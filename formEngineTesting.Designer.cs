@@ -135,6 +135,7 @@
             this.btnMode.TabIndex = 0;
             this.btnMode.Text = "MODE";
             this.btnMode.UseVisualStyleBackColor = false;
+            this.btnMode.Click += new System.EventHandler(this.btnMode_Click);
             // 
             // aGauge1
             // 

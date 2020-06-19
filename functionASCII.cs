@@ -19,6 +19,9 @@ namespace UIDesign
         public functionASCII(string _command)
         {
             command = _command;
+            chartoascii();
+            checksum();
+            asciitochar();
         }
 
         public byte[] chartoascii()

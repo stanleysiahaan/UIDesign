@@ -13,38 +13,52 @@ namespace UIDesign
 {
     class connectionProtocol
     {
+        UdpClient udpClient;
+        IPAddress ipadd;
         
         public string status { get; set; }
-        public string host { get; set; }
-        public string port { get; set; }
+        int port;
         public string TestConnection(string host, string port)
         {
-            IPAddress IP;
-            if (IPAddress.TryParse(host,out IP))
+            ipadd = IPAddress.Parse(host);
+            IPEndPoint iPEndPoint = new IPEndPoint(ipadd, int.Parse(port));
+            try
             {
-                Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                try
-                {
-                    s.Connect(IP, int.Parse(port));
-                    status = "Connection Established";
-                }
-                catch(Exception ex)
-                {
-                    status = ex.Message;
-                }
-            }   
+                udpClient = new UdpClient();
+                udpClient.Connect(iPEndPoint);
+                status = "Connection Established";
+            }
+            catch (Exception e)
+            {
+                status = e.ToString();
+            }
             return status;
         }
 
-        public string SendCommand(string command, string IPTexcel, string PortTexcel)
+        public string SendCommandTexcel(string command, string IPTexcel, string PortTexcel)
         {
-            int port = int.Parse(PortTexcel);
+            port = int.Parse(PortTexcel);
             string texttosend = command;
-            UdpClient udpClient = new UdpClient();
+            udpClient = new UdpClient();
             udpClient.Connect(IPTexcel, port);
             byte[] senddata = Encoding.ASCII.GetBytes(texttosend);
             udpClient.Send(senddata, senddata.Length);
             return texttosend;
+        }
+
+        public (string, string) SendHostControl(string tohost, string IPTexcel, string PortTexcel)
+        {
+            port = int.Parse(PortTexcel);
+            string texttosend = tohost;
+            udpClient = new UdpClient();
+            udpClient.Connect(IPTexcel, port);
+            byte[] senddata = Encoding.ASCII.GetBytes(texttosend);
+            udpClient.Send(senddata, senddata.Length);
+            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Parse(IPTexcel), port);
+            byte[] receivedData = udpClient.Receive(ref RemoteIpEndPoint);
+            string _receivedData = Encoding.ASCII.GetString(receivedData);
+            return (texttosend, _receivedData);
+
         }
     }
 

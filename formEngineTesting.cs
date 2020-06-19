@@ -27,6 +27,8 @@ namespace UIDesign
         System.Timers.Timer Timer2;
         DBConnect dbc = new DBConnect();
         connectionProtocol connectionProtocol = new connectionProtocol();
+        TexcelCommand texcelCommand;
+        functionASCII fncascii;
         string elapsed_time;
         //Declare all the IP
         string IPTexcel;
@@ -125,8 +127,6 @@ namespace UIDesign
             da.Fill(dt4);
             IPWaterCoolant = dt4.Rows[0][0].ToString();
             PortWaterCoolant = dt4.Rows[0][1].ToString();
-
-
         }
 
         private void formEngineTesting_Load(object sender, EventArgs e)
@@ -142,7 +142,7 @@ namespace UIDesign
             string duration = dataGridView1.Rows[i].Cells["duration"].Value.ToString();
 
             //send those parameters to texcel command
-            TexcelCommand texcelCommand = new TexcelCommand(torque, rpm, duration);
+            texcelCommand = new TexcelCommand(torque, rpm, duration);
             string _command = texcelCommand.TorqueThrottle();
 
             //Printing the commmand to rtblogging
@@ -150,25 +150,15 @@ namespace UIDesign
             rtbLogging.ScrollToCaret();
             i++;
 
-            //printing the ascii decoding to rtblongging
-            functionASCII fncascii = new functionASCII(_command);
-            byte[] _chartoascii = fncascii.chartoascii();
-            rtbLogging.AppendText(String.Format("ASCII: {0}\r\n",String.Join(" ", _chartoascii)));
-
-            //printing the ascii checksum to rtblogging
-            int sum = fncascii.checksum();
-            rtbLogging.AppendText(String.Format("SUM: {0} \r\n", sum.ToString()));
-
-            //printing the checksum character
-            char charascii = fncascii.asciitochar();
-            rtbLogging.AppendText("Char: "+ charascii + "\r\n");
+            //Sending the command to functionascii
+            fncascii = new functionASCII(_command);
 
             //Printing the final command
             string cmdFinal = fncascii.commandbuilder();
             rtbLogging.AppendText(String.Format("F: {0}", cmdFinal));
 
             //Sending command through IP
-            string sentpacket = connectionProtocol.SendCommand(cmdFinal, IPTexcel, PortTexcel);
+            string sentpacket = connectionProtocol.SendCommandTexcel(cmdFinal, IPTexcel, PortTexcel);
             richTextBox1.AppendText(String.Format("[{1}]Sent: {0}", sentpacket, elapsed_time));
 
             //Stop sending command
@@ -267,6 +257,26 @@ namespace UIDesign
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+
+        }
+
+        private void btnMode_Click(object sender, EventArgs e)
+        {
+            texcelCommand = new TexcelCommand(null,null,null);
+            string tohost = texcelCommand.HostControl();
+            //Sending the command to functionascii
+            fncascii = new functionASCII(tohost);
+
+            //Printing the final command
+            string cmdFinal = fncascii.commandbuilder();
+            rtbLogging.AppendText(String.Format("F: {0}", cmdFinal));
+
+            //Sending command through IP
+            var packet = connectionProtocol.SendHostControl(cmdFinal, IPTexcel, PortTexcel);
+            string sentPacket = packet.Item1;
+            string receivedPacket = packet.Item2;
+
+            richTextBox1.AppendText(String.Format("[{1}]Sent: {0} Received: {2}", sentPacket, DateTime.Now.ToString("hh:mm:ss.fff tt"), receivedPacket));
 
         }
     }
