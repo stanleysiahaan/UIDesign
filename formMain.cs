@@ -16,11 +16,13 @@ namespace UIDesign
     public partial class formMain : Form
     {
         public string projectID { get; set; }
+        ucMethodEditor ucME = new ucMethodEditor();
         public formMain()
         {
             InitializeComponent();
             ucHomeMenu hmMn = new ucHomeMenu();
             panelContainer.Controls.Add(hmMn);
+            
         }
         
         private void mainForm_Load(object sender, EventArgs e)
@@ -130,5 +132,6 @@ namespace UIDesign
             {
             }
         }
+
     }
 }

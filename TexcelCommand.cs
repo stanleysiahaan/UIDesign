@@ -13,6 +13,7 @@ namespace UIDesign
         public string torque;
         public string rpm;
         public string duration;
+        public string ramp_time;
         public string inletValve;
         public string unitsCode;
         public string ign_Status;
@@ -20,17 +21,18 @@ namespace UIDesign
         public string gplug_Status;
 
         public string command { get; set; }
-        public TexcelCommand(string _torque, string _rpm, string _duration)
+        public TexcelCommand(string _torque, string _rpm, string _duration, string _ramp_time)
         {
             torque = _torque;
             rpm = _rpm;
             duration = _duration;
+            ramp_time = _ramp_time;
         }
 
         //Set dynamometer and throttle demand
         public string TorqueThrottle()
         {
-            return command = "C1,2," + torque + ",6,1," + rpm + ",6," + duration + ",";
+            return command = "C1,2," + torque + ","+ ramp_time + ",1," + rpm + ","+ramp_time+"," + duration + ",";
         }
 
         //Set dynamometer, throttle, inlet valve demands

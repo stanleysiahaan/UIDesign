@@ -140,9 +140,10 @@ namespace UIDesign
             string torque = dataGridView1.Rows[i].Cells["Torque"].Value.ToString();
             string rpm = dataGridView1.Rows[i].Cells["RPM"].Value.ToString();
             string duration = dataGridView1.Rows[i].Cells["duration"].Value.ToString();
+            string ramp_time = dataGridView1.Rows[i].Cells["ramp_time"].Value.ToString();
 
             //send those parameters to texcel command
-            texcelCommand = new TexcelCommand(torque, rpm, duration);
+            texcelCommand = new TexcelCommand(torque, rpm, duration, ramp_time);
             string _command = texcelCommand.TorqueThrottle();
 
             //Printing the commmand to rtblogging
@@ -263,7 +264,7 @@ namespace UIDesign
 
         private void btnMode_Click(object sender, EventArgs e)
         {
-            texcelCommand = new TexcelCommand(null,null,null);
+            texcelCommand = new TexcelCommand(null,null,null, null);
             string tohost = texcelCommand.HostControl();           
             //Sending the command to functionascii
             fncascii = new functionASCII(tohost);

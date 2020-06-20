@@ -26,13 +26,13 @@ namespace UIDesign
         //To make 'Step' coloumn auto increment
         private void dataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
-            dataGridView1.Rows[e.RowIndex].Cells[0].Value = (e.RowIndex + 1);
+            dgPositions.Rows[e.RowIndex].Cells[0].Value = (e.RowIndex + 1);
         }
 
         //To skip 'Step' coloumn when user press Tab button
         private void dataGridView1_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
-            if (dataGridView1.Columns[e.ColumnIndex].Name == "Step")
+            if (dgPositions.Columns[e.ColumnIndex].Name == "Step")
             {
                 SendKeys.Send("{TAB}");
             }
@@ -70,7 +70,7 @@ namespace UIDesign
 
             //await Task.Delay(2000);
             //Write data each row from datagridview1 to each row in method_data database
-            foreach (DataGridViewRow row in dataGridView1.Rows)
+            foreach (DataGridViewRow row in dgPositions.Rows)
             {
                 try
                 {
@@ -102,6 +102,31 @@ namespace UIDesign
             //Close connection
             dbc.CloseConnection();
         }
-              
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string s = Clipboard.GetText();
+
+            string[] lines = s.Replace("\n", "").Split('\r');
+
+            dgPositions.Rows.Add(lines.Length - 1);
+            string[] fields;
+            int row = 0;
+            int col = 1;
+
+            foreach (string item in lines)
+            {
+                fields = item.Split('\t');
+                foreach (string f in fields)
+                {
+                    Console.WriteLine(f);
+                    dgPositions[col, row].Value = f;
+                    col++;
+                }
+                row++;
+                col = 1;
+            }
+        }
     }
+    
 }

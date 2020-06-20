@@ -31,22 +31,22 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formMain));
             this.topBar = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.menuIcon = new System.Windows.Forms.PictureBox();
             this.navLabel = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.sideBar = new System.Windows.Forms.Panel();
-            this.panelContainer = new System.Windows.Forms.Panel();
             this.btnET = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
             this.btnHome = new System.Windows.Forms.Button();
             this.btnPrmtr = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
             this.btnDAQ = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.menuIcon = new System.Windows.Forms.PictureBox();
+            this.panelContainer = new System.Windows.Forms.Panel();
             this.topBar.SuspendLayout();
-            this.sideBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.menuIcon)).BeginInit();
+            this.sideBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // topBar
@@ -61,6 +61,28 @@
             this.topBar.Name = "topBar";
             this.topBar.Size = new System.Drawing.Size(1904, 57);
             this.topBar.TabIndex = 0;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Image = global::UIDesign.Properties.Resources.icons8_info_50px;
+            this.pictureBox1.Location = new System.Drawing.Point(1851, 3);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox1.TabIndex = 3;
+            this.pictureBox1.TabStop = false;
+            // 
+            // menuIcon
+            // 
+            this.menuIcon.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.menuIcon.Image = global::UIDesign.Properties.Resources.menuicon;
+            this.menuIcon.Location = new System.Drawing.Point(9, 10);
+            this.menuIcon.Margin = new System.Windows.Forms.Padding(2);
+            this.menuIcon.Name = "menuIcon";
+            this.menuIcon.Size = new System.Drawing.Size(26, 28);
+            this.menuIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.menuIcon.TabIndex = 2;
+            this.menuIcon.TabStop = false;
             // 
             // navLabel
             // 
@@ -96,16 +118,6 @@
             this.sideBar.Name = "sideBar";
             this.sideBar.Size = new System.Drawing.Size(113, 984);
             this.sideBar.TabIndex = 1;
-            // 
-            // panelContainer
-            // 
-            this.panelContainer.BackColor = System.Drawing.Color.White;
-            this.panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelContainer.Location = new System.Drawing.Point(113, 57);
-            this.panelContainer.Margin = new System.Windows.Forms.Padding(2);
-            this.panelContainer.Name = "panelContainer";
-            this.panelContainer.Size = new System.Drawing.Size(1791, 984);
-            this.panelContainer.TabIndex = 2;
             // 
             // btnET
             // 
@@ -228,27 +240,15 @@
             this.btnDAQ.UseVisualStyleBackColor = false;
             this.btnDAQ.Click += new System.EventHandler(this.btnDAQ_Click);
             // 
-            // pictureBox1
+            // panelContainer
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Image = global::UIDesign.Properties.Resources.icons8_info_50px;
-            this.pictureBox1.Location = new System.Drawing.Point(1851, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
-            // 
-            // menuIcon
-            // 
-            this.menuIcon.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.menuIcon.Image = global::UIDesign.Properties.Resources.menuicon;
-            this.menuIcon.Location = new System.Drawing.Point(9, 10);
-            this.menuIcon.Margin = new System.Windows.Forms.Padding(2);
-            this.menuIcon.Name = "menuIcon";
-            this.menuIcon.Size = new System.Drawing.Size(26, 28);
-            this.menuIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.menuIcon.TabIndex = 2;
-            this.menuIcon.TabStop = false;
+            this.panelContainer.BackColor = System.Drawing.Color.White;
+            this.panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelContainer.Location = new System.Drawing.Point(113, 57);
+            this.panelContainer.Margin = new System.Windows.Forms.Padding(2);
+            this.panelContainer.Name = "panelContainer";
+            this.panelContainer.Size = new System.Drawing.Size(1791, 984);
+            this.panelContainer.TabIndex = 2;
             // 
             // formMain
             // 
@@ -261,6 +261,7 @@
             this.Controls.Add(this.topBar);
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(29)))), ((int)(((byte)(38)))));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "formMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -268,9 +269,9 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.topBar.ResumeLayout(false);
             this.topBar.PerformLayout();
-            this.sideBar.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.menuIcon)).EndInit();
+            this.sideBar.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

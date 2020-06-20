@@ -531,6 +531,7 @@
             // toggleSwitch1
             // 
             this.toggleSwitch1.Enabled = false;
+            this.toggleSwitch1.GrayWhenDisabled = false;
             this.toggleSwitch1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.toggleSwitch1.Location = new System.Drawing.Point(161, 75);
             this.toggleSwitch1.Name = "toggleSwitch1";
