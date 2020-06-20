@@ -530,6 +530,7 @@
             // 
             // toggleSwitch1
             // 
+            this.toggleSwitch1.Enabled = false;
             this.toggleSwitch1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.toggleSwitch1.Location = new System.Drawing.Point(161, 75);
             this.toggleSwitch1.Name = "toggleSwitch1";
@@ -540,7 +541,6 @@
             this.toggleSwitch1.Size = new System.Drawing.Size(55, 22);
             this.toggleSwitch1.TabIndex = 4;
             this.toggleSwitch1.ToggleOnSideClick = false;
-            this.toggleSwitch1.CheckedChanged += new JCS.ToggleSwitch.CheckedChangedDelegate(this.toggleSwitch1_CheckedChanged);
             // 
             // label8
             // 

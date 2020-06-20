@@ -35,11 +35,13 @@
             this.hour = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.minute = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.second = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ramp_time = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.oil_temp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cool_temp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.tbMethodName = new System.Windows.Forms.TextBox();
             this.btnSubmitMethod = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,9 +57,10 @@
             this.hour,
             this.minute,
             this.second,
+            this.ramp_time,
             this.oil_temp,
             this.cool_temp});
-            this.dataGridView1.Location = new System.Drawing.Point(43, 66);
+            this.dataGridView1.Location = new System.Drawing.Point(44, 66);
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
@@ -107,6 +110,11 @@
             this.second.MinimumWidth = 6;
             this.second.Name = "second";
             // 
+            // ramp_time
+            // 
+            this.ramp_time.HeaderText = "Ramp Time (second)";
+            this.ramp_time.Name = "ramp_time";
+            // 
             // oil_temp
             // 
             this.oil_temp.HeaderText = "Oil Temperature";
@@ -151,11 +159,19 @@
             this.btnSubmitMethod.UseVisualStyleBackColor = true;
             this.btnSubmitMethod.Click += new System.EventHandler(this.btnSubmitMethod_Click);
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(393, 40);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.TabIndex = 4;
+            // 
             // ucMethodEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnSubmitMethod);
             this.Controls.Add(this.tbMethodName);
             this.Controls.Add(this.label1);
@@ -180,7 +196,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn hour;
         private System.Windows.Forms.DataGridViewTextBoxColumn minute;
         private System.Windows.Forms.DataGridViewTextBoxColumn second;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ramp_time;
         private System.Windows.Forms.DataGridViewTextBoxColumn oil_temp;
         private System.Windows.Forms.DataGridViewTextBoxColumn cool_temp;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

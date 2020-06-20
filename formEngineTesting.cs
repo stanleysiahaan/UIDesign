@@ -185,34 +185,42 @@ namespace UIDesign
         //Start button trigger
         private void btnStart_Click(object sender, EventArgs e)
         {
-            //Reseting the index if STOP button is clicked
-            i = 0;
+            if (toggleSwitch1.Checked == true)
+            {
+                //Reseting the index if STOP button is clicked
+                i = 0;
 
-            //Declaring all the timer and stopwatch
-            Timer1 = new System.Timers.Timer(1000);
-            Timer1.Elapsed += new ElapsedEventHandler(commandTimer);
-            Timer1.AutoReset = true;
-            Timer2 = new System.Timers.Timer(1);
-            Timer2.Elapsed += new ElapsedEventHandler(stopwatch_command);
-            Timer2.AutoReset = true;
+                //Declaring all the timer and stopwatch
+                Timer1 = new System.Timers.Timer(1000);
+                Timer1.Elapsed += new ElapsedEventHandler(commandTimer);
+                Timer1.AutoReset = true;
+                Timer2 = new System.Timers.Timer(1);
+                Timer2.Elapsed += new ElapsedEventHandler(stopwatch_command);
+                Timer2.AutoReset = true;
 
-            //Starting the timer and stopwatch
-            sw1.Start();
-            Timer2.Enabled = true;
-            Timer1.Enabled = true;
+                //Starting the timer and stopwatch
+                sw1.Start();
+                Timer2.Enabled = true;
+                Timer1.Enabled = true;
 
-            //Synchronize the timer with the textbox
-            Timer1.SynchronizingObject = this;
-            Timer2.SynchronizingObject = this;
+                //Synchronize the timer with the textbox
+                Timer1.SynchronizingObject = this;
+                Timer2.SynchronizingObject = this;
+            }
+            else
+            {
+                MessageBox.Show("CANNOT START THE TEST! \r\nConnection to all equipment has not established!");
+            }
+
 
         }
 
         //Stop button trigger
         private void btnStop_Click(object sender, EventArgs e)
         {
-            Timer1.Stop();
-            Timer2.Stop();
-            sw1.Stop();
+                Timer1.Stop();
+                Timer2.Stop();
+                sw1.Stop();            
         }
 
         //Menganti REDline
@@ -247,13 +255,6 @@ namespace UIDesign
             textBox7.Text = trackBar4.Value.ToString();
         }
 
-        private void toggleSwitch1_CheckedChanged(object sender, EventArgs e)
-        {
-            //TESTING THE CONNECTION TO EACH DEVICE
-            //TEXCEL
-            string status = connectionProtocol.TestConnection(IPTexcel, PortTexcel);
-            rtbLogging.AppendText("Connection: " + status + "\r\n");
-        }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -263,7 +264,7 @@ namespace UIDesign
         private void btnMode_Click(object sender, EventArgs e)
         {
             texcelCommand = new TexcelCommand(null,null,null);
-            string tohost = texcelCommand.HostControl();
+            string tohost = texcelCommand.HostControl();           
             //Sending the command to functionascii
             fncascii = new functionASCII(tohost);
 
@@ -275,9 +276,20 @@ namespace UIDesign
             var packet = connectionProtocol.SendHostControl(cmdFinal, IPTexcel, PortTexcel);
             string sentPacket = packet.Item1;
             string receivedPacket = packet.Item2;
-
             richTextBox1.AppendText(String.Format("[{1}]Sent: {0} Received: {2}", sentPacket, DateTime.Now.ToString("hh:mm:ss.fff tt"), receivedPacket));
-
+            if (receivedPacket == "R19,1,E,\r")
+            {
+                //toggleSwitch1_CheckedChanged(sender, e);
+                toggleSwitch1.Checked = true;
+            }
+            else if (receivedPacket == "R19,2,E,\r")
+            {
+                toggleSwitch1.Checked = false;
+            }
+            else
+            {
+                MessageBox.Show("Texcel not connected! Check IP or contact admin.");
+            }
         }
     }
 }

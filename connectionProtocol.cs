@@ -58,7 +58,6 @@ namespace UIDesign
             byte[] receivedData = udpClient.Receive(ref RemoteIpEndPoint);
             string _receivedData = Encoding.ASCII.GetString(receivedData);
             return (texttosend, _receivedData);
-
         }
     }
 

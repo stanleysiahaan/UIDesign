@@ -16,7 +16,7 @@ namespace UIDesign
 {
     public partial class ucMethodEditor : UserControl
     {
-        private object methodIdObject;
+        public object methodIdObject;
 
         public ucMethodEditor()
         {
@@ -66,7 +66,9 @@ namespace UIDesign
             //Search for method name id
             cmd.CommandText = "SELECT id FROM method_name WHERE name LIKE '%" + tbMethodName.Text + "%'";
             methodIdObject = cmd.ExecuteScalar();
+            textBox1.Text = methodIdObject.ToString();
 
+            //await Task.Delay(2000);
             //Write data each row from datagridview1 to each row in method_data database
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
@@ -82,10 +84,11 @@ namespace UIDesign
                     cmd.Parameters.AddWithValue("@hour", row.Cells["hour"].Value);
                     cmd.Parameters.AddWithValue("@minute", row.Cells["minute"].Value);
                     cmd.Parameters.AddWithValue("@second", row.Cells["second"].Value);
+                    cmd.Parameters.AddWithValue("@ramp_time", row.Cells["ramp_time"].Value);
                     cmd.Parameters.AddWithValue("@oil_temp", row.Cells["oil_temp"].Value);
                     cmd.Parameters.AddWithValue("@cool_temp", row.Cells["cool_temp"].Value);
                     //Assign the query using CommandText
-                    cmd.CommandText = "INSERT INTO method_data(method_id, Step, Torque, RPM, hour, minute, second, oil_temp, cool_temp)VALUES(@method_id, @Step, @Torque, @RPM, @hour, @minute, @second, @oil_temp, @cool_temp)";
+                    cmd.CommandText = "INSERT INTO method_data(method_id, Step, Torque, RPM, hour, minute, second, ramp_time, oil_temp, cool_temp)VALUES(@method_id, @Step, @Torque, @RPM, @hour, @minute, @second, @ramp_time, @oil_temp, @cool_temp)";
                     //Exceute query
                     cmd.ExecuteNonQuery();
 

@@ -84,6 +84,10 @@ namespace UIDesign
                         else if (column.HeaderText == "second")
                         {
                             column.HeaderText = "Duration (second)";
+                        }                        
+                        else if (column.HeaderText == "ramp_time")
+                        {
+                            column.HeaderText = "Ramp Time (second)";
                         }
                         else if (column.HeaderText == "oil_temp")
                         {
