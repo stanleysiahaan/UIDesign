@@ -192,7 +192,7 @@ namespace UIDesign
                 i = 0;
 
                 //Declaring all the timer and stopwatch
-                Timer1 = new System.Timers.Timer(1000);
+                Timer1 = new System.Timers.Timer(5000);
                 Timer1.Elapsed += new ElapsedEventHandler(commandTimer);
                 Timer1.AutoReset = true;
                 Timer2 = new System.Timers.Timer(1);
@@ -277,7 +277,7 @@ namespace UIDesign
             var packet = connectionProtocol.SendHostControl(cmdFinal, IPTexcel, PortTexcel);
             string sentPacket = packet.Item1;
             string receivedPacket = packet.Item2;
-            richTextBox1.AppendText(String.Format("[{1}]Sent: {0} Received: {2}", sentPacket, DateTime.Now.ToString("hh:mm:ss.fff tt"), receivedPacket));
+            richTextBox1.AppendText(String.Format("[{1}]Sent: {0} \r\n Received: {2}", sentPacket, DateTime.Now.ToString("hh:mm:ss.fff tt"), receivedPacket));
             if (receivedPacket == "R19,1,E,\r")
             {
                 //toggleSwitch1_CheckedChanged(sender, e);
