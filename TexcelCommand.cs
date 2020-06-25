@@ -133,5 +133,11 @@ namespace UIDesign
         }
 
         //Switch to remote repository changes
+
+        //Request for repeated data packets.
+        public string TorqueRpmRequest()
+        {
+            return command = "P2,";
+        }
     }
 }

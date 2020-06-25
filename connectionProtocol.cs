@@ -12,42 +12,50 @@ using System.Windows.Forms;
 namespace UIDesign
 {
     class connectionProtocol
-    {
-        UdpClient udpClient;
-        
-        public string status { get; set; }
+    {    
         int port;
         string textReceived;
-
 
         public string SendCommandTexcel(string command, string IPTexcel, string PortTexcel)
         {
             port = int.Parse(PortTexcel);
+            //--data to send to the server--
             string texttosend = command;
-            udpClient = new UdpClient();
-            udpClient.Connect(IPTexcel, port);
-            byte[] senddata = Encoding.ASCII.GetBytes(texttosend);
-            udpClient.Send(senddata, senddata.Length);
-            return texttosend;
+            try
+            {
+                //--create a TCPClient Object at the IP and port no--
+                TcpClient client = new TcpClient();
+                NetworkStream nwStream = client.GetStream();
+                byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(texttosend);
+                //--send the text--
+                nwStream.Write(bytesToSend, 0, bytesToSend.Length);
+                //--readback the text--
+                byte[] bytesToRead = new byte[client.ReceiveBufferSize];
+                int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
+                textReceived = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                client.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            //--return the sended and received data--
+            return textReceived;
         }
 
         public (string, string) SendHostControl(string tohost, string IPTexcel, string PortTexcel)
         {
             port = int.Parse(PortTexcel);
-
             //--data to send to the server---
             string texttosend = tohost;
-
             try
             {
                 //--create a TCPClient object at the IP and port no---
                 TcpClient client = new TcpClient(IPTexcel, port);
                 NetworkStream nwStream = client.GetStream();
                 byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(texttosend);
-
                 //--send the text--
                 nwStream.Write(bytesToSend, 0, bytesToSend.Length);
-
                 //--read back the text---
                 byte[] bytesToRead = new byte[client.ReceiveBufferSize];
                 int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
@@ -61,64 +69,77 @@ namespace UIDesign
 
             //--return the sending and receiving data--
             return (texttosend, textReceived);
+        }
 
+        public string SendCommandTexcelSocket(string command, string IPTexcel, string PortTexcel)
+        {
+            port = int.Parse(PortTexcel);
+            byte[] bytes = new byte[1024];
+            try
+            {
+                //Connect to a remote server
+                IPAddress IPadd = IPAddress.Parse(IPTexcel);
+                IPEndPoint remoteEP = new IPEndPoint(IPadd, port);
+                //Create a TCP/IP socket.
+                Socket sender = new Socket(IPadd.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                try
+                {
+                    //connect to remote Endpoint
+                    sender.Connect(remoteEP);
+                    //encode the data string into a byte array
+                    byte[] bytesToSend = Encoding.ASCII.GetBytes(command);
+                    //send the data through the socket
+                    int bytesSent = sender.Send(bytesToSend);
+                    //receive the response from the remote device
+                    int bytesRead = sender.Receive(bytes);
+                    textReceived = Encoding.ASCII.GetString(bytes, 0, bytesRead);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            return textReceived;
+        }
 
+        public (string, string) SendHostControlSocket(string tohost, string IPTexcel, string PortTexcel)
+        {
+            port = int.Parse(PortTexcel);
+            byte[] bytes = new byte[1024];
+            try
+            {
+                //Connect to a remote server
+                IPAddress IPadd = IPAddress.Parse(IPTexcel);
+                IPEndPoint remoteEP = new IPEndPoint(IPadd, port);
+                //Create a TCP/IP socket.
+                Socket sender = new Socket(IPadd.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                try
+                {
+                    //connect to remote Endpoint
+                    sender.Connect(remoteEP);
+                    //encode the data string into a byte array
+                    byte[] bytesToSend = Encoding.ASCII.GetBytes(tohost);
+                    //send the data through the socket
+                    int bytesSent = sender.Send(bytesToSend);
+                    //receive the response from the remote device
+                    int bytesRead = sender.Receive(bytes);
+                    textReceived = Encoding.ASCII.GetString(bytes, 0, bytesRead);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            return (tohost, textReceived);
         }
     }
 
 }
-
-
-
-//==========================Example===============================
-/*
-//---data to send to the server---
-string textToSend = command;
-string Server_IP = "192.168.1.17";
-//---create a TCPClient object at the IP and port no.---
-TcpClient client = new TcpClient(Server_IP, 55);
-NetworkStream nwStream = client.GetStream();
-byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(textToSend);
-
-//---send the text---
-//Console.WriteLine("Sending : " + textToSend);
-nwStream.Write(bytesToSend, 0, bytesToSend.Length);
-
-//---read back the text---
-//byte[] bytesToRead = new byte[client.ReceiveBufferSize];
-//int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
-//Console.WriteLine("Received : " + Encoding.ASCII.GetString(bytesToRead, 0, bytesRead));
-//Console.ReadLine();
-client.Close();
-
-return textToSend;
-*/
-
-
-//udpClient = new UdpClient();
-//udpClient.Connect(IPTexcel, port);
-//byte[] senddata = Encoding.ASCII.GetBytes(texttosend);
-//udpClient.Send(senddata, senddata.Length);
-//IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Parse(IPTexcel), port);
-//byte[] receivedData = udpClient.Receive(ref RemoteIpEndPoint);
-//string _receivedData = Encoding.ASCII.GetString(receivedData);
-//return (texttosend, _receivedData);
-
-
-
-//public string TestConnection(string host, string port)
-//{
-//    ipadd = IPAddress.Parse(host);
-//    IPEndPoint iPEndPoint = new IPEndPoint(ipadd, int.Parse(port));
-//    try
-//    {
-//        udpClient = new UdpClient();
-//        udpClient.Connect(iPEndPoint);
-//        status = "Connection Established";
-//    }
-//    catch (Exception e)
-//    {
-//        status = e.ToString();
-//    }
-//    return status;
-//}

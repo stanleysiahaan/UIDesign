@@ -159,8 +159,8 @@ namespace UIDesign
             rtbLogging.AppendText(String.Format("F: {0}", cmdFinal));
 
             //Sending command through IP
-            string sentpacket = connectionProtocol.SendCommandTexcel(cmdFinal, IPTexcel, PortTexcel);
-            richTextBox1.AppendText(String.Format("[{1}]Sent: {0}", sentpacket, elapsed_time));
+            string receivePacket = connectionProtocol.SendCommandTexcelSocket(cmdFinal, IPTexcel, PortTexcel); // change this method from SendCommandTexcel to SendCommandTexcelSocket.
+            richTextBox1.AppendText(String.Format("[{1}]Respond: {0}\r\n", receivePacket, elapsed_time));
 
             //Stop sending command
             if (i == dataGridView1.Rows.Count)
@@ -207,13 +207,14 @@ namespace UIDesign
                 //Synchronize the timer with the textbox
                 Timer1.SynchronizingObject = this;
                 Timer2.SynchronizingObject = this;
+
+                //Get rpm and torque value from texcel
+                requestDataTexcel();
             }
             else
             {
                 MessageBox.Show("CANNOT START THE TEST! \r\nConnection to all equipment has not established!");
             }
-
-
         }
 
         //Stop button trigger
@@ -274,10 +275,10 @@ namespace UIDesign
             rtbLogging.AppendText(String.Format("F: {0}", cmdFinal));
 
             //Sending command through IP
-            var packet = connectionProtocol.SendHostControl(cmdFinal, IPTexcel, PortTexcel);
+            var packet = connectionProtocol.SendHostControlSocket(cmdFinal, IPTexcel, PortTexcel);
             string sentPacket = packet.Item1;
             string receivedPacket = packet.Item2;
-            richTextBox1.AppendText(String.Format("[{1}]Sent: {0} \r\n Received: {2}", sentPacket, DateTime.Now.ToString("hh:mm:ss.fff tt"), receivedPacket));
+            richTextBox1.AppendText(String.Format("[{1}]Sent: {0} \r\n [{1}]Received: {2}\r\n", sentPacket, DateTime.Now.ToString("hh:mm:ss.fff tt"), receivedPacket));
             if (receivedPacket == "R19,1,E,\r")
             {
                 //toggleSwitch1_CheckedChanged(sender, e);
@@ -291,6 +292,17 @@ namespace UIDesign
             {
                 MessageBox.Show("Texcel not connected! Check IP or contact admin.");
             }
+        }
+
+        private void requestDataTexcel()
+        {
+            texcelCommand = new TexcelCommand(null, null, null, null);
+            string requestRpmTorque = texcelCommand.TorqueRpmRequest();
+            fncascii = new functionASCII(requestRpmTorque);
+            string cmdFinal = fncascii.commandbuilder();
+            rtbLogging.AppendText(String.Format("cmd: {0}", cmdFinal));
+            string receivePacket = connectionProtocol.SendCommandTexcelSocket(cmdFinal, IPTexcel, PortTexcel);
+            richTextBox1.AppendText(String.Format("[{1}]Respond: {0} \r\n", receivePacket, elapsed_time));
         }
     }
 }
