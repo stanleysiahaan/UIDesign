@@ -41,18 +41,14 @@
             this.btnStop = new System.Windows.Forms.Button();
             this.btnMode = new System.Windows.Forms.Button();
             this.aGauge1 = new System.Windows.Forms.AGauge();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.trackBar2 = new System.Windows.Forms.TrackBar();
             this.aGauge2 = new System.Windows.Forms.AGauge();
             this.aGauge3 = new System.Windows.Forms.AGauge();
             this.aGauge4 = new System.Windows.Forms.AGauge();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
-            this.trackBar3 = new System.Windows.Forms.TrackBar();
             this.textBox6 = new System.Windows.Forms.TextBox();
-            this.trackBar4 = new System.Windows.Forms.TrackBar();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -60,6 +56,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnConnect = new System.Windows.Forms.Button();
             this.toggleSwitch3 = new JCS.ToggleSwitch();
             this.toggleSwitch2 = new JCS.ToggleSwitch();
             this.toggleSwitch1 = new JCS.ToggleSwitch();
@@ -73,16 +70,13 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.StartThread = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -209,33 +203,12 @@
             this.aGauge1.Value = 0F;
             this.aGauge1.ValueInRangeChanged += new System.EventHandler<System.Windows.Forms.ValueInRangeChangedEventArgs>(this.aGauge1_ValueInRangeChanged);
             // 
-            // trackBar1
-            // 
-            this.trackBar1.LargeChange = 1;
-            this.trackBar1.Location = new System.Drawing.Point(16, 229);
-            this.trackBar1.Maximum = 800;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.trackBar1.Size = new System.Drawing.Size(200, 45);
-            this.trackBar1.TabIndex = 2;
-            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
-            // 
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(1402, 364);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(134, 20);
             this.textBox2.TabIndex = 6;
-            // 
-            // trackBar2
-            // 
-            this.trackBar2.Location = new System.Drawing.Point(16, 336);
-            this.trackBar2.Maximum = 100;
-            this.trackBar2.Name = "trackBar2";
-            this.trackBar2.Size = new System.Drawing.Size(200, 45);
-            this.trackBar2.SmallChange = 2;
-            this.trackBar2.TabIndex = 5;
-            this.trackBar2.Scroll += new System.EventHandler(this.trackBar2_Scroll);
             // 
             // aGauge2
             // 
@@ -410,30 +383,12 @@
             this.textBox5.Size = new System.Drawing.Size(134, 20);
             this.textBox5.TabIndex = 6;
             // 
-            // trackBar3
-            // 
-            this.trackBar3.Location = new System.Drawing.Point(16, 264);
-            this.trackBar3.Maximum = 120;
-            this.trackBar3.Name = "trackBar3";
-            this.trackBar3.Size = new System.Drawing.Size(200, 45);
-            this.trackBar3.TabIndex = 5;
-            this.trackBar3.Scroll += new System.EventHandler(this.trackBar3_Scroll);
-            // 
             // textBox6
             // 
             this.textBox6.Location = new System.Drawing.Point(713, 364);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(134, 20);
             this.textBox6.TabIndex = 6;
-            // 
-            // trackBar4
-            // 
-            this.trackBar4.Location = new System.Drawing.Point(16, 303);
-            this.trackBar4.Maximum = 120;
-            this.trackBar4.Name = "trackBar4";
-            this.trackBar4.Size = new System.Drawing.Size(200, 45);
-            this.trackBar4.TabIndex = 5;
-            this.trackBar4.Scroll += new System.EventHandler(this.trackBar4_Scroll);
             // 
             // textBox7
             // 
@@ -489,6 +444,7 @@
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.btnConnect);
             this.panel1.Controls.Add(this.toggleSwitch3);
             this.panel1.Controls.Add(this.toggleSwitch2);
             this.panel1.Controls.Add(this.toggleSwitch1);
@@ -496,15 +452,21 @@
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.trackBar1);
-            this.panel1.Controls.Add(this.trackBar3);
-            this.panel1.Controls.Add(this.trackBar4);
-            this.panel1.Controls.Add(this.trackBar2);
             this.panel1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(239, 384);
             this.panel1.TabIndex = 13;
+            // 
+            // btnConnect
+            // 
+            this.btnConnect.Location = new System.Drawing.Point(4, 236);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(228, 35);
+            this.btnConnect.TabIndex = 7;
+            this.btnConnect.Text = "Texcel Test Connection";
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
             // toggleSwitch3
             // 
@@ -632,6 +594,7 @@
             this.flowLayoutPanel1.BackColor = System.Drawing.SystemColors.Control;
             this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flowLayoutPanel1.Controls.Add(this.richTextBox1);
+            this.flowLayoutPanel1.Controls.Add(this.StartThread);
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 384);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(303, 648);
@@ -644,6 +607,16 @@
             this.richTextBox1.Size = new System.Drawing.Size(291, 328);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
+            // 
+            // StartThread
+            // 
+            this.StartThread.Location = new System.Drawing.Point(3, 337);
+            this.StartThread.Name = "StartThread";
+            this.StartThread.Size = new System.Drawing.Size(298, 23);
+            this.StartThread.TabIndex = 1;
+            this.StartThread.Text = "Start Threading";
+            this.StartThread.UseVisualStyleBackColor = true;
+            this.StartThread.Click += new System.EventHandler(this.StartThreading_Click);
             // 
             // panel3
             // 
@@ -696,7 +669,6 @@
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.Size = new System.Drawing.Size(1588, 611);
             this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // tabPage1
             // 
@@ -755,10 +727,6 @@
             this.Text = "engineTestingForm";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.formEngineTesting_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -779,18 +747,14 @@
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnMode;
         private System.Windows.Forms.AGauge aGauge1;
-        private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TrackBar trackBar2;
         private System.Windows.Forms.AGauge aGauge2;
         private System.Windows.Forms.AGauge aGauge3;
         private System.Windows.Forms.AGauge aGauge4;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TrackBar trackBar3;
         private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TrackBar trackBar4;
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
@@ -817,5 +781,7 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Button StartThread;
+        private System.Windows.Forms.Button btnConnect;
     }
 }

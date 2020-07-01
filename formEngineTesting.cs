@@ -15,30 +15,39 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Timers;
-
+using System.Net.Sockets;
+using System.Net;
 
 namespace UIDesign
-{    
+{
     public partial class formEngineTesting : Form
     {
-        int i;
+        //Class to be used in all function.
         Stopwatch sw1 = new Stopwatch();
         System.Timers.Timer Timer1;
         System.Timers.Timer Timer2;
         DBConnect dbc = new DBConnect();
-        connectionProtocol connectionProtocol = new connectionProtocol();
         TexcelCommand texcelCommand;
         functionASCII fncascii;
-        string elapsed_time;
-        //Declare all the IP
-        string IPTexcel;
-        string PortTexcel;
+        Thread threadReceiveData;
+        TcpClient client;
+        NetworkStream stream;
+
+        //Declare all the global variables
+        public string IPTexcel;
+        public string PortTexcel;
         string IPOilCoolant;
         string PortOilCoolant;
         string IPWaterCoolant;
         string PortWaterCoolant;
         string IPDAQ;
         string PortDAQ;
+        private string _checkChanges;
+        public string textToSend;
+        public string cmdFinal;
+        public string textReceived;
+        int i;
+        string elapsed_time;
 
         public formEngineTesting(ucChooseProject ucCP, string projectID)
         {
@@ -79,9 +88,7 @@ namespace UIDesign
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
                 hour = (int)dataGridView1.Rows[i].Cells["hour"].Value;
-                minute = (int)dataGridView1.Rows[i].Cells["minute"].Value;
-                second = (int)dataGridView1.Rows[i].Cells["second"].Value;
-                int _second = (hour * 3600) + (minute * 60) + second;
+             2q        int _second = (hour * 3600) + (minute * 60) + second;
                 dataGridView1.Rows[i].Cells["second"].Value = _second;
             }
 
@@ -131,6 +138,7 @@ namespace UIDesign
 
         private void formEngineTesting_Load(object sender, EventArgs e)
         {
+
         }
 
         //Sending and logging trigger
@@ -141,37 +149,38 @@ namespace UIDesign
             string rpm = dataGridView1.Rows[i].Cells["RPM"].Value.ToString();
             string duration = dataGridView1.Rows[i].Cells["duration"].Value.ToString();
             string ramp_time = dataGridView1.Rows[i].Cells["ramp_time"].Value.ToString();
-
             //send those parameters to texcel command
             texcelCommand = new TexcelCommand(torque, rpm, duration, ramp_time);
             string _command = texcelCommand.TorqueThrottle();
-
-            //Printing the commmand to rtblogging
-            rtbLogging.AppendText(String.Format("[{1}] : {0} \r\n", _command, elapsed_time));
-            rtbLogging.ScrollToCaret();
             i++;
-
-            //Sending the command to functionascii
+            //Build the final command
             fncascii = new functionASCII(_command);
-
-            //Printing the final command
-            string cmdFinal = fncascii.commandbuilder();
-            rtbLogging.AppendText(String.Format("F: {0}", cmdFinal));
-
+            cmdFinal = fncascii.commandbuilder();
             //Sending command through IP
-            string receivePacket = connectionProtocol.SendCommandTexcelSocket(cmdFinal, IPTexcel, PortTexcel); // change this method from SendCommandTexcel to SendCommandTexcelSocket.
-            richTextBox1.AppendText(String.Format("[{1}]Respond: {0}\r\n", receivePacket, elapsed_time));
-
+            try
+            {
+                byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
+                //send the data through the socket
+                stream.Write(bytesToSend, 0, bytesToSend.Length);
+                rtbLogging.AppendText(String.Format("[{1}]Sent: {0}", cmdFinal, elapsed_time));
+                rtbLogging.ScrollToCaret();
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText(ex.Message);
+                rtbLogging.ScrollToCaret();
+            }
+            stream.Flush();
             //Stop sending command
             if (i == dataGridView1.Rows.Count)
             {
                 Timer1.Enabled = false;
-                //sw1.Stop();
                 rtbLogging.AppendText("Your command is done\r\n");
+                rtbLogging.ScrollToCaret();
             }
         }
 
-        //Timer elapsed trigger
+        //Time elapsed trigger
         private void stopwatch_command (object sender, EventArgs e)
         {
             elapsed_time = DateTime.Now.ToString("hh:mm:ss.fff tt");
@@ -190,7 +199,6 @@ namespace UIDesign
             {
                 //Reseting the index if STOP button is clicked
                 i = 0;
-
                 //Declaring all the timer and stopwatch
                 Timer1 = new System.Timers.Timer(5000);
                 Timer1.Elapsed += new ElapsedEventHandler(commandTimer);
@@ -198,16 +206,13 @@ namespace UIDesign
                 Timer2 = new System.Timers.Timer(1);
                 Timer2.Elapsed += new ElapsedEventHandler(stopwatch_command);
                 Timer2.AutoReset = true;
-
                 //Starting the timer and stopwatch
                 sw1.Start();
                 Timer2.Enabled = true;
                 Timer1.Enabled = true;
-
                 //Synchronize the timer with the textbox
                 Timer1.SynchronizingObject = this;
                 Timer2.SynchronizingObject = this;
-
                 //Get rpm and torque value from texcel
                 requestDataTexcel();
             }
@@ -225,73 +230,31 @@ namespace UIDesign
                 sw1.Stop();            
         }
 
-        //Menganti REDline
+        //Change the red line REDline. Better put in on the settings menu
         private void aGauge1_ValueInRangeChanged(object sender, ValueInRangeChangedEventArgs e)
         {
-           
 
         }
 
-        private void trackBar1_Scroll(object sender, EventArgs e)
-        {
-            //float a = trackBar1.Value;
-            //a = a / 100;
-            //aGauge1.Value = sw1.ElapsedMilliseconds;
-            //textBox1.Text = sw1.ElapsedMilliseconds.ToString();
-        }
-
-        private void trackBar2_Scroll(object sender, EventArgs e)
-        {
-            aGauge2.Value = trackBar2.Value;
-            textBox2.Text = trackBar2.Value.ToString();
-        }
-
-        public void trackBar3_Scroll (object sender, EventArgs e)
-        {
-            aGauge3.Value = trackBar3.Value;
-            textBox6.Text = trackBar3.Value.ToString();
-        }
-        public void trackBar4_Scroll(object sender, EventArgs e)
-        {
-            aGauge4.Value = trackBar4.Value;
-            textBox7.Text = trackBar4.Value.ToString();
-        }
-
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
+        //Change the texcel to host control mode
         private void btnMode_Click(object sender, EventArgs e)
         {
+            // Start the thread to listen
+            threadReceiveData = new Thread(new ThreadStart(startReceiving));
+            threadReceiveData.IsBackground = true;
+            threadReceiveData.Start();
+
+            //Building the command
             texcelCommand = new TexcelCommand(null,null,null, null);
             string tohost = texcelCommand.HostControl();           
-            //Sending the command to functionascii
             fncascii = new functionASCII(tohost);
-
-            //Printing the final command
             string cmdFinal = fncascii.commandbuilder();
-            rtbLogging.AppendText(String.Format("F: {0}", cmdFinal));
-
+            rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal));
             //Sending command through IP
-            var packet = connectionProtocol.SendHostControlSocket(cmdFinal, IPTexcel, PortTexcel);
-            string sentPacket = packet.Item1;
-            string receivedPacket = packet.Item2;
-            richTextBox1.AppendText(String.Format("[{1}]Sent: {0} \r\n [{1}]Received: {2}\r\n", sentPacket, DateTime.Now.ToString("hh:mm:ss.fff tt"), receivedPacket));
-            if (receivedPacket == "R19,1,E,\r")
-            {
-                //toggleSwitch1_CheckedChanged(sender, e);
-                toggleSwitch1.Checked = true;
-            }
-            else if (receivedPacket == "R19,2,E,\r")
-            {
-                toggleSwitch1.Checked = false;
-            }
-            else
-            {
-                MessageBox.Show("Texcel not connected! Check IP or contact admin.");
-            }
+            byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
+            //send the data through the socket
+            stream.Write(bytesToSend, 0, bytesToSend.Length);
+            stream.Flush();
         }
 
         private void requestDataTexcel()
@@ -300,9 +263,91 @@ namespace UIDesign
             string requestRpmTorque = texcelCommand.TorqueRpmRequest();
             fncascii = new functionASCII(requestRpmTorque);
             string cmdFinal = fncascii.commandbuilder();
-            rtbLogging.AppendText(String.Format("cmd: {0}", cmdFinal));
-            string receivePacket = connectionProtocol.SendCommandTexcelSocket(cmdFinal, IPTexcel, PortTexcel);
-            richTextBox1.AppendText(String.Format("[{1}]Respond: {0} \r\n", receivePacket, elapsed_time));
+            rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal));
+            //Sending command through IP
+            byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
+            //send the data through the socket
+            stream.Write(bytesToSend, 0, bytesToSend.Length);
+            stream.Flush();
+        }
+
+
+        //Button to start the thread for receiving data.
+        public void StartThreading_Click(object sender, EventArgs e)
+        {
+        }
+
+        //Recieving in backgroud method.
+        public void startReceiving()
+        {
+            //Data buffer
+            byte[] buffer = new byte[1024];
+            //Create integer to hold how large the data received is
+            Int32 bytesReceived;
+            //Loop to continously reading data while the client is connected
+            while (client.Connected)//client.Connected
+            {
+                try
+                {
+                    //receive the response from the remote device
+                    bytesReceived = stream.Read(buffer, 0, buffer.Length);
+                    if (bytesReceived > 0)
+                    {
+                        textReceived = Encoding.ASCII.GetString(buffer, 0, bytesReceived);
+                    }
+
+                    //Check the received text and do suitable command
+                    if (textReceived == "R19,1,E,\r") //Host control successfully established
+                    {
+                        toggleSwitch1.Invoke((Action)delegate
+                        {
+                            toggleSwitch1.Checked = true;
+                        });
+                        richTextBox1.Invoke((Action)delegate
+                        {
+                            richTextBox1.AppendText(string.Format("[{1}]Respond: {0}", textReceived, elapsed_time));
+                        }
+                        );
+                    }
+                    else if (textReceived == "R19,2,E,\r")//Host control not success
+                    {
+                        toggleSwitch1.Invoke((Action)delegate
+                        {
+                            toggleSwitch1.Checked = false;
+                            MessageBox.Show("Host control failed. \r\n Check the command.");
+                        });
+                    }
+                    else
+                    richTextBox1.Invoke((Action)delegate
+                    {
+                        richTextBox1.AppendText(string.Format("[{1}]Respond: {0}", textReceived, elapsed_time));
+                    }
+                    );
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+                stream.Flush();
+            }         
+        }
+
+        //Establish the connection to the server from client.
+        public void btnConnect_Click(object sender, EventArgs e)
+        {
+            try
+            {                
+                IPAddress IPadd = IPAddress.Parse(IPTexcel);
+                client = new TcpClient();
+                client.Connect(IPTexcel, int.Parse(PortTexcel));
+                stream = client.GetStream();
+                rtbLogging.AppendText("Conected to server.....\r");
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText(ex.Message + "\r\n");
+            }
+
         }
     }
 }

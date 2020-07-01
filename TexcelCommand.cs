@@ -137,7 +137,7 @@ namespace UIDesign
         //Request for repeated data packets.
         public string TorqueRpmRequest()
         {
-            return command = "P2,";
+            return command = "P2,0,1,";
         }
     }
 }
