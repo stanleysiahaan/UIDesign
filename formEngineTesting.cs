@@ -42,12 +42,15 @@ namespace UIDesign
         string PortWaterCoolant;
         string IPDAQ;
         string PortDAQ;
-        private string _checkChanges;
         public string textToSend;
         public string cmdFinal;
         public string textReceived;
         int i;
         string elapsed_time;
+        string actualCondition;
+        double RPM;
+        double Torque;
+        
 
         public formEngineTesting(ucChooseProject ucCP, string projectID)
         {
@@ -88,7 +91,9 @@ namespace UIDesign
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
                 hour = (int)dataGridView1.Rows[i].Cells["hour"].Value;
-             2q        int _second = (hour * 3600) + (minute * 60) + second;
+                minute = (int)dataGridView1.Rows[i].Cells["minute"].Value;
+                second = (int)dataGridView1.Rows[i].Cells["second"].Value;
+                int _second = (hour * 3600) + (minute * 60) + second;
                 dataGridView1.Rows[i].Cells["second"].Value = _second;
             }
 
@@ -185,11 +190,6 @@ namespace UIDesign
         {
             elapsed_time = DateTime.Now.ToString("hh:mm:ss.fff tt");
             textBox8.Text = elapsed_time;
-            //Creating random float number for tachometer
-            var rand = new Random();
-            double a = rand.NextDouble() * (5 - 4.8) + 4.8;
-            aGauge1.Value = (float)a;
-            textBox1.Text = a.ToString("###,###.00");
         }
 
         //Start button trigger
@@ -285,7 +285,7 @@ namespace UIDesign
             //Create integer to hold how large the data received is
             Int32 bytesReceived;
             //Loop to continously reading data while the client is connected
-            while (client.Connected)//client.Connected
+            while (client.Connected)
             {
                 try
                 {
@@ -295,7 +295,6 @@ namespace UIDesign
                     {
                         textReceived = Encoding.ASCII.GetString(buffer, 0, bytesReceived);
                     }
-
                     //Check the received text and do suitable command
                     if (textReceived == "R19,1,E,\r") //Host control successfully established
                     {
@@ -306,6 +305,7 @@ namespace UIDesign
                         richTextBox1.Invoke((Action)delegate
                         {
                             richTextBox1.AppendText(string.Format("[{1}]Respond: {0}", textReceived, elapsed_time));
+                            richTextBox1.ScrollToCaret();
                         }
                         );
                     }
@@ -317,10 +317,44 @@ namespace UIDesign
                             MessageBox.Show("Host control failed. \r\n Check the command.");
                         });
                     }
+                    else if (textReceived.IndexOf("D2")>-1)
+                    {
+                        actualCondition = textReceived;
+                        string[] _actualCondition = actualCondition.Split(',');
+                        RPM = double.Parse(_actualCondition[1]);
+                        Torque = double.Parse(_actualCondition[2]);
+                        aGauge1.Invoke((Action)delegate
+                        {
+                            aGauge1.Value = (float)RPM/1000;
+                        });
+                        textBox1.Invoke((Action)delegate
+                        {
+                            textBox1.Text = RPM.ToString();
+                        });
+                        richTextBox1.Invoke((Action)delegate
+                        {
+                            richTextBox1.AppendText(string.Format("[{1}]Respond: {0}", textReceived, elapsed_time));
+                            richTextBox1.ScrollToCaret();
+                        });                        
+                        aGauge2.Invoke((Action)delegate
+                        {
+                            aGauge2.Value = (float)Torque;
+                        });
+                        textBox2.Invoke((Action)delegate
+                        {
+                            textBox2.Text = Torque.ToString();
+                        });
+                        richTextBox1.Invoke((Action)delegate
+                        {
+                            richTextBox1.AppendText(string.Format("[{1}]Respond: {0}", textReceived, elapsed_time));
+                            richTextBox1.ScrollToCaret();
+                        });
+                    }
                     else
                     richTextBox1.Invoke((Action)delegate
                     {
                         richTextBox1.AppendText(string.Format("[{1}]Respond: {0}", textReceived, elapsed_time));
+                        richTextBox1.ScrollToCaret();
                     }
                     );
                 }

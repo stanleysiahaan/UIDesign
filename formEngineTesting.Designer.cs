@@ -205,10 +205,15 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(1402, 364);
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox2.Enabled = false;
+            this.textBox2.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox2.Location = new System.Drawing.Point(1401, 335);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(134, 20);
+            this.textBox2.Size = new System.Drawing.Size(134, 22);
             this.textBox2.TabIndex = 6;
+            this.textBox2.TabStop = false;
+            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // aGauge2
             // 
@@ -225,10 +230,10 @@
             aGaugeLabel3.Position = new System.Drawing.Point(170, 125);
             aGaugeLabel3.Text = "TORQUE";
             aGaugeLabel4.Color = System.Drawing.SystemColors.WindowText;
-            aGaugeLabel4.Font = new System.Drawing.Font("Arial", 27.75F, System.Drawing.FontStyle.Bold);
+            aGaugeLabel4.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold);
             aGaugeLabel4.Name = "GaugeLabel2";
-            aGaugeLabel4.Position = new System.Drawing.Point(0, 0);
-            aGaugeLabel4.Text = null;
+            aGaugeLabel4.Position = new System.Drawing.Point(230, 280);
+            aGaugeLabel4.Text = "kNm";
             this.aGauge2.GaugeLabels.Add(aGaugeLabel3);
             this.aGauge2.GaugeLabels.Add(aGaugeLabel4);
             this.aGauge2.Location = new System.Drawing.Point(1209, 12);
@@ -584,10 +589,14 @@
             // textBox1
             // 
             this.textBox1.BackColor = System.Drawing.SystemColors.Window;
-            this.textBox1.Location = new System.Drawing.Point(380, 364);
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Enabled = false;
+            this.textBox1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Location = new System.Drawing.Point(384, 335);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(134, 20);
+            this.textBox1.Size = new System.Drawing.Size(134, 22);
             this.textBox1.TabIndex = 3;
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // flowLayoutPanel1
             // 
