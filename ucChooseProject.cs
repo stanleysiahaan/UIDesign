@@ -96,7 +96,6 @@ namespace UIDesign
                 ucProjectDetail ucProjectDetail = new ucProjectDetail(this, projectID);
                 this.Hide();
                 this.Parent.Controls.Add(ucProjectDetail);
-                // lalslalsdlsaldlsald
             }
         }
 

@@ -69,7 +69,6 @@
             this.dgPositions.RowTemplate.Height = 24;
             this.dgPositions.Size = new System.Drawing.Size(1707, 880);
             this.dgPositions.TabIndex = 0;
-            this.dgPositions.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEnter);
             this.dgPositions.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dataGridView1_RowPostPaint);
             // 
             // Step

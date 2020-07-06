@@ -17,6 +17,7 @@ using System.Threading;
 using System.Timers;
 using System.Net.Sockets;
 using System.Net;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 namespace UIDesign
 {
@@ -24,6 +25,7 @@ namespace UIDesign
     {
         //Class to be used in all function.
         Stopwatch sw1 = new Stopwatch();
+        Stopwatch sw2 = new Stopwatch();
         System.Timers.Timer Timer1;
         System.Timers.Timer Timer2;
         DBConnect dbc = new DBConnect();
@@ -32,6 +34,7 @@ namespace UIDesign
         Thread threadReceiveData;
         TcpClient client;
         NetworkStream stream;
+        TimeSpan timeSpan;
 
         //Declare all the global variables
         public string IPTexcel;
@@ -50,7 +53,9 @@ namespace UIDesign
         string actualCondition;
         double RPM;
         double Torque;
-        
+        string duration;
+
+
 
         public formEngineTesting(ucChooseProject ucCP, string projectID)
         {
@@ -139,6 +144,14 @@ namespace UIDesign
             da.Fill(dt4);
             IPWaterCoolant = dt4.Rows[0][0].ToString();
             PortWaterCoolant = dt4.Rows[0][1].ToString();
+
+            //Declaring all the timer and stopwatch
+            Timer1 = new System.Timers.Timer();
+            Timer1.Elapsed += new ElapsedEventHandler(commandTimer);
+            Timer1.AutoReset = true;
+            Timer2 = new System.Timers.Timer(1);
+            Timer2.Elapsed += new ElapsedEventHandler(stopwatch_command);
+            Timer2.AutoReset = true;
         }
 
         private void formEngineTesting_Load(object sender, EventArgs e)
@@ -152,11 +165,13 @@ namespace UIDesign
             //obtaining torque, rpm and duration value
             string torque = dataGridView1.Rows[i].Cells["Torque"].Value.ToString();
             string rpm = dataGridView1.Rows[i].Cells["RPM"].Value.ToString();
-            string duration = dataGridView1.Rows[i].Cells["duration"].Value.ToString();
+            duration = dataGridView1.Rows[i].Cells["duration"].Value.ToString();
             string ramp_time = dataGridView1.Rows[i].Cells["ramp_time"].Value.ToString();
             //send those parameters to texcel command
             texcelCommand = new TexcelCommand(torque, rpm, duration, ramp_time);
             string _command = texcelCommand.TorqueThrottle();
+            //Showing stage in textbox3
+            textBox4.Text = (i+1).ToString();
             i++;
             //Build the final command
             fncascii = new functionASCII(_command);
@@ -183,13 +198,18 @@ namespace UIDesign
                 rtbLogging.AppendText("Your command is done\r\n");
                 rtbLogging.ScrollToCaret();
             }
+            Timer1.Stop();
+            Timer1.Interval = int.Parse(duration) * 1000;
+            Timer1.Start();
         }
 
         //Time elapsed trigger
         private void stopwatch_command (object sender, EventArgs e)
-        {
-            elapsed_time = DateTime.Now.ToString("hh:mm:ss.fff tt");
-            textBox8.Text = elapsed_time;
+        {       
+            textBox8.Invoke((Action)delegate
+            {
+                textBox8.Text = sw1.Elapsed.ToString("hh\\:mm\\:ss\\.ff");
+            });
         }
 
         //Start button trigger
@@ -198,21 +218,17 @@ namespace UIDesign
             if (toggleSwitch1.Checked == true)
             {
                 //Reseting the index if STOP button is clicked
-                i = 0;
-                //Declaring all the timer and stopwatch
-                Timer1 = new System.Timers.Timer(5000);
-                Timer1.Elapsed += new ElapsedEventHandler(commandTimer);
-                Timer1.AutoReset = true;
-                Timer2 = new System.Timers.Timer(1);
-                Timer2.Elapsed += new ElapsedEventHandler(stopwatch_command);
-                Timer2.AutoReset = true;
-                //Starting the timer and stopwatch
-                sw1.Start();
-                Timer2.Enabled = true;
+                i = 1;
+                //Immidiately send the first command
+                sendFirstCommand();
+                //Starting the timer
+                Timer2.Enabled = true;                
+                Timer1.Interval = int.Parse(duration)*1000;
                 Timer1.Enabled = true;
-                //Synchronize the timer with the textbox
+                //Starting the stopwatch
+                sw1.Start();
+                //Synchronize the timer object with the main thread
                 Timer1.SynchronizingObject = this;
-                Timer2.SynchronizingObject = this;
                 //Get rpm and torque value from texcel
                 requestDataTexcel();
             }
@@ -228,6 +244,39 @@ namespace UIDesign
                 Timer1.Stop();
                 Timer2.Stop();
                 sw1.Stop();            
+        }
+
+        private void sendFirstCommand()
+        {
+            //obtaining torque, rpm and duration value
+            string torque = dataGridView1.Rows[0].Cells["Torque"].Value.ToString();
+            string rpm = dataGridView1.Rows[0].Cells["RPM"].Value.ToString();
+            duration = dataGridView1.Rows[0].Cells["duration"].Value.ToString();
+            string ramp_time = dataGridView1.Rows[0].Cells["ramp_time"].Value.ToString();
+            //send those parameters to texcel command
+            texcelCommand = new TexcelCommand(torque, rpm, duration, ramp_time);
+            string _command = texcelCommand.TorqueThrottle();
+            //Showing stage in textbox3
+            textBox4.Text = "1";
+            //Build the final command
+            fncascii = new functionASCII(_command);
+            cmdFinal = fncascii.commandbuilder();
+            //Sending command through IP
+            try
+            {
+                byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
+                //send the data through the socket
+                stream.Write(bytesToSend, 0, bytesToSend.Length);
+                rtbLogging.AppendText(String.Format("[{1}]Sent: {0}", cmdFinal, elapsed_time));
+                rtbLogging.ScrollToCaret();
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText(ex.Message);
+                rtbLogging.ScrollToCaret();
+            }
+            stream.Flush();
+
         }
 
         //Change the red line REDline. Better put in on the settings menu
