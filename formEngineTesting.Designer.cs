@@ -74,8 +74,9 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dgvDemand = new System.Windows.Forms.DataGridView();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.dgvResult = new System.Windows.Forms.DataGridView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -83,7 +84,9 @@
             this.panel3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDemand)).BeginInit();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).BeginInit();
             this.SuspendLayout();
             // 
             // btnStart
@@ -654,7 +657,7 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.dataGridView1);
+            this.tabPage3.Controls.Add(this.dgvDemand);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -663,24 +666,25 @@
             this.tabPage3.Text = "Demand List";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // dataGridView1
+            // dgvDemand
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToResizeColumns = false;
-            this.dataGridView1.AllowUserToResizeRows = false;
-            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 3);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.Size = new System.Drawing.Size(1588, 611);
-            this.dataGridView1.TabIndex = 0;
+            this.dgvDemand.AllowUserToAddRows = false;
+            this.dgvDemand.AllowUserToDeleteRows = false;
+            this.dgvDemand.AllowUserToResizeColumns = false;
+            this.dgvDemand.AllowUserToResizeRows = false;
+            this.dgvDemand.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvDemand.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
+            this.dgvDemand.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDemand.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvDemand.Location = new System.Drawing.Point(3, 3);
+            this.dgvDemand.Name = "dgvDemand";
+            this.dgvDemand.RowHeadersVisible = false;
+            this.dgvDemand.Size = new System.Drawing.Size(1588, 611);
+            this.dgvDemand.TabIndex = 0;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.dgvResult);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.tabPage1.Name = "tabPage1";
@@ -689,6 +693,15 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Table";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // dgvResult
+            // 
+            this.dgvResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvResult.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvResult.Location = new System.Drawing.Point(3, 3);
+            this.dgvResult.Name = "dgvResult";
+            this.dgvResult.Size = new System.Drawing.Size(1588, 611);
+            this.dgvResult.TabIndex = 0;
             // 
             // tabPage2
             // 
@@ -744,7 +757,9 @@
             this.panel3.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDemand)).EndInit();
+            this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -788,9 +803,10 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvDemand;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Button StartThread;
         private System.Windows.Forms.Button btnConnect;
+        private System.Windows.Forms.DataGridView dgvResult;
     }
 }

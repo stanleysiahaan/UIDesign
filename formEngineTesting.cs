@@ -18,6 +18,7 @@ using System.Timers;
 using System.Net.Sockets;
 using System.Net;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Xml.Serialization;
 
 namespace UIDesign
 {
@@ -34,7 +35,6 @@ namespace UIDesign
         Thread threadReceiveData;
         TcpClient client;
         NetworkStream stream;
-        TimeSpan timeSpan;
 
         //Declare all the global variables
         public string IPTexcel;
@@ -51,11 +51,11 @@ namespace UIDesign
         int i;
         string elapsed_time;
         string actualCondition;
-        double RPM;
-        double Torque;
+        double _RPM;
+        double _Torque;
         string duration;
-
-
+        string data_time_stamp;
+        string _projectID { get; set; }
 
         public formEngineTesting(ucChooseProject ucCP, string projectID)
         {
@@ -72,7 +72,9 @@ namespace UIDesign
             object methodID = cmd.ExecuteScalar();
             rtbLogging.Text = 
                 "Your Project id is: " + projectID + "\r\n" + 
-                "Your method id is: " + methodID.ToString() +"\r\n";
+                "Your method id is: " + methodID.ToString() +"\r\n" +
+                "Your project id is: " + projectID +"\r\n";
+            _projectID = projectID;
 
             //Show the parameter on the datagridview
             string query = "SELECT * FROM method_data WHERE method_id LIKE '%" + methodID + "%'";
@@ -83,7 +85,7 @@ namespace UIDesign
                 dataset.Tables.Add(datatable);
                 MySqlDataAdapter dataadapter = new MySqlDataAdapter(query, dbc.connection);
                 dataadapter.Fill(datatable);
-                dataGridView1.DataSource = datatable;
+                dgvDemand.DataSource = datatable;
             }
             catch (MySqlException ex)
             {
@@ -93,21 +95,21 @@ namespace UIDesign
 
             //Converting hours:minute:second to duration(second)
             int hour; int minute; int second;
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            for (int i = 0; i < dgvDemand.Rows.Count; i++)
             {
-                hour = (int)dataGridView1.Rows[i].Cells["hour"].Value;
-                minute = (int)dataGridView1.Rows[i].Cells["minute"].Value;
-                second = (int)dataGridView1.Rows[i].Cells["second"].Value;
+                hour = (int)dgvDemand.Rows[i].Cells["hour"].Value;
+                minute = (int)dgvDemand.Rows[i].Cells["minute"].Value;
+                second = (int)dgvDemand.Rows[i].Cells["second"].Value;
                 int _second = (hour * 3600) + (minute * 60) + second;
-                dataGridView1.Rows[i].Cells["second"].Value = _second;
+                dgvDemand.Rows[i].Cells["second"].Value = _second;
             }
 
             //Deleting hour and minute coloumn
-            dataGridView1.Columns["id"].Visible = false;
-            dataGridView1.Columns["method_id"].Visible = false;
-            dataGridView1.Columns["hour"].Visible = false;
-            dataGridView1.Columns["minute"].Visible = false;
-            dataGridView1.Columns["second"].Name = "duration";
+            dgvDemand.Columns["id"].Visible = false;
+            dgvDemand.Columns["method_id"].Visible = false;
+            dgvDemand.Columns["hour"].Visible = false;
+            dgvDemand.Columns["minute"].Visible = false;
+            dgvDemand.Columns["second"].Name = "duration";
 
             //OBTAINING ALL THE DEVICES' IP
             //declaring all parameter
@@ -163,10 +165,10 @@ namespace UIDesign
         private void commandTimer(object sender, EventArgs e)
         {
             //obtaining torque, rpm and duration value
-            string torque = dataGridView1.Rows[i].Cells["Torque"].Value.ToString();
-            string rpm = dataGridView1.Rows[i].Cells["RPM"].Value.ToString();
-            duration = dataGridView1.Rows[i].Cells["duration"].Value.ToString();
-            string ramp_time = dataGridView1.Rows[i].Cells["ramp_time"].Value.ToString();
+            string torque = dgvDemand.Rows[i].Cells["Torque"].Value.ToString();
+            string rpm = dgvDemand.Rows[i].Cells["RPM"].Value.ToString();
+            duration = dgvDemand.Rows[i].Cells["duration"].Value.ToString();
+            string ramp_time = dgvDemand.Rows[i].Cells["ramp_time"].Value.ToString();
             //send those parameters to texcel command
             texcelCommand = new TexcelCommand(torque, rpm, duration, ramp_time);
             string _command = texcelCommand.TorqueThrottle();
@@ -192,7 +194,7 @@ namespace UIDesign
             }
             stream.Flush();
             //Stop sending command
-            if (i == dataGridView1.Rows.Count)
+            if (i == dgvDemand.Rows.Count)
             {
                 Timer1.Enabled = false;
                 rtbLogging.AppendText("Your command is done\r\n");
@@ -249,10 +251,10 @@ namespace UIDesign
         private void sendFirstCommand()
         {
             //obtaining torque, rpm and duration value
-            string torque = dataGridView1.Rows[0].Cells["Torque"].Value.ToString();
-            string rpm = dataGridView1.Rows[0].Cells["RPM"].Value.ToString();
-            duration = dataGridView1.Rows[0].Cells["duration"].Value.ToString();
-            string ramp_time = dataGridView1.Rows[0].Cells["ramp_time"].Value.ToString();
+            string torque = dgvDemand.Rows[0].Cells["Torque"].Value.ToString();
+            string rpm = dgvDemand.Rows[0].Cells["RPM"].Value.ToString();
+            duration = dgvDemand.Rows[0].Cells["duration"].Value.ToString();
+            string ramp_time = dgvDemand.Rows[0].Cells["ramp_time"].Value.ToString();
             //send those parameters to texcel command
             texcelCommand = new TexcelCommand(torque, rpm, duration, ramp_time);
             string _command = texcelCommand.TorqueThrottle();
@@ -370,34 +372,37 @@ namespace UIDesign
                     {
                         actualCondition = textReceived;
                         string[] _actualCondition = actualCondition.Split(',');
-                        RPM = double.Parse(_actualCondition[1]);
-                        Torque = double.Parse(_actualCondition[2]);
+                        _RPM = double.Parse(_actualCondition[1]);
+                        _Torque = double.Parse(_actualCondition[2]);
                         aGauge1.Invoke((Action)delegate
                         {
-                            aGauge1.Value = (float)RPM/1000;
+                            aGauge1.Value = (float)_RPM/1000;
                         });
                         textBox1.Invoke((Action)delegate
                         {
-                            textBox1.Text = RPM.ToString();
+                            textBox1.Text = _RPM.ToString();
                         });
                         richTextBox1.Invoke((Action)delegate
                         {
-                            richTextBox1.AppendText(string.Format("[{1}]Respond: {0}", textReceived, elapsed_time));
+                            data_time_stamp = DateTime.Now.ToString("yyyy-MM-dd H:mm:ss");
+                            richTextBox1.AppendText(string.Format("[{1}]Respond: {0}", textReceived, data_time_stamp));
                             richTextBox1.ScrollToCaret();
                         });                        
                         aGauge2.Invoke((Action)delegate
                         {
-                            aGauge2.Value = (float)Torque;
+                            aGauge2.Value = (float)_Torque;
                         });
                         textBox2.Invoke((Action)delegate
                         {
-                            textBox2.Text = Torque.ToString();
+                            textBox2.Text = _Torque.ToString();
                         });
                         richTextBox1.Invoke((Action)delegate
                         {
                             richTextBox1.AppendText(string.Format("[{1}]Respond: {0}", textReceived, elapsed_time));
                             richTextBox1.ScrollToCaret();
                         });
+                        //Sending the data to the database
+                        sendResponseToDatabase(_RPM, _Torque);
                     }
                     else
                     richTextBox1.Invoke((Action)delegate
@@ -419,7 +424,7 @@ namespace UIDesign
         public void btnConnect_Click(object sender, EventArgs e)
         {
             try
-            {                
+            {
                 IPAddress IPadd = IPAddress.Parse(IPTexcel);
                 client = new TcpClient();
                 client.Connect(IPTexcel, int.Parse(PortTexcel));
@@ -430,6 +435,31 @@ namespace UIDesign
             {
                 rtbLogging.AppendText(ex.Message + "\r\n");
             }
+        }
+
+        public void sendResponseToDatabase(double actualRPM, double actualTorque)
+        {
+            try
+            {
+                dbc.Initialize();
+                dbc.OpenConnection();
+
+                MySqlCommand cmd = new MySqlCommand();
+                cmd = dbc.connection.CreateCommand();
+
+                data_time_stamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@project_id", _projectID);
+                cmd.Parameters.AddWithValue("@time_stamp", data_time_stamp);
+                cmd.Parameters.AddWithValue("@speed", actualRPM);
+                cmd.Parameters.AddWithValue("@torque", actualTorque);
+                cmd.CommandText = "INSERT INTO testing_result(project_id, time_stamp, speed, torque)VALUES (@project_id, @time_stamp, @speed, @torque)";
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }     
 
         }
     }
