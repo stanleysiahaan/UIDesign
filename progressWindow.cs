@@ -30,13 +30,18 @@ namespace UIDesign
 
         public void refreshProgress(object sender, EventArgs e)
         {
-            label2.Text = String.Format("Inserting {0} of {1}", _progress, _max);
+            label2.Text = String.Format("Fetching {0} from {1}", _progress, _max);
             progressBar1.Value = _progress;            
             if (progressBar1.Value == _max - 1)
             {
                 this.Close();
                 timer1.Enabled = false;
             }
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

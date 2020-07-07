@@ -37,9 +37,7 @@ namespace UIDesign
         //    {
         //        SendKeys.Send("{TAB}");
         //    }
-        //}
-
-        
+        //}        
 
         private async void btnSubmitMethod_Click(object sender, EventArgs e)
         {
@@ -58,10 +56,11 @@ namespace UIDesign
             cmd.Parameters.AddWithValue("@name", methodName);
             cmd.CommandText = "INSERT INTO method_name(name)VALUES(@name)";
             cmd.ExecuteNonQuery();
-            await Task.Delay(1500);
+            await Task.Delay(1000);
             int max = dgPositions.RowCount;
             int i = 0;
             int step = 0;
+            //Showing progress bar.
             progressW = new progressWindow(this, max);
             progressW.Show();
             //Search for method name id
