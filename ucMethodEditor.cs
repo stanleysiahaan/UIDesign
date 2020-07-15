@@ -55,8 +55,7 @@ namespace UIDesign
             string methodName = tbMethodName.Text;
             cmd.Parameters.AddWithValue("@name", methodName);
             cmd.CommandText = "INSERT INTO method_name(name)VALUES(@name)";
-            cmd.ExecuteNonQuery();
-            await Task.Delay(1000);
+            cmd.ExecuteNonQuery();            
             int max = dgPositions.RowCount;
             int i = 0;
             int step = 0;
@@ -64,6 +63,7 @@ namespace UIDesign
             progressW = new progressWindow(this, max);
             progressW.Show();
             //Search for method name id
+            await Task.Delay(1000);
             cmd.CommandText = "SELECT id FROM method_name WHERE name LIKE '%" + tbMethodName.Text + "%'";
             methodIdObject = cmd.ExecuteScalar();
             textBox1.Text = methodIdObject.ToString();

@@ -21,18 +21,14 @@ namespace UIDesign
         public string gplug_Status;
 
         public string command { get; set; }
-        public TexcelCommand(string _torque, string _rpm, string _duration, string _ramp_time)
+        public TexcelCommand()
         {
-            torque = _torque;
-            rpm = _rpm;
-            duration = _duration;
-            ramp_time = _ramp_time;
         }
 
         //Set dynamometer and throttle demand
-        public string TorqueThrottle()
+        public string TorqueThrottle(string torque, string rpm, string duration, string ramp_time)
         {
-            return command = "C1,2," + torque + ","+ ramp_time + ",1," + rpm + ","+ramp_time+"," + duration + ",";
+            return command = "C1,1," + rpm + "," + ramp_time + ",2," + torque + "," + ramp_time + "," + duration + ",";
         }
 
         //Set dynamometer, throttle, inlet valve demands
@@ -54,7 +50,7 @@ namespace UIDesign
         }
 
         //Clear demand queue
-        public string ClearDemandQueue()
+        public string clearDemandQueue()
         {
             return command = "C5,";
         }
@@ -123,7 +119,7 @@ namespace UIDesign
         //Switch to manual control and inhibit operator
         public string ManualControl()
         {
-            return command = "C18,0.1,";
+            return command = "C18,5,";
         }
 
         //Switch to host control
@@ -139,5 +135,24 @@ namespace UIDesign
         {
             return command = "P2,0,1,";
         }
+
+        //Request for repeated data packets.
+        public string stopTorqueRpmRequest()
+        {
+            return command = "P2,0,0,";
+        }
+
+        //Turn off all Outstanding Data Request
+        public string clearDataRequest()
+        {
+            return command = "P0!\r";
+        }
+
+        public string getTexcelStatus()
+        {
+            return command = "P7,";
+        }
+
+
     }
 }

@@ -19,6 +19,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Xml.Serialization;
+using MySqlX.XDevAPI.Relational;
 
 namespace UIDesign
 {
@@ -29,12 +30,18 @@ namespace UIDesign
         Stopwatch sw2 = new Stopwatch();
         System.Timers.Timer Timer1;
         System.Timers.Timer Timer2;
+        //System.Threading.Timer Timer3;
         DBConnect dbc = new DBConnect();
-        TexcelCommand texcelCommand;
-        functionASCII fncascii;
-        Thread threadReceiveData;
+        TexcelCommand texcelCommand = new TexcelCommand();
+        functionASCII fncascii = new functionASCII();
         TcpClient client;
+        TcpClient clientPLC;
         NetworkStream stream;
+        MySqlDataAdapter dataAdapterResult;
+        DataTable dataTableResult;
+        Thread tableDisplayThread;
+        Thread threadReceiveData;
+        texcelRespondProcessor respondProcessor = new texcelRespondProcessor();
 
         //Declare all the global variables
         public string IPTexcel;
@@ -48,191 +55,289 @@ namespace UIDesign
         public string textToSend;
         public string cmdFinal;
         public string textReceived;
-        int i;
-        string elapsed_time;
+        int i = 0;
         string actualCondition;
         double _RPM;
         double _Torque;
         string duration;
+        string ramp_time;
         string data_time_stamp;
         string _projectID { get; set; }
+        int totalDemandDuration;
+        int totalRampDuration;
+        int totalDuration;
+        int progressBar1Second = 0;
+        int progressBar2Second = 0;
+        //Declare the flag
+        bool isTesting = false; //FlagforDisplaingDataonTable
+        //bool isReceive = false;
 
-        public formEngineTesting(ucChooseProject ucCP, string projectID)
+    static void SetDoubleBuffer(Control ctl, bool DoubleBuffered)
+    {
+        typeof(Control).InvokeMember("DoubleBuffered",
+            BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
+            null, ctl, new object[] { DoubleBuffered });
+    }
+
+    public formEngineTesting(ucChooseProject ucCP, string projectID)
+    {
+        InitializeComponent();
+
+        //Initializing the database
+        dbc.Initialize();
+        dbc.OpenConnection();
+
+        //Obtaining the method_id and show it on rtbLogging
+        MySqlCommand cmd = new MySqlCommand();
+        cmd = dbc.connection.CreateCommand();
+        cmd.CommandText = "SELECT method_id FROM project_data WHERE id LIKE '%" + projectID + "%'";
+        object methodID = cmd.ExecuteScalar();
+        rtbLogging.Text = 
+            "Your Project id is: " + projectID + "\r\n" + 
+            "Your method id is: " + methodID.ToString() +"\r\n" +
+            "Your project id is: " + projectID +"\r\n";
+        _projectID = projectID;
+
+        //Show the parameter on the datagridview
+        string query = "SELECT * FROM method_data WHERE method_id LIKE '%" + methodID + "%'";
+        try
         {
-            InitializeComponent();
-
-            //Initializing the database
-            dbc.Initialize();
-            dbc.OpenConnection();
-
-            //Obtaining the method_id and show it on rtbLogging
-            MySqlCommand cmd = new MySqlCommand();
-            cmd = dbc.connection.CreateCommand();
-            cmd.CommandText = "SELECT method_id FROM project_data WHERE id LIKE '%" + projectID + "%'";
-            object methodID = cmd.ExecuteScalar();
-            rtbLogging.Text = 
-                "Your Project id is: " + projectID + "\r\n" + 
-                "Your method id is: " + methodID.ToString() +"\r\n" +
-                "Your project id is: " + projectID +"\r\n";
-            _projectID = projectID;
-
-            //Show the parameter on the datagridview
-            string query = "SELECT * FROM method_data WHERE method_id LIKE '%" + methodID + "%'";
-            try
-            {
-                DataTable datatable = new DataTable();
-                DataSet dataset = new DataSet();
-                dataset.Tables.Add(datatable);
-                MySqlDataAdapter dataadapter = new MySqlDataAdapter(query, dbc.connection);
-                dataadapter.Fill(datatable);
-                dgvDemand.DataSource = datatable;
-            }
-            catch (MySqlException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            dbc.CloseConnection();
-
-            //Converting hours:minute:second to duration(second)
-            int hour; int minute; int second;
-            for (int i = 0; i < dgvDemand.Rows.Count; i++)
-            {
-                hour = (int)dgvDemand.Rows[i].Cells["hour"].Value;
-                minute = (int)dgvDemand.Rows[i].Cells["minute"].Value;
-                second = (int)dgvDemand.Rows[i].Cells["second"].Value;
-                int _second = (hour * 3600) + (minute * 60) + second;
-                dgvDemand.Rows[i].Cells["second"].Value = _second;
-            }
-
-            //Deleting hour and minute coloumn
-            dgvDemand.Columns["id"].Visible = false;
-            dgvDemand.Columns["method_id"].Visible = false;
-            dgvDemand.Columns["hour"].Visible = false;
-            dgvDemand.Columns["minute"].Visible = false;
-            dgvDemand.Columns["second"].Name = "duration";
-
-            //OBTAINING ALL THE DEVICES' IP
-            //declaring all parameter
-            MySqlDataAdapter da = new MySqlDataAdapter();
-            DataTable dt1 = new DataTable();
-            DataTable dt2 = new DataTable();
-            DataTable dt3 = new DataTable();
-            DataTable dt4 = new DataTable();
-            //inserting IP and PORT to DAQ textbox field            
-            string query1 = "SELECT IP, Port FROM ipaddress WHERE device LIKE 'DAQ'";
-            cmd = dbc.connection.CreateCommand();
-            cmd.CommandText = query1;
-            da.SelectCommand = cmd;
-            da.Fill(dt1);
-            IPDAQ = dt1.Rows[0][0].ToString();
-            PortDAQ = dt1.Rows[0][1].ToString();
-            //inserting IP and PORT to Gateway textbox field
-            string query2 = "SELECT IP, Port FROM ipaddress WHERE device LIKE 'GATEWAY'";
-            da.SelectCommand.CommandText = query2;
-            da.Fill(dt2);
-            IPTexcel = dt2.Rows[0][0].ToString();
-            rtbLogging.AppendText("IP TEXCEL" + IPTexcel + "\r\n");
-            PortTexcel = dt2.Rows[0][1].ToString();
-            rtbLogging.AppendText("PORT TEXCEL" + PortTexcel + "\r\n");
-            //inserting IP and PORT to Oil Coolant textbox field
-            string query3 = "SELECT IP, Port FROM ipaddress WHERE device LIKE 'MODBUS_OC'";
-            da.SelectCommand.CommandText = query3;
-            da.Fill(dt3);
-            IPOilCoolant = dt3.Rows[0][0].ToString();
-            PortOilCoolant = dt3.Rows[0][1].ToString();
-            //inserting IP and PORT to Water Coolant textbox field
-            string query4 = "SELECT IP, Port FROM ipaddress WHERE device LIKE 'MODBUS_WC'";
-            da.SelectCommand.CommandText = query4;
-            da.Fill(dt4);
-            IPWaterCoolant = dt4.Rows[0][0].ToString();
-            PortWaterCoolant = dt4.Rows[0][1].ToString();
-
-            //Declaring all the timer and stopwatch
-            Timer1 = new System.Timers.Timer();
-            Timer1.Elapsed += new ElapsedEventHandler(commandTimer);
-            Timer1.AutoReset = true;
-            Timer2 = new System.Timers.Timer(1);
-            Timer2.Elapsed += new ElapsedEventHandler(stopwatch_command);
-            Timer2.AutoReset = true;
+            DataTable datatable = new DataTable();
+            DataSet dataset = new DataSet();
+            dataset.Tables.Add(datatable);
+            MySqlDataAdapter dataadapter = new MySqlDataAdapter(query, dbc.connection);
+            dataadapter.Fill(datatable);
+            dgvDemand.DataSource = datatable;
         }
+        catch (MySqlException ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
+
+        //Converting hours:minute:second to duration(second)
+        int hour; int minute; int second;
+        for (int i = 0; i < dgvDemand.Rows.Count; i++)
+        {
+            hour = (int)dgvDemand.Rows[i].Cells["hour"].Value;
+            minute = (int)dgvDemand.Rows[i].Cells["minute"].Value;
+            second = (int)dgvDemand.Rows[i].Cells["second"].Value;
+            int _second = (hour * 3600) + (minute * 60) + second;
+            dgvDemand.Rows[i].Cells["second"].Value = _second;
+        }
+
+        //Deleting hour and minute coloumn
+        dgvDemand.Columns["id"].Visible = false;
+        dgvDemand.Columns["method_id"].Visible = false;
+        dgvDemand.Columns["hour"].Visible = false;
+        dgvDemand.Columns["minute"].Visible = false;
+        dgvDemand.Columns["second"].Name = "duration";
+        dgvDemand.ClearSelection(); 
+
+        //------------------------OBTAINING ALL THE DEVICES' IP--------------------//
+        //declaring all parameter
+        MySqlDataAdapter da = new MySqlDataAdapter();
+        DataTable dt1 = new DataTable();
+        DataTable dt2 = new DataTable();
+        DataTable dt3 = new DataTable();
+        DataTable dt4 = new DataTable();
+        //inserting IP and PORT to DAQ textbox field            
+        string query1 = "SELECT IP, Port FROM ipaddress WHERE device LIKE 'DAQ'";
+        cmd = dbc.connection.CreateCommand();
+        cmd.CommandText = query1;
+        da.SelectCommand = cmd;
+        da.Fill(dt1);
+        IPDAQ = dt1.Rows[0][0].ToString();
+        PortDAQ = dt1.Rows[0][1].ToString();
+        //inserting IP and PORT to Gateway textbox field
+        string query2 = "SELECT IP, Port FROM ipaddress WHERE device LIKE 'GATEWAY'";
+        da.SelectCommand.CommandText = query2;
+        da.Fill(dt2);
+        IPTexcel = dt2.Rows[0][0].ToString();
+        rtbLogging.AppendText("IP TEXCEL" + IPTexcel + "\r\n");
+        PortTexcel = dt2.Rows[0][1].ToString();
+        rtbLogging.AppendText("PORT TEXCEL" + PortTexcel + "\r\n");
+        //inserting IP and PORT to Oil Coolant textbox field
+        string query3 = "SELECT IP, Port FROM ipaddress WHERE device LIKE 'MODBUS_OC'";
+        da.SelectCommand.CommandText = query3;
+        da.Fill(dt3);
+        IPOilCoolant = dt3.Rows[0][0].ToString();
+        PortOilCoolant = dt3.Rows[0][1].ToString();
+        //inserting IP and PORT to Water Coolant textbox field
+        string query4 = "SELECT IP, Port FROM ipaddress WHERE device LIKE 'MODBUS_WC'";
+        da.SelectCommand.CommandText = query4;
+        da.Fill(dt4);
+        IPWaterCoolant = dt4.Rows[0][0].ToString();
+        rtbLogging.AppendText("IP PLC Water Coolant" + IPWaterCoolant + "\r\n");
+        PortWaterCoolant = dt4.Rows[0][1].ToString();
+        rtbLogging.AppendText("PORT PLC Water Coolant" + PortWaterCoolant + "\r\n");
+
+        //Declaring all the timer and stopwatch
+        Timer1 = new System.Timers.Timer();
+        Timer1.Elapsed += new ElapsedEventHandler(commandTimer);
+        //Timer1.AutoReset = true;
+        Timer2 = new System.Timers.Timer(1000);
+        Timer2.Elapsed += new ElapsedEventHandler(stopwatch_command);
+        //Timer2.AutoReset = true;
+        dbc.CloseConnection();
+
+        //Calculating total duration
+        for (int j=0; j < (int)dgvDemand.RowCount; j++)
+        {
+            totalDemandDuration += (int)dgvDemand.Rows[j].Cells["duration"].Value;
+            totalRampDuration += (int)dgvDemand.Rows[j].Cells["ramp_time"].Value;
+        }
+        totalDuration = totalDemandDuration + totalRampDuration;
+        pbTimeElapsed.Maximum = totalDuration;
+        rtbLogging.AppendText(String.Format("Total Duration: {0} s\r", totalDuration));
+
+        //Disabling the mode button.
+        btnMode.Enabled = false;
+        btnStart.Enabled = false;
+    }
 
         private void formEngineTesting_Load(object sender, EventArgs e)
         {
-
+            // Declare all the thread
+            tableDisplayThread = new Thread(TableDisplay);
+            tableDisplayThread.IsBackground = true;
+            tableDisplayThread.Name = "TableDisplayThread";
+            threadReceiveData = new Thread(startReceiving);
+            threadReceiveData.IsBackground = true;
+            threadReceiveData.Name = "Data receiving thread";
         }
 
         //Sending and logging trigger
         private void commandTimer(object sender, EventArgs e)
         {
+            if (i < dgvDemand.Rows.Count)
+            {
+                //Higihlighting the current demand
+                dgvDemand.ClearSelection();
+                dgvDemand.Rows[i].Selected = true;
+                //dgvDemand.FirstDisplayedScrollingRowIndex = dgvDemand.SelectedRows[0].Index;
+                string torque = dgvDemand.Rows[i].Cells["Torque"].Value.ToString();
+                string rpm = dgvDemand.Rows[i].Cells["RPM"].Value.ToString();
+                duration = dgvDemand.Rows[i].Cells["duration"].Value.ToString();
+                ramp_time = dgvDemand.Rows[i].Cells["ramp_time"].Value.ToString();
+                //send those parameters to texcel command               
+                string _command = texcelCommand.TorqueThrottle(torque, rpm, duration, ramp_time);
+                //Showing stage in textbox3
+                textBox4.Text = i.ToString();                
+                //Build the final command
+                cmdFinal = fncascii.commandbuilder(_command);
+                //Sending command through IP
+                try
+                {
+                    byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
+                    //send the data through the socket
+                    stream.Write(bytesToSend, 0, bytesToSend.Length);
+                    rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal));
+                    rtbLogging.ScrollToCaret();
+                }
+                catch (Exception ex)
+                {
+                    rtbLogging.AppendText(ex.Message);
+                    rtbLogging.ScrollToCaret();
+                }
+                stream.Flush();
+                //Stop sending command
+                if (i == dgvDemand.Rows.Count)
+                {
+                    btnStop_Click(sender, e);
+                    rtbLogging.AppendText("Your command is done\r\n");
+                    rtbLogging.ScrollToCaret();                    
+                }
+                sw2.Restart();
+                Timer1.Stop();
+                Timer1.Interval = (int.Parse(duration)) * 1000;
+                Timer1.Start();
+                pbStage.Value = 0;
+                progressBar2Second = 0;
+                pbStage.Maximum = int.Parse(duration);
+                i++;
+            }
+            else
+            {
+                btnStop_Click(sender, e);
+                MessageBox.Show("Your test is done!");
+            }
             //obtaining torque, rpm and duration value
-            string torque = dgvDemand.Rows[i].Cells["Torque"].Value.ToString();
-            string rpm = dgvDemand.Rows[i].Cells["RPM"].Value.ToString();
-            duration = dgvDemand.Rows[i].Cells["duration"].Value.ToString();
-            string ramp_time = dgvDemand.Rows[i].Cells["ramp_time"].Value.ToString();
-            //send those parameters to texcel command
-            texcelCommand = new TexcelCommand(torque, rpm, duration, ramp_time);
-            string _command = texcelCommand.TorqueThrottle();
-            //Showing stage in textbox3
-            textBox4.Text = (i+1).ToString();
-            i++;
-            //Build the final command
-            fncascii = new functionASCII(_command);
-            cmdFinal = fncascii.commandbuilder();
-            //Sending command through IP
-            try
-            {
-                byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
-                //send the data through the socket
-                stream.Write(bytesToSend, 0, bytesToSend.Length);
-                rtbLogging.AppendText(String.Format("[{1}]Sent: {0}", cmdFinal, elapsed_time));
-                rtbLogging.ScrollToCaret();
-            }
-            catch (Exception ex)
-            {
-                rtbLogging.AppendText(ex.Message);
-                rtbLogging.ScrollToCaret();
-            }
-            stream.Flush();
-            //Stop sending command
-            if (i == dgvDemand.Rows.Count)
-            {
-                Timer1.Enabled = false;
-                rtbLogging.AppendText("Your command is done\r\n");
-                rtbLogging.ScrollToCaret();
-            }
-            Timer1.Stop();
-            Timer1.Interval = int.Parse(duration) * 1000;
-            Timer1.Start();
+
         }
 
         //Time elapsed trigger
         private void stopwatch_command (object sender, EventArgs e)
-        {       
-            textBox8.Invoke((Action)delegate
+        {
+            pbStage.Invoke((Action)delegate
             {
-                textBox8.Text = sw1.Elapsed.ToString("hh\\:mm\\:ss\\.ff");
+                pbStage.CustomText = sw2.Elapsed.ToString("hh\\:mm\\:ss");
+                pbStage.Value = progressBar2Second;
             });
+            pbTimeElapsed.Invoke((Action)delegate
+            {
+                pbTimeElapsed.CustomText = sw1.Elapsed.ToString("hh\\:mm\\:ss");
+                pbTimeElapsed.Value = progressBar1Second;
+            });
+            progressBar1Second += 1;
+            progressBar2Second += 1;
         }
 
+        //--------COMMAND FOR THE START, STOP, PAUSE, AND MODE BUTTON-------------------------//
         //Start button trigger
         private void btnStart_Click(object sender, EventArgs e)
         {
             if (toggleSwitch1.Checked == true)
             {
-                //Reseting the index if STOP button is clicked
-                i = 1;
-                //Immidiately send the first command
-                sendFirstCommand();
-                //Starting the timer
-                Timer2.Enabled = true;                
-                Timer1.Interval = int.Parse(duration)*1000;
-                Timer1.Enabled = true;
-                //Starting the stopwatch
-                sw1.Start();
-                //Synchronize the timer object with the main thread
-                Timer1.SynchronizingObject = this;
-                //Get rpm and torque value from texcel
-                requestDataTexcel();
+                if (i < 1)
+                {
+                    //Tell the programme wheter the testing on progress or not
+                    isTesting = true;
+                    //isReceive = true;
+                    //Start the updating table thread
+                    tableDisplayThread.Start();
+                    //Reseting the index if STOP button is clicked
+                    i = 1;
+                    //Immidiately send the first command
+                    sendFirstCommand();
+                    //Starting the timer
+                    Timer2.Enabled = true;
+                    Timer1.Interval = int.Parse(duration) * 1000;
+                    Timer1.Enabled = true;
+                    //Starting the stopwatch
+                    sw1.Start();
+                    sw2.Start();
+                    //Synchronize the timer object with the main thread
+                    Timer1.SynchronizingObject = this;
+                    //Get rpm and torque value from texcel
+                    requestDataTexcel();
+                    //Set the pbStage maximum value
+                    pbStage.Maximum = (int.Parse(duration) + int.Parse(ramp_time));
+                }
+                else
+                {
+                    //Tell the programme wheter the testing on progress or not
+                    isTesting = true;
+                    //isReceive = true;
+                    //Start the updating table thread
+                    tableDisplayThread.Start();
+                    //Start the receiving thread
+                    threadReceiveData.Start();
+                    //Immidiately send the first command
+                    sendFirstCommand();
+                    //Starting the timer
+                    Timer2.Enabled = true;
+                    Timer1.Interval = int.Parse(duration) * 1000;
+                    Timer1.Enabled = true;
+                    //Starting the stopwatch
+                    sw1.Start();
+                    sw2.Start();
+                    //Synchronize the timer object with the main thread
+                    Timer1.SynchronizingObject = this;
+                    ////Get rpm and torque value from texcel
+                    //requestDataTexcel();
+                    //Set the pbStage maximum value
+                    pbStage.Maximum = (int.Parse(duration) + int.Parse(ramp_time));
+                }
             }
             else
             {
@@ -240,36 +345,92 @@ namespace UIDesign
             }
         }
 
-        //Stop button trigger
-        private void btnStop_Click(object sender, EventArgs e)
+        //Pause button trigger
+        private void btnPause_Click(object sender, EventArgs e)
         {
-                Timer1.Stop();
-                Timer2.Stop();
-                sw1.Stop();            
+            isTesting = false;
+            //isReceive = false;
+            Timer1.Stop();
+            Timer2.Stop();
+            sw1.Stop();
+            sw2.Stop();
         }
 
+        //Stop button trigger
+        private void btnStop_Click(object sender, EventArgs e)
+        {           
+            string clearRequest = texcelCommand.clearDataRequest();
+            string clearDemand = texcelCommand.clearDemandQueue();
+            string toManualControl = texcelCommand.ManualControl();
+            string cmdFinal1 = clearRequest;
+            string cmdFinal2 = fncascii.commandbuilder(clearDemand);
+            string cmdFinal3 = fncascii.commandbuilder(toManualControl);
+            try
+            {
+                byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal1);
+                stream.Write(bytesToSend, 0, bytesToSend.Length);
+                rtbLogging.AppendText(String.Format("[Stop Resqesting]Sent: {0}", cmdFinal1));
+                bytesToSend = Encoding.ASCII.GetBytes(cmdFinal2);
+                stream.Write(bytesToSend, 0, bytesToSend.Length);
+                rtbLogging.AppendText(String.Format("[Clear Demand]Sent: {0}", cmdFinal2));
+                bytesToSend = Encoding.ASCII.GetBytes(cmdFinal3);
+                stream.Write(bytesToSend, 0, bytesToSend.Length);
+                rtbLogging.AppendText(String.Format("[To Manual Control]Sent: {0}", cmdFinal3));
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText(ex.Message);
+                rtbLogging.ScrollToCaret();
+            }
+            isTesting = false;
+            //isReceive = false;
+            Timer1.Stop();
+            Timer2.Stop();
+            sw1.Stop();
+            sw2.Stop();
+            rtbLogging.AppendText("STOP TESTING");
+        }
+
+        //Change the texcel to host control mode
+        private void btnMode_Click(object sender, EventArgs e)
+        {
+            //Building the command           
+            string tohost = texcelCommand.HostControl();
+            string clearDemandCommand = texcelCommand.clearDemandQueue();            
+            string cmdFinal1 = fncascii.commandbuilder(tohost);
+            string cmdFinal2 = fncascii.commandbuilder(clearDemandCommand);
+            rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal2));
+            byte[] bytesToSend2 = Encoding.ASCII.GetBytes(cmdFinal2);
+            stream.Write(bytesToSend2, 0, bytesToSend2.Length);
+            rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal1));
+            byte[] bytesToSend1 = Encoding.ASCII.GetBytes(cmdFinal1);
+            stream.Write(bytesToSend1, 0, bytesToSend1.Length);
+        }
+
+        //--------SENDING AND RECIEVING THE COMMAND TO TEXCEL-------------------------//
         private void sendFirstCommand()
         {
+            //Highlighting the current demand
+            dgvDemand.ClearSelection();
+            dgvDemand.Rows[0].Selected = true;
             //obtaining torque, rpm and duration value
             string torque = dgvDemand.Rows[0].Cells["Torque"].Value.ToString();
             string rpm = dgvDemand.Rows[0].Cells["RPM"].Value.ToString();
             duration = dgvDemand.Rows[0].Cells["duration"].Value.ToString();
-            string ramp_time = dgvDemand.Rows[0].Cells["ramp_time"].Value.ToString();
+            ramp_time = dgvDemand.Rows[0].Cells["ramp_time"].Value.ToString();
             //send those parameters to texcel command
-            texcelCommand = new TexcelCommand(torque, rpm, duration, ramp_time);
-            string _command = texcelCommand.TorqueThrottle();
+            string _command = texcelCommand.TorqueThrottle(torque, rpm, duration, ramp_time);
             //Showing stage in textbox3
             textBox4.Text = "1";
             //Build the final command
-            fncascii = new functionASCII(_command);
-            cmdFinal = fncascii.commandbuilder();
+            cmdFinal = fncascii.commandbuilder(_command);
             //Sending command through IP
             try
             {
                 byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
                 //send the data through the socket
                 stream.Write(bytesToSend, 0, bytesToSend.Length);
-                rtbLogging.AppendText(String.Format("[{1}]Sent: {0}", cmdFinal, elapsed_time));
+                rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal));
                 rtbLogging.ScrollToCaret();
             }
             catch (Exception ex)
@@ -278,46 +439,14 @@ namespace UIDesign
                 rtbLogging.ScrollToCaret();
             }
             stream.Flush();
-
-        }
-
-        //Change the red line REDline. Better put in on the settings menu
-        private void aGauge1_ValueInRangeChanged(object sender, ValueInRangeChangedEventArgs e)
-        {
-
-        }
-
-        //Change the texcel to host control mode
-        private void btnMode_Click(object sender, EventArgs e)
-        {
-            // Start the thread to listen
-            threadReceiveData = new Thread(new ThreadStart(startReceiving));
-            threadReceiveData.IsBackground = true;
-            threadReceiveData.Start();
-
-            //Building the command
-            texcelCommand = new TexcelCommand(null,null,null, null);
-            string tohost = texcelCommand.HostControl();           
-            fncascii = new functionASCII(tohost);
-            string cmdFinal = fncascii.commandbuilder();
-            rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal));
-            //Sending command through IP
-            byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
-            //send the data through the socket
-            stream.Write(bytesToSend, 0, bytesToSend.Length);
-            stream.Flush();
         }
 
         private void requestDataTexcel()
         {
-            texcelCommand = new TexcelCommand(null, null, null, null);
-            string requestRpmTorque = texcelCommand.TorqueRpmRequest();
-            fncascii = new functionASCII(requestRpmTorque);
-            string cmdFinal = fncascii.commandbuilder();
+            string requestRpmTorque = texcelCommand.TorqueRpmRequest();            
+            string cmdFinal = fncascii.commandbuilder(requestRpmTorque);
             rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal));
-            //Sending command through IP
             byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
-            //send the data through the socket
             stream.Write(bytesToSend, 0, bytesToSend.Length);
             stream.Flush();
         }
@@ -326,13 +455,16 @@ namespace UIDesign
         //Button to start the thread for receiving data.
         public void StartThreading_Click(object sender, EventArgs e)
         {
+            //Start receiveing data thread
+            threadReceiveData.Start();
+            //isReceive = true;
         }
 
         //Recieving in backgroud method.
         public void startReceiving()
         {
             //Data buffer
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[256];
             //Create integer to hold how large the data received is
             Int32 bytesReceived;
             //Loop to continously reading data while the client is connected
@@ -346,78 +478,155 @@ namespace UIDesign
                     {
                         textReceived = Encoding.ASCII.GetString(buffer, 0, bytesReceived);
                     }
-                    //Check the received text and do suitable command
-                    if (textReceived == "R19,1,E,\r") //Host control successfully established
+                    //Exploding the textReceivedPacket from Texcel into single string.
+                    char delimiterChar = '\r';
+                    string[] explodedResponse = textReceived.Split(delimiterChar);
+                    foreach (string responseUnit in explodedResponse)
                     {
-                        toggleSwitch1.Invoke((Action)delegate
+                        //Check the received text and do suitable command
+                        if (responseUnit == "1") //Host control successfully established
                         {
-                            toggleSwitch1.Checked = true;
-                        });
-                        richTextBox1.Invoke((Action)delegate
-                        {
-                            richTextBox1.AppendText(string.Format("[{1}]Respond: {0}", textReceived, elapsed_time));
-                            richTextBox1.ScrollToCaret();
+                            richTextBox1.Invoke((Action)delegate
+                            {
+                                richTextBox1.AppendText(string.Format("Respond: {0} [Valid checksum]\r\n", responseUnit));
+                                richTextBox1.ScrollToCaret();
+                            });
                         }
-                        );
+                        else if (responseUnit == "0") //Host control successfully established
+                        {
+                            richTextBox1.Invoke((Action)delegate
+                            {
+                                richTextBox1.AppendText(string.Format("Respond: {0} [Invalid checksum]\r\n", responseUnit));
+                                richTextBox1.ScrollToCaret();
+                            });
+                        }
+                        else if (responseUnit.IndexOf("R19,1") > -1) //Host control successfully established
+                        {
+                            richTextBox1.Invoke((Action)delegate
+                            {
+                                richTextBox1.AppendText(string.Format("Respond: {0} [Host mode success]\r\n", responseUnit));
+                                richTextBox1.ScrollToCaret();
+                            });
+                        }
+                        else if (responseUnit.IndexOf("R19,2") > -1)//Host control not success
+                        {
+                            richTextBox1.Invoke((Action)delegate
+                            {
+                                richTextBox1.AppendText(string.Format("Respond: {0} [Host mode unsuccess]\r\n", responseUnit));
+                            });
+                        }
+                        else if (responseUnit.IndexOf("D2") > -1)//Actual data of texcel;
+                        {
+                            actualCondition = responseUnit;
+                            string[] _actualCondition = actualCondition.Split(',');
+                            _RPM = double.Parse(_actualCondition[2]);
+                            _Torque = double.Parse(_actualCondition[3]);
+                            aGauge1.Invoke((Action)delegate
+                            {
+                                aGauge1.Value = (float)_RPM / 1000;
+                            });
+                            textBox1.Invoke((Action)delegate
+                            {
+                                textBox1.Text = _RPM.ToString();
+                            });
+                            richTextBox1.Invoke((Action)delegate
+                            {
+                                richTextBox1.AppendText(string.Format("Respond: {0}\r\n", responseUnit));
+                                richTextBox1.ScrollToCaret();
+                            });
+                            aGauge2.Invoke((Action)delegate
+                            {
+                                aGauge2.Value = (float)_Torque;
+                            });
+                            textBox2.Invoke((Action)delegate
+                            {
+                                textBox2.Text = _Torque.ToString();
+                            });
+                            richTextBox1.Invoke((Action)delegate
+                            {
+                                richTextBox1.AppendText(string.Format("Respond: {0}\r\n", responseUnit));
+                                richTextBox1.ScrollToCaret();
+                            });
+                            //Sending the data to the database
+                            sendResponseToDatabase(_RPM, _Torque);
+                        }
+                        else if (responseUnit.IndexOf("D7") > -1)
+                        {
+                            string[] texcelStatus = responseUnit.Split(',');
+
+                            if (texcelStatus[2] == "0" && texcelStatus[3] == "0" && texcelStatus[4] == "1")
+                            {
+                                this.Invoke((Action)delegate
+                                {
+                                    btnStart.Enabled = true;
+                                    toggleSwitch1.Checked = true;
+                                    richTextBox1.AppendText(string.Format("Respond [1]: {0}\r\n", responseUnit));
+                                    richTextBox1.ScrollToCaret();
+                                    rtbLogging.AppendText("You CAN start the test!\r\n");
+                                    rtbLogging.ScrollToCaret();
+                                });
+                            }
+                            else if (texcelStatus[2] == "1" && texcelStatus[3] == "1" && texcelStatus[4] == "0")
+                            {
+                                this.Invoke((Action)delegate
+                                {
+
+                                    toggleSwitch1.Checked = false;
+                                    btnStart.Enabled = false;
+                                    richTextBox1.AppendText(string.Format("Respond [2]: {0}\r\n", responseUnit));
+                                    richTextBox1.ScrollToCaret();
+                                });
+                            }
+                            else if (texcelStatus[2] == "0" && texcelStatus[3] == "0" && texcelStatus[4] == "0")
+                            {
+                                this.Invoke((Action)delegate
+                                {
+
+                                    toggleSwitch1.Checked = false;
+                                    btnStart.Enabled = false;
+                                    richTextBox1.AppendText(string.Format("Respond [3]: {0}\r\n", responseUnit));
+                                    richTextBox1.ScrollToCaret();
+                                });
+                            }
+                            else if (texcelStatus[2] == "1" && texcelStatus[3] == "1" && texcelStatus[4] == "1")
+                            {
+                                this.Invoke((Action)delegate
+                                {
+
+                                    toggleSwitch1.Checked = true;
+                                    btnStart.Enabled = false;
+                                    richTextBox1.AppendText(string.Format("Respond [4]: {0}\r\n", responseUnit));
+                                    richTextBox1.ScrollToCaret();
+                                });
+                            }
+                            else
+                            {
+                                this.Invoke((Action)delegate
+                                {
+                                    richTextBox1.AppendText(string.Format("Respond [else]: {0}\r\n", responseUnit));
+                                    richTextBox1.ScrollToCaret();
+                                });
+                            }
+                        }
+                        else if (responseUnit == "\r" || responseUnit == "")
+                        {
+                        }
+                        else
+                        {
+                            richTextBox1.Invoke((Action)delegate
+                            {
+                                richTextBox1.AppendText(string.Format("Respond [Else2]: {0}\r\n", responseUnit));
+                                richTextBox1.ScrollToCaret();
+                            });
+                        }
                     }
-                    else if (textReceived == "R19,2,E,\r")//Host control not success
-                    {
-                        toggleSwitch1.Invoke((Action)delegate
-                        {
-                            toggleSwitch1.Checked = false;
-                            MessageBox.Show("Host control failed. \r\n Check the command.");
-                        });
-                    }
-                    else if (textReceived.IndexOf("D2")>-1)
-                    {
-                        actualCondition = textReceived;
-                        string[] _actualCondition = actualCondition.Split(',');
-                        _RPM = double.Parse(_actualCondition[1]);
-                        _Torque = double.Parse(_actualCondition[2]);
-                        aGauge1.Invoke((Action)delegate
-                        {
-                            aGauge1.Value = (float)_RPM/1000;
-                        });
-                        textBox1.Invoke((Action)delegate
-                        {
-                            textBox1.Text = _RPM.ToString();
-                        });
-                        richTextBox1.Invoke((Action)delegate
-                        {
-                            data_time_stamp = DateTime.Now.ToString("yyyy-MM-dd H:mm:ss");
-                            richTextBox1.AppendText(string.Format("[{1}]Respond: {0}", textReceived, data_time_stamp));
-                            richTextBox1.ScrollToCaret();
-                        });                        
-                        aGauge2.Invoke((Action)delegate
-                        {
-                            aGauge2.Value = (float)_Torque;
-                        });
-                        textBox2.Invoke((Action)delegate
-                        {
-                            textBox2.Text = _Torque.ToString();
-                        });
-                        richTextBox1.Invoke((Action)delegate
-                        {
-                            richTextBox1.AppendText(string.Format("[{1}]Respond: {0}", textReceived, elapsed_time));
-                            richTextBox1.ScrollToCaret();
-                        });
-                        //Sending the data to the database
-                        sendResponseToDatabase(_RPM, _Torque);
-                    }
-                    else
-                    richTextBox1.Invoke((Action)delegate
-                    {
-                        richTextBox1.AppendText(string.Format("[{1}]Respond: {0}", textReceived, elapsed_time));
-                        richTextBox1.ScrollToCaret();
-                    }
-                    );
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.Message);
+                    MessageBox.Show("Recieving: " + e.Message );
                 }
                 stream.Flush();
-            }         
+            }      
         }
 
         //Establish the connection to the server from client.
@@ -429,7 +638,17 @@ namespace UIDesign
                 client = new TcpClient();
                 client.Connect(IPTexcel, int.Parse(PortTexcel));
                 stream = client.GetStream();
-                rtbLogging.AppendText("Conected to server.....\r");
+                rtbLogging.AppendText("Conected to Texcel\r\n");
+                btnMode.Enabled = true;
+                string clearDataRequest = texcelCommand.clearDataRequest();
+                byte[] bytesToSend = Encoding.ASCII.GetBytes(clearDataRequest);          
+                stream.Write(bytesToSend, 0, bytesToSend.Length);
+                rtbLogging.AppendText(String.Format("Sent: {0}", clearDataRequest));
+                string getTexcelStatus = texcelCommand.getTexcelStatus();
+                string cmdFinal = fncascii.commandbuilder(getTexcelStatus);
+                bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
+                stream.Write(bytesToSend, 0, bytesToSend.Length);
+                rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal));
             }
             catch (Exception ex)
             {
@@ -437,16 +656,32 @@ namespace UIDesign
             }
         }
 
+
+        //Connect to PLC
+        private void btnConnectPLC_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                clientPLC = new TcpClient();
+                clientPLC.Connect(IPWaterCoolant, int.Parse(PortWaterCoolant));
+                stream = clientPLC.GetStream();
+                rtbLogging.AppendText("Conected to PLC\r\n");
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText("[PLC CONNECT]: \r\n" + ex.Message);
+            }
+        }
+
+        //------------------SAVING THE TESTING RESULT TO THE DATABASE----------------------------//
         public void sendResponseToDatabase(double actualRPM, double actualTorque)
         {
             try
             {
                 dbc.Initialize();
                 dbc.OpenConnection();
-
                 MySqlCommand cmd = new MySqlCommand();
                 cmd = dbc.connection.CreateCommand();
-
                 data_time_stamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("@project_id", _projectID);
@@ -459,8 +694,47 @@ namespace UIDesign
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }     
+            }
+            dbc.CloseConnection();
+        }
+        
+
+        public void TableDisplay()
+        {
+            while (isTesting)
+            {
+                dbc.Initialize();
+                dbc.OpenConnection();
+                dataAdapterResult = null;
+                dataTableResult = null;
+                string queryResult = "SELECT * FROM testing_result WHERE project_id LIKE '%" + _projectID + "%'";
+                try
+                {
+                    dataAdapterResult = new MySqlDataAdapter(queryResult, dbc.connection);
+                    dataTableResult = new DataTable();
+                    dataAdapterResult.Fill(dataTableResult);
+                    dgvResult.Invoke((MethodInvoker)delegate
+                    {
+                        dgvResult.DataSource = dataTableResult;
+                        //Changing the coloumn format of dgvResult
+                        dgvResult.Columns["time_stamp"].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss";
+                        dgvResult.FirstDisplayedScrollingRowIndex = dgvResult.RowCount - 1;
+                    });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                dbc.CloseConnection();
+                Thread.Sleep(1000);
+            }            
+        }
+
+        //Change the red line REDline. Better put in on the settings menu
+        private void aGauge1_ValueInRangeChanged(object sender, ValueInRangeChangedEventArgs e)
+        {
 
         }
+
     }
 }

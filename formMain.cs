@@ -128,9 +128,9 @@ namespace UIDesign
                 btnSettings.BackColor = System.Drawing.Color.FromArgb(44, 62, 80);
                 btnExport.BackColor = System.Drawing.Color.FromArgb(28, 135, 219);
             }
-            else
-            {
-            }
+            panelContainer.Controls.Clear();
+            ucExportMenu ucEM = new ucExportMenu();
+            panelContainer.Controls.Add(ucEM);
         }
 
     }

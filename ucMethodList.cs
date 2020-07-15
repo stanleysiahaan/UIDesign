@@ -56,10 +56,8 @@ namespace UIDesign
                 textBox1.Text = methodIdObject.ToString();
 
                 //Populating dataGridView1 with mySQL data
-
                 string query = "SELECT * FROM method_data WHERE method_id LIKE '%" + methodIdObject.ToString() + "%'";
-
-
+                
                 try
                 {
                     DataTable dt = new DataTable();

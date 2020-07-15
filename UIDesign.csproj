@@ -125,6 +125,8 @@
       <DependentUpon>progressWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="TexcelCommand.cs" />
+    <Compile Include="texcelRespondProcessor.cs" />
+    <Compile Include="TextProgressBar.cs" />
     <Compile Include="ucChooseProject.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -142,6 +144,12 @@
     </Compile>
     <Compile Include="ucEngineTestingMenu.Designer.cs">
       <DependentUpon>ucEngineTestingMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ucExportMenu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ucExportMenu.Designer.cs">
+      <DependentUpon>ucExportMenu.cs</DependentUpon>
     </Compile>
     <Compile Include="ucMethodEditor.cs">
       <SubType>UserControl</SubType>
@@ -201,6 +209,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ucEngineTestingMenu.resx">
       <DependentUpon>ucEngineTestingMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ucExportMenu.resx">
+      <DependentUpon>ucExportMenu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ucMethodEditor.resx">
       <DependentUpon>ucMethodEditor.cs</DependentUpon>

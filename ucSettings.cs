@@ -1,35 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using SimpleTCP;
-using Client;
+﻿using Client;
 using MySql.Data.MySqlClient;
+using System;
+using System.Data;
+using System.Windows.Forms;
 
 namespace UIDesign
 {
     public partial class ucSettings : UserControl
     {
-        SimpleTcpServer server;
-
         //initializing the database
         DBConnect dbc = new DBConnect();
 
         public ucSettings()
         {
             InitializeComponent();
-            //TCP SERVER
-            server = new SimpleTcpServer();
-            server.Delimiter = 0x13; //enter
-            server.StringEncoder = Encoding.UTF8;
-            server.DataReceived += Server_DataReceived;
-
             try
             {
                 //Calling IP saved in database
@@ -74,28 +58,6 @@ namespace UIDesign
             dbc.CloseConnection();
         }
 
-        private void Server_DataReceived(object sender, SimpleTCP.Message e)
-        {
-            txtStatus.Invoke((MethodInvoker)delegate () 
-            {
-                txtStatus.Text += e.MessageString;
-                e.ReplyLine(string.Format("You said: {0}", e.MessageString));
-            });
-        }
-
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            txtStatus.Text = "Server starting.....";
-            IPAddress ip = IPAddress.Parse(txtHost.Text);
-            server.Start(ip, Convert.ToInt32(txtPort.Text));
-        }
-
-        private void btnStop_Click(object sender, EventArgs e)
-        {
-            if (server.IsStarted)
-                server.Stop();
-        }
-
         private void btnCallClient_Click(object sender, EventArgs e)
         {
             ConnectionTestForm form1 = new ConnectionTestForm();
@@ -115,20 +77,20 @@ namespace UIDesign
                 cmd.Parameters.AddWithValue("@IP", tbGateway.Text);
                 cmd.Parameters.AddWithValue("@Port", tbGatewayPort.Text);
                 cmd.Parameters.AddWithValue("@device", "GATEWAY");
-                cmd.CommandText = "INSERT INTO ipaddress (IP, Port, device) VALUES (@IP, @Port, @device) ON duplicate KEY UPDATE IP=@IP, Port=@Port";                
+                cmd.CommandText = "INSERT INTO ipaddress (IP, Port, device) VALUES (@IP, @Port, @device) ON duplicate KEY UPDATE IP=@IP, Port=@Port";
                 cmd.ExecuteNonQuery();
                 //Inserting Oil Coolant IP to database
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("@IP", tbOilCoolant.Text);
                 cmd.Parameters.AddWithValue("@Port", tbOilCoolantPort.Text);
-                cmd.Parameters.AddWithValue("@device", "MODBUS_WC");
+                cmd.Parameters.AddWithValue("@device", "MODBUS_OC");
                 cmd.CommandText = "INSERT INTO ipaddress (IP, Port, device) VALUES (@IP, @Port, @device) ON duplicate KEY UPDATE IP=@IP,Port=@Port";
                 cmd.ExecuteNonQuery();
                 //Inserting Water Coolant IP to database
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("@IP", tbWaterCoolant.Text);
                 cmd.Parameters.AddWithValue("@Port", tbWaterCoolantPort.Text);
-                cmd.Parameters.AddWithValue("@device", "MODBUS_OC");
+                cmd.Parameters.AddWithValue("@device", "MODBUS_WC");
                 cmd.CommandText = "INSERT INTO ipaddress (IP, Port, device) VALUES (@IP, @Port, @device) ON duplicate KEY UPDATE IP=@IP,Port=@Port";
                 cmd.ExecuteNonQuery();
                 //Inserting DAQ IP to databse

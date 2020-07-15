@@ -10,40 +10,31 @@ namespace UIDesign
 {
     class functionASCII
     {
-        public string command;
         public byte[] asciiBytes { get; set; }
         public char charascii { get; set; }
-        
+
         public int sum { get; set; }
-        public string cmdFinal { get; set; }
-        public functionASCII(string _command)
+        string cmdFinal;
+        public functionASCII()
         {
-            command = _command;
-            chartoascii();
-            checksum();
-            asciitochar();
         }
 
-        public byte[] chartoascii()
+        public string commandbuilder(string command)
         {
             asciiBytes = Encoding.ASCII.GetBytes(command);
-            return asciiBytes;
-        }
-
-        public int checksum()
-        {
+            //Checksum
             sum = 0;
-            foreach(byte b in asciiBytes)
+            foreach (byte b in asciiBytes)
             {
                 sum += b;
-            }            
+            }
             if (sum == 127)
             {
                 sum = 32;
             }
             else if (sum < 32)
             {
-                sum += 32;
+                sum += 33;
             }
             else if (sum > 127)
             {
@@ -54,24 +45,15 @@ namespace UIDesign
                 }
                 else if (sum < 32)
                 {
-                    sum += 32;
+                    sum += 33;
                 }
             }
-            return sum;
-        }
-
-        public char asciitochar()
-        {
+            //asciitochar
             charascii = Convert.ToChar(sum);
-            return charascii;
-        }
-
-        public string commandbuilder()
-        {
-            cmdFinal = String.Join("", command, charascii, ",\r");
+            cmdFinal = command + charascii + "\r";
             return cmdFinal;
-        }
 
+        }
     }
 }
 //System.Text.Encoding.UTF8.GetString(_chartoascii);

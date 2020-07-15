@@ -90,12 +90,12 @@ namespace UIDesign
             dbc.CloseConnection();
 
             //Rezise the height of the panel
-            int totalRowHeight = dataGridView1.ColumnHeadersHeight;
-            foreach (DataGridViewRow row in dataGridView1.Rows)
-            {
-                totalRowHeight += row.Height;
-                dataGridView1.Height = totalRowHeight;
-            }
+            //int totalRowHeight = dataGridView1.ColumnHeadersHeight;
+            //foreach (DataGridViewRow row in dataGridView1.Rows)
+            //{
+            //    totalRowHeight += row.Height;
+            //    dataGridView1.Height = totalRowHeight;
+            //}
             //textBox1.Text = projectID;
         }
 
