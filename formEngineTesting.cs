@@ -20,6 +20,7 @@ using System.Net;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Xml.Serialization;
 using MySqlX.XDevAPI.Relational;
+using EasyModbus;
 
 namespace UIDesign
 {
@@ -30,18 +31,21 @@ namespace UIDesign
         Stopwatch sw2 = new Stopwatch();
         System.Timers.Timer Timer1;
         System.Timers.Timer Timer2;
+        DateTime timestamp = DateTime.Now;
         //System.Threading.Timer Timer3;
         DBConnect dbc = new DBConnect();
         TexcelCommand texcelCommand = new TexcelCommand();
         functionASCII fncascii = new functionASCII();
         TcpClient client;
-        TcpClient clientPLC;
         NetworkStream stream;
         MySqlDataAdapter dataAdapterResult;
         DataTable dataTableResult;
         Thread tableDisplayThread;
         Thread threadReceiveData;
         texcelRespondProcessor respondProcessor = new texcelRespondProcessor();
+        ModbusClient modbusDAQ;
+        ModbusClient modbusOC;
+        ModbusClient modbusWC;
 
         //Declare all the global variables
         public string IPTexcel;
@@ -68,9 +72,9 @@ namespace UIDesign
         int totalDuration;
         int progressBar1Second = 0;
         int progressBar2Second = 0;
+        string[] explodedResponse = null;
         //Declare the flag
         bool isTesting = false; //FlagforDisplaingDataonTable
-        //bool isReceive = false;
 
     static void SetDoubleBuffer(Control ctl, bool DoubleBuffered)
     {
@@ -214,7 +218,6 @@ namespace UIDesign
                 //Higihlighting the current demand
                 dgvDemand.ClearSelection();
                 dgvDemand.Rows[i].Selected = true;
-                //dgvDemand.FirstDisplayedScrollingRowIndex = dgvDemand.SelectedRows[0].Index;
                 string torque = dgvDemand.Rows[i].Cells["Torque"].Value.ToString();
                 string rpm = dgvDemand.Rows[i].Cells["RPM"].Value.ToString();
                 duration = dgvDemand.Rows[i].Cells["duration"].Value.ToString();
@@ -231,7 +234,7 @@ namespace UIDesign
                     byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
                     //send the data through the socket
                     stream.Write(bytesToSend, 0, bytesToSend.Length);
-                    rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal));
+                    rtbLogging.AppendText(String.Format("[{1}]Sent: {0}", cmdFinal, timestamp));
                     rtbLogging.ScrollToCaret();
                 }
                 catch (Exception ex)
@@ -292,13 +295,14 @@ namespace UIDesign
                 {
                     //Tell the programme wheter the testing on progress or not
                     isTesting = true;
-                    //isReceive = true;
                     //Start the updating table thread
                     tableDisplayThread.Start();
                     //Reseting the index if STOP button is clicked
                     i = 1;
                     //Immidiately send the first command
                     sendFirstCommand();
+                    //Starting DAQ record
+                    startRecordDAQ();
                     //Starting the timer
                     Timer2.Enabled = true;
                     Timer1.Interval = int.Parse(duration) * 1000;
@@ -317,11 +321,8 @@ namespace UIDesign
                 {
                     //Tell the programme wheter the testing on progress or not
                     isTesting = true;
-                    //isReceive = true;
                     //Start the updating table thread
                     tableDisplayThread.Start();
-                    //Start the receiving thread
-                    threadReceiveData.Start();
                     //Immidiately send the first command
                     sendFirstCommand();
                     //Starting the timer
@@ -348,8 +349,7 @@ namespace UIDesign
         //Pause button trigger
         private void btnPause_Click(object sender, EventArgs e)
         {
-            isTesting = false;
-            //isReceive = false;
+            pauseRecordDAQ();
             Timer1.Stop();
             Timer2.Stop();
             sw1.Stop();
@@ -369,7 +369,7 @@ namespace UIDesign
             {
                 byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal1);
                 stream.Write(bytesToSend, 0, bytesToSend.Length);
-                rtbLogging.AppendText(String.Format("[Stop Resqesting]Sent: {0}", cmdFinal1));
+                rtbLogging.AppendText(String.Format("[Clear Resqesting]Sent: {0}", cmdFinal1));
                 bytesToSend = Encoding.ASCII.GetBytes(cmdFinal2);
                 stream.Write(bytesToSend, 0, bytesToSend.Length);
                 rtbLogging.AppendText(String.Format("[Clear Demand]Sent: {0}", cmdFinal2));
@@ -383,11 +383,14 @@ namespace UIDesign
                 rtbLogging.ScrollToCaret();
             }
             isTesting = false;
-            //isReceive = false;
             Timer1.Stop();
             Timer2.Stop();
             sw1.Stop();
             sw2.Stop();
+            stopRecordDAQ();
+            //Disconnecting to DAQ
+            modbusDAQ.Disconnect();
+            toggleSwitch3.Checked = false;
             rtbLogging.AppendText("STOP TESTING");
         }
 
@@ -399,10 +402,10 @@ namespace UIDesign
             string clearDemandCommand = texcelCommand.clearDemandQueue();            
             string cmdFinal1 = fncascii.commandbuilder(tohost);
             string cmdFinal2 = fncascii.commandbuilder(clearDemandCommand);
-            rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal2));
+            rtbLogging.AppendText(String.Format("[{1}]Sent: {0}", cmdFinal2, timestamp));
             byte[] bytesToSend2 = Encoding.ASCII.GetBytes(cmdFinal2);
             stream.Write(bytesToSend2, 0, bytesToSend2.Length);
-            rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal1));
+            rtbLogging.AppendText(String.Format("[{1}]Sent: {0}", cmdFinal1, timestamp));
             byte[] bytesToSend1 = Encoding.ASCII.GetBytes(cmdFinal1);
             stream.Write(bytesToSend1, 0, bytesToSend1.Length);
         }
@@ -430,7 +433,7 @@ namespace UIDesign
                 byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
                 //send the data through the socket
                 stream.Write(bytesToSend, 0, bytesToSend.Length);
-                rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal));
+                rtbLogging.AppendText(String.Format("[{1}]Sent: {0}", cmdFinal, timestamp));
                 rtbLogging.ScrollToCaret();
             }
             catch (Exception ex)
@@ -449,15 +452,6 @@ namespace UIDesign
             byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
             stream.Write(bytesToSend, 0, bytesToSend.Length);
             stream.Flush();
-        }
-
-
-        //Button to start the thread for receiving data.
-        public void StartThreading_Click(object sender, EventArgs e)
-        {
-            //Start receiveing data thread
-            threadReceiveData.Start();
-            //isReceive = true;
         }
 
         //Recieving in backgroud method.
@@ -480,7 +474,7 @@ namespace UIDesign
                     }
                     //Exploding the textReceivedPacket from Texcel into single string.
                     char delimiterChar = '\r';
-                    string[] explodedResponse = textReceived.Split(delimiterChar);
+                    explodedResponse = textReceived.Split(delimiterChar);
                     foreach (string responseUnit in explodedResponse)
                     {
                         //Check the received text and do suitable command
@@ -528,11 +522,6 @@ namespace UIDesign
                             textBox1.Invoke((Action)delegate
                             {
                                 textBox1.Text = _RPM.ToString();
-                            });
-                            richTextBox1.Invoke((Action)delegate
-                            {
-                                richTextBox1.AppendText(string.Format("Respond: {0}\r\n", responseUnit));
-                                richTextBox1.ScrollToCaret();
                             });
                             aGauge2.Invoke((Action)delegate
                             {
@@ -643,12 +632,14 @@ namespace UIDesign
                 string clearDataRequest = texcelCommand.clearDataRequest();
                 byte[] bytesToSend = Encoding.ASCII.GetBytes(clearDataRequest);          
                 stream.Write(bytesToSend, 0, bytesToSend.Length);
+                
                 rtbLogging.AppendText(String.Format("Sent: {0}", clearDataRequest));
                 string getTexcelStatus = texcelCommand.getTexcelStatus();
                 string cmdFinal = fncascii.commandbuilder(getTexcelStatus);
                 bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
                 stream.Write(bytesToSend, 0, bytesToSend.Length);
                 rtbLogging.AppendText(String.Format("Sent: {0}", cmdFinal));
+                threadReceiveData.Start();
             }
             catch (Exception ex)
             {
@@ -656,20 +647,56 @@ namespace UIDesign
             }
         }
 
-
-        //Connect to PLC
-        private void btnConnectPLC_Click(object sender, EventArgs e)
+        //Connect to Coolant Temperature Controller
+        private void btnConnectWC_Click(object sender, EventArgs e)
         {
+            modbusWC = new ModbusClient(IPWaterCoolant, int.Parse(PortDAQ));
+            rtbLogging.AppendText("Connecting to Coolant Conditioner\r\n");
             try
             {
-                clientPLC = new TcpClient();
-                clientPLC.Connect(IPWaterCoolant, int.Parse(PortWaterCoolant));
-                stream = clientPLC.GetStream();
-                rtbLogging.AppendText("Conected to PLC\r\n");
+                modbusWC.Connect();
+                rtbLogging.AppendText("Connected to water controller\r\n");
+                toggleSwitch2.Checked = true;
             }
             catch (Exception ex)
             {
-                rtbLogging.AppendText("[PLC CONNECT]: \r\n" + ex.Message);
+                rtbLogging.AppendText("Coolant Conditioner Error: "+ ex.Message + "\r\n");
+            }           
+
+        }
+
+        //Connect to Oil Temperature Controller
+        private void btnConnectOC_Click(object sender, EventArgs e)
+        {
+            modbusOC = new ModbusClient(IPOilCoolant, int.Parse(PortOilCoolant));
+            rtbLogging.AppendText("Connecting to Oil Conditioner\r\n");
+            try
+            {
+                modbusOC.Connect();
+                rtbLogging.AppendText("Connected to oil controller\r\n");
+                toggleSwitch4.Checked = true;
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText("Lubricant Conditioner Error: " + ex.Message + "\r\n");
+            }
+        }
+
+        //Connecting to DAQ
+        private void btnConnectDAQ_Click(object sender, EventArgs e)
+        {
+            modbusDAQ = new ModbusClient(IPDAQ, int.Parse(PortDAQ));
+            rtbLogging.AppendText("Connecting to DAQ\r\n");
+            try
+            {
+                modbusDAQ.Connect();
+                rtbLogging.AppendText("Connected to DAQ\r\n");
+                toggleSwitch3.Checked = true;
+
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText("DAQ Error: " + ex.Message + "\r\n");
             }
         }
 
@@ -729,12 +756,59 @@ namespace UIDesign
                 Thread.Sleep(1000);
             }            
         }
+        //-------------------------------START STOP PAUSEDAQ Function------------------------------//
+        private void startRecordDAQ()
+        {
+            try
+            {
+                modbusDAQ.WriteSingleRegister(0, 1);
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText("Modbus DAQ: " + ex.Message + "\r\n");
+            }
+        }
+        private void stopRecordDAQ()
+        {
+            try
+            {
+                modbusDAQ.WriteSingleRegister(0, 2);
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText("Modbus DAQ: " + ex.Message + "\r\n");
+            }
+        }
+        private void pauseRecordDAQ()
+        {
+            try
+            {
+                modbusDAQ.WriteSingleRegister(0, 3);
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText("Modbus DAQ: " + ex.Message + "\r\n");
+            }
+        }
+
+        //-------------------------Set point Coolant and Lubricant----------------------//
+        private void setPointCoolant()
+        {
+            try
+            {
+                modbusWC.WriteSingleRegister(1, 70); //insert the Set Point here
+                rtbLogging.AppendText("Coolant Set Point: " + "\r\n");
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText("Coolant Conditioner Error: " + ex.Message + "\r\n");
+            }
+        }
 
         //Change the red line REDline. Better put in on the settings menu
         private void aGauge1_ValueInRangeChanged(object sender, ValueInRangeChangedEventArgs e)
         {
 
         }
-
     }
 }
