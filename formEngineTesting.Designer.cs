@@ -79,6 +79,12 @@
             this.dgvDemand = new System.Windows.Forms.DataGridView();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.dgvResult = new System.Windows.Forms.DataGridView();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.time_stamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rpmActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rpmDemand = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.torqueActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.torqueDemand = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnPause = new System.Windows.Forms.Button();
             this.pbStage = new ProgressBarSample.TextProgressBar();
@@ -391,17 +397,25 @@
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(711, 315);
+            this.textBox6.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox6.Enabled = false;
+            this.textBox6.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold);
+            this.textBox6.Location = new System.Drawing.Point(710, 311);
             this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(134, 20);
-            this.textBox6.TabIndex = 6;
+            this.textBox6.Size = new System.Drawing.Size(134, 22);
+            this.textBox6.TabIndex = 0;
+            this.textBox6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // textBox7
             // 
-            this.textBox7.Location = new System.Drawing.Point(1087, 315);
+            this.textBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox7.Enabled = false;
+            this.textBox7.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold);
+            this.textBox7.Location = new System.Drawing.Point(1082, 311);
             this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(134, 20);
+            this.textBox7.Size = new System.Drawing.Size(134, 22);
             this.textBox7.TabIndex = 6;
+            this.textBox7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label1
             // 
@@ -645,7 +659,7 @@
             this.textBox1.Location = new System.Drawing.Point(385, 311);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(134, 22);
-            this.textBox1.TabIndex = 3;
+            this.textBox1.TabIndex = 0;
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // flowLayoutPanel1
@@ -710,6 +724,7 @@
             this.dgvDemand.AllowUserToResizeRows = false;
             this.dgvDemand.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvDemand.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
+            this.dgvDemand.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvDemand.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDemand.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvDemand.Location = new System.Drawing.Point(3, 3);
@@ -732,15 +747,56 @@
             // 
             // dgvResult
             // 
+            this.dgvResult.AllowUserToAddRows = false;
+            this.dgvResult.AllowUserToDeleteRows = false;
+            this.dgvResult.AllowUserToResizeRows = false;
             this.dgvResult.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvResult.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dgvResult.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvResult.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.id,
+            this.time_stamp,
+            this.rpmActual,
+            this.rpmDemand,
+            this.torqueActual,
+            this.torqueDemand});
             this.dgvResult.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvResult.Location = new System.Drawing.Point(3, 3);
             this.dgvResult.Name = "dgvResult";
             this.dgvResult.RowHeadersVisible = false;
             this.dgvResult.Size = new System.Drawing.Size(1588, 611);
             this.dgvResult.TabIndex = 0;
+            // 
+            // id
+            // 
+            this.id.HeaderText = "id";
+            this.id.Name = "id";
+            // 
+            // time_stamp
+            // 
+            this.time_stamp.HeaderText = "Time Stamp";
+            this.time_stamp.Name = "time_stamp";
+            // 
+            // rpmActual
+            // 
+            this.rpmActual.HeaderText = "Speed Actual (rpm)";
+            this.rpmActual.Name = "rpmActual";
+            // 
+            // rpmDemand
+            // 
+            this.rpmDemand.HeaderText = "Speed Demand (rpm)";
+            this.rpmDemand.Name = "rpmDemand";
+            // 
+            // torqueActual
+            // 
+            this.torqueActual.HeaderText = "Torque Actual (Nm)";
+            this.torqueActual.Name = "torqueActual";
+            // 
+            // torqueDemand
+            // 
+            this.torqueDemand.HeaderText = "Torque Demand (Nm)";
+            this.torqueDemand.Name = "torqueDemand";
             // 
             // tabPage2
             // 
@@ -894,5 +950,11 @@
         private System.Windows.Forms.Button btnConnectDAQ;
         private JCS.ToggleSwitch toggleSwitch4;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.DataGridViewTextBoxColumn id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn time_stamp;
+        private System.Windows.Forms.DataGridViewTextBoxColumn rpmActual;
+        private System.Windows.Forms.DataGridViewTextBoxColumn rpmDemand;
+        private System.Windows.Forms.DataGridViewTextBoxColumn torqueActual;
+        private System.Windows.Forms.DataGridViewTextBoxColumn torqueDemand;
     }
 }

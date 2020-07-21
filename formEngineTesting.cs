@@ -21,6 +21,7 @@ using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Xml.Serialization;
 using MySqlX.XDevAPI.Relational;
 using EasyModbus;
+using System.IO;
 
 namespace UIDesign
 {
@@ -38,9 +39,9 @@ namespace UIDesign
         functionASCII fncascii = new functionASCII();
         TcpClient client;
         NetworkStream stream;
-        MySqlDataAdapter dataAdapterResult;
-        DataTable dataTableResult;
-        Thread tableDisplayThread;
+        //MySqlDataAdapter dataAdapterResult;
+        //DataTable dataTableResult;
+        //Thread tableDisplayThread;
         Thread threadReceiveData;
         texcelRespondProcessor respondProcessor = new texcelRespondProcessor();
         ModbusClient modbusDAQ;
@@ -65,7 +66,9 @@ namespace UIDesign
         double _Torque;
         string duration;
         string ramp_time;
-        string data_time_stamp;
+        //string data_time_stamp;
+        int[] coolantTemp;
+        int[] lubricantTemp;
         string _projectID { get; set; }
         int totalDemandDuration;
         int totalRampDuration;
@@ -73,15 +76,10 @@ namespace UIDesign
         int progressBar1Second = 0;
         int progressBar2Second = 0;
         string[] explodedResponse = null;
+        string torque;
+        string rpm;
         //Declare the flag
         bool isTesting = false; //FlagforDisplaingDataonTable
-
-    static void SetDoubleBuffer(Control ctl, bool DoubleBuffered)
-    {
-        typeof(Control).InvokeMember("DoubleBuffered",
-            BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
-            null, ctl, new object[] { DoubleBuffered });
-    }
 
     public formEngineTesting(ucChooseProject ucCP, string projectID)
     {
@@ -96,10 +94,10 @@ namespace UIDesign
         cmd = dbc.connection.CreateCommand();
         cmd.CommandText = "SELECT method_id FROM project_data WHERE id LIKE '%" + projectID + "%'";
         object methodID = cmd.ExecuteScalar();
-        rtbLogging.Text = 
-            "Your Project id is: " + projectID + "\r\n" + 
-            "Your method id is: " + methodID.ToString() +"\r\n" +
-            "Your project id is: " + projectID +"\r\n";
+        //rtbLogging.Text = 
+        //    "Your Project id is: " + projectID + "\r\n" + 
+        //    "Your method id is: " + methodID.ToString() +"\r\n" +
+        //    "Your project id is: " + projectID +"\r\n";
         _projectID = projectID;
 
         //Show the parameter on the datagridview
@@ -202,9 +200,6 @@ namespace UIDesign
         private void formEngineTesting_Load(object sender, EventArgs e)
         {
             // Declare all the thread
-            tableDisplayThread = new Thread(TableDisplay);
-            tableDisplayThread.IsBackground = true;
-            tableDisplayThread.Name = "TableDisplayThread";
             threadReceiveData = new Thread(startReceiving);
             threadReceiveData.IsBackground = true;
             threadReceiveData.Name = "Data receiving thread";
@@ -218,8 +213,8 @@ namespace UIDesign
                 //Higihlighting the current demand
                 dgvDemand.ClearSelection();
                 dgvDemand.Rows[i].Selected = true;
-                string torque = dgvDemand.Rows[i].Cells["Torque"].Value.ToString();
-                string rpm = dgvDemand.Rows[i].Cells["RPM"].Value.ToString();
+                torque = dgvDemand.Rows[i].Cells["Torque"].Value.ToString();
+                rpm = dgvDemand.Rows[i].Cells["RPM"].Value.ToString();
                 duration = dgvDemand.Rows[i].Cells["duration"].Value.ToString();
                 ramp_time = dgvDemand.Rows[i].Cells["ramp_time"].Value.ToString();
                 //send those parameters to texcel command               
@@ -271,15 +266,26 @@ namespace UIDesign
         //Time elapsed trigger
         private void stopwatch_command (object sender, EventArgs e)
         {
-            pbStage.Invoke((Action)delegate
+            try
+            {
+                coolantTemp = modbusWC.ReadInputRegisters(1, 1);
+                lubricantTemp = modbusOC.ReadInputRegisters(1, 1);
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText(String.Format("[PLC Error]: {0}", ex.Message));
+            }
+
+            this.Invoke((Action)delegate
             {
                 pbStage.CustomText = sw2.Elapsed.ToString("hh\\:mm\\:ss");
                 pbStage.Value = progressBar2Second;
-            });
-            pbTimeElapsed.Invoke((Action)delegate
-            {
                 pbTimeElapsed.CustomText = sw1.Elapsed.ToString("hh\\:mm\\:ss");
                 pbTimeElapsed.Value = progressBar1Second;
+                textBox6.Text = coolantTemp[0].ToString();
+                aGauge3.Value = coolantTemp[0];
+                textBox7.Text = lubricantTemp[0].ToString();
+                aGauge4.Value = lubricantTemp[0];
             });
             progressBar1Second += 1;
             progressBar2Second += 1;
@@ -295,8 +301,6 @@ namespace UIDesign
                 {
                     //Tell the programme wheter the testing on progress or not
                     isTesting = true;
-                    //Start the updating table thread
-                    tableDisplayThread.Start();
                     //Reseting the index if STOP button is clicked
                     i = 1;
                     //Immidiately send the first command
@@ -321,8 +325,6 @@ namespace UIDesign
                 {
                     //Tell the programme wheter the testing on progress or not
                     isTesting = true;
-                    //Start the updating table thread
-                    tableDisplayThread.Start();
                     //Immidiately send the first command
                     sendFirstCommand();
                     //Starting the timer
@@ -334,8 +336,6 @@ namespace UIDesign
                     sw2.Start();
                     //Synchronize the timer object with the main thread
                     Timer1.SynchronizingObject = this;
-                    ////Get rpm and torque value from texcel
-                    //requestDataTexcel();
                     //Set the pbStage maximum value
                     pbStage.Maximum = (int.Parse(duration) + int.Parse(ramp_time));
                 }
@@ -417,8 +417,8 @@ namespace UIDesign
             dgvDemand.ClearSelection();
             dgvDemand.Rows[0].Selected = true;
             //obtaining torque, rpm and duration value
-            string torque = dgvDemand.Rows[0].Cells["Torque"].Value.ToString();
-            string rpm = dgvDemand.Rows[0].Cells["RPM"].Value.ToString();
+            torque = dgvDemand.Rows[0].Cells["Torque"].Value.ToString();
+            rpm = dgvDemand.Rows[0].Cells["RPM"].Value.ToString();
             duration = dgvDemand.Rows[0].Cells["duration"].Value.ToString();
             ramp_time = dgvDemand.Rows[0].Cells["ramp_time"].Value.ToString();
             //send those parameters to texcel command
@@ -602,7 +602,7 @@ namespace UIDesign
                         }
                         else
                         {
-                            richTextBox1.Invoke((Action)delegate
+                            this.Invoke((Action)delegate
                             {
                                 richTextBox1.AppendText(string.Format("Respond [Else2]: {0}\r\n", responseUnit));
                                 richTextBox1.ScrollToCaret();
@@ -610,9 +610,13 @@ namespace UIDesign
                         }
                     }
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Recieving: " + e.Message );
+                    this.Invoke((Action)delegate
+                    {
+                        rtbLogging.AppendText(string.Format("[Recieving Error]: {0}\r\n", ex.Message));
+                        rtbLogging.ScrollToCaret();
+                    });
                 }
                 stream.Flush();
             }      
@@ -703,56 +707,76 @@ namespace UIDesign
         //------------------SAVING THE TESTING RESULT TO THE DATABASE----------------------------//
         public void sendResponseToDatabase(double actualRPM, double actualTorque)
         {
-            try
+            this.Invoke((Action)delegate
             {
-                dbc.Initialize();
-                dbc.OpenConnection();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd = dbc.connection.CreateCommand();
-                data_time_stamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@project_id", _projectID);
-                cmd.Parameters.AddWithValue("@time_stamp", data_time_stamp);
-                cmd.Parameters.AddWithValue("@speed", actualRPM);
-                cmd.Parameters.AddWithValue("@torque", actualTorque);
-                cmd.CommandText = "INSERT INTO testing_result(project_id, time_stamp, speed, torque)VALUES (@project_id, @time_stamp, @speed, @torque)";
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            dbc.CloseConnection();
+                var index = dgvResult.Rows.Add();
+                dgvResult.Rows[index].Cells["id"].Value = index + 1;
+                dgvResult.Rows[index].Cells["time_stamp"].Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                dgvResult.Rows[index].Cells["rpmActual"].Value = actualRPM;
+                dgvResult.Rows[index].Cells["rpmDemand"].Value = rpm;
+                dgvResult.Rows[index].Cells["torqueActual"].Value = actualTorque;
+                dgvResult.Rows[index].Cells["torqueDemand"].Value = torque;
+                dgvResult.FirstDisplayedScrollingRowIndex = dgvResult.RowCount - 1;
+                dgvResult.Update();
+            });
         }
-        
+
+        public void saveDataGridView()
+        {
+            //SaveFileDialog sfd = new SaveFileDialog();
+            //sfd.Filter = "CSV (*.csv)|*.csv";
+            //sfd.FileName = "Output.csv";
+            //bool fileError = false;
+            //if (sfd.ShowDialog() == DialogResult.OK)
+            //{
+            //    if (File.Exists(sfd.FileName))
+            //    {
+            //        try
+            //        {
+            //            File.Delete(sfd.FileName);
+            //        }
+            //        catch (IOException ex)
+            //        {
+            //            fileError = true;
+            //            MessageBox.Show("It wasn't possible to write the data to the disk." + ex.Message);
+            //        }
+            //    }
+            //    if (!fileError)
+            //    {
+            //        try
+            //        {
+            //            int columnCount = dataGridView1.Columns.Count;
+            //            string columnNames = "";
+            //            string[] outputCsv = new string[dataGridView1.Rows.Count + 1];
+            //            for (int i = 0; i < columnCount; i++)
+            //            {
+            //                columnNames += dataGridView1.Columns[i].HeaderText.ToString() + ",";
+            //            }
+            //            outputCsv[0] += columnNames;
+
+            //            for (int i = 1; (i - 1) < dataGridView1.Rows.Count; i++)
+            //            {
+            //                for (int j = 0; j < columnCount; j++)
+            //                {
+            //                    outputCsv[i] += dataGridView1.Rows[i - 1].Cells[j].Value.ToString() + ",";
+            //                }
+            //            }
+
+            //            File.WriteAllLines(sfd.FileName, outputCsv, Encoding.UTF8);
+            //            MessageBox.Show("Data Exported Successfully !!!", "Info");
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            MessageBox.Show("Error :" + ex.Message);
+            //        }
+            //    }
+            //}
+        }       
 
         public void TableDisplay()
         {
             while (isTesting)
             {
-                dbc.Initialize();
-                dbc.OpenConnection();
-                dataAdapterResult = null;
-                dataTableResult = null;
-                string queryResult = "SELECT * FROM testing_result WHERE project_id LIKE '%" + _projectID + "%'";
-                try
-                {
-                    dataAdapterResult = new MySqlDataAdapter(queryResult, dbc.connection);
-                    dataTableResult = new DataTable();
-                    dataAdapterResult.Fill(dataTableResult);
-                    dgvResult.Invoke((MethodInvoker)delegate
-                    {
-                        dgvResult.DataSource = dataTableResult;
-                        //Changing the coloumn format of dgvResult
-                        dgvResult.Columns["time_stamp"].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss";
-                        dgvResult.FirstDisplayedScrollingRowIndex = dgvResult.RowCount - 1;
-                    });
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-                dbc.CloseConnection();
                 Thread.Sleep(1000);
             }            
         }
