@@ -33,15 +33,11 @@ namespace UIDesign
         System.Timers.Timer Timer1;
         System.Timers.Timer Timer2;
         DateTime timestamp = DateTime.Now;
-        //System.Threading.Timer Timer3;
         DBConnect dbc = new DBConnect();
         TexcelCommand texcelCommand = new TexcelCommand();
         functionASCII fncascii = new functionASCII();
         TcpClient client;
         NetworkStream stream;
-        //MySqlDataAdapter dataAdapterResult;
-        //DataTable dataTableResult;
-        //Thread tableDisplayThread;
         Thread threadReceiveData;
         texcelRespondProcessor respondProcessor = new texcelRespondProcessor();
         ModbusClient modbusDAQ;
@@ -66,9 +62,10 @@ namespace UIDesign
         double _Torque;
         string duration;
         string ramp_time;
-        //string data_time_stamp;
         int[] coolantTemp;
-        int[] lubricantTemp;
+        float _coolantTemp;
+        int[] lubricantTemp;        
+        float _lubricantTemp;        
         string _projectID { get; set; }
         int totalDemandDuration;
         int totalRampDuration;
@@ -79,7 +76,6 @@ namespace UIDesign
         string torque;
         string rpm;
         //Declare the flag
-        bool isTesting = false; //FlagforDisplaingDataonTable
 
     public formEngineTesting(ucChooseProject ucCP, string projectID)
     {
@@ -94,10 +90,6 @@ namespace UIDesign
         cmd = dbc.connection.CreateCommand();
         cmd.CommandText = "SELECT method_id FROM project_data WHERE id LIKE '%" + projectID + "%'";
         object methodID = cmd.ExecuteScalar();
-        //rtbLogging.Text = 
-        //    "Your Project id is: " + projectID + "\r\n" + 
-        //    "Your method id is: " + methodID.ToString() +"\r\n" +
-        //    "Your project id is: " + projectID +"\r\n";
         _projectID = projectID;
 
         //Show the parameter on the datagridview
@@ -155,9 +147,7 @@ namespace UIDesign
         da.SelectCommand.CommandText = query2;
         da.Fill(dt2);
         IPTexcel = dt2.Rows[0][0].ToString();
-        rtbLogging.AppendText("IP TEXCEL" + IPTexcel + "\r\n");
         PortTexcel = dt2.Rows[0][1].ToString();
-        rtbLogging.AppendText("PORT TEXCEL" + PortTexcel + "\r\n");
         //inserting IP and PORT to Oil Coolant textbox field
         string query3 = "SELECT IP, Port FROM ipaddress WHERE device LIKE 'MODBUS_OC'";
         da.SelectCommand.CommandText = query3;
@@ -169,17 +159,14 @@ namespace UIDesign
         da.SelectCommand.CommandText = query4;
         da.Fill(dt4);
         IPWaterCoolant = dt4.Rows[0][0].ToString();
-        rtbLogging.AppendText("IP PLC Water Coolant" + IPWaterCoolant + "\r\n");
         PortWaterCoolant = dt4.Rows[0][1].ToString();
-        rtbLogging.AppendText("PORT PLC Water Coolant" + PortWaterCoolant + "\r\n");
 
         //Declaring all the timer and stopwatch
         Timer1 = new System.Timers.Timer();
         Timer1.Elapsed += new ElapsedEventHandler(commandTimer);
-        //Timer1.AutoReset = true;
+        Timer1.SynchronizingObject = this;
         Timer2 = new System.Timers.Timer(1000);
         Timer2.Elapsed += new ElapsedEventHandler(stopwatch_command);
-        //Timer2.AutoReset = true;
         dbc.CloseConnection();
 
         //Calculating total duration
@@ -190,7 +177,6 @@ namespace UIDesign
         }
         totalDuration = totalDemandDuration + totalRampDuration;
         pbTimeElapsed.Maximum = totalDuration;
-        rtbLogging.AppendText(String.Format("Total Duration: {0} s\r", totalDuration));
 
         //Disabling the mode button.
         btnMode.Enabled = false;
@@ -199,7 +185,6 @@ namespace UIDesign
 
         private void formEngineTesting_Load(object sender, EventArgs e)
         {
-            // Declare all the thread
             threadReceiveData = new Thread(startReceiving);
             threadReceiveData.IsBackground = true;
             threadReceiveData.Name = "Data receiving thread";
@@ -259,33 +244,37 @@ namespace UIDesign
                 btnStop_Click(sender, e);
                 MessageBox.Show("Your test is done!");
             }
-            //obtaining torque, rpm and duration value
+            
 
         }
 
-        //Time elapsed trigger
+        //Stopwatch to send command every 1 second.
         private void stopwatch_command (object sender, EventArgs e)
         {
             try
             {
                 coolantTemp = modbusWC.ReadInputRegisters(1, 1);
-                lubricantTemp = modbusOC.ReadInputRegisters(1, 1);
+                lubricantTemp = modbusOC.ReadInputRegisters(3, 1);
+                _coolantTemp = coolantTemp[0];
+                _lubricantTemp = lubricantTemp[0];
             }
             catch (Exception ex)
             {
-                rtbLogging.AppendText(String.Format("[PLC Error]: {0}", ex.Message));
+                this.Invoke((Action)delegate
+                {
+                    rtbLogging.AppendText(String.Format("[PLC Error]: {0}", ex.Message));
+                });                
             }
-
             this.Invoke((Action)delegate
             {
                 pbStage.CustomText = sw2.Elapsed.ToString("hh\\:mm\\:ss");
                 pbStage.Value = progressBar2Second;
                 pbTimeElapsed.CustomText = sw1.Elapsed.ToString("hh\\:mm\\:ss");
                 pbTimeElapsed.Value = progressBar1Second;
-                textBox6.Text = coolantTemp[0].ToString();
-                aGauge3.Value = coolantTemp[0];
-                textBox7.Text = lubricantTemp[0].ToString();
-                aGauge4.Value = lubricantTemp[0];
+                textBox6.Text = (_coolantTemp / 10).ToString();
+                aGauge3.Value = _coolantTemp / 10;
+                textBox7.Text = (_lubricantTemp / 10).ToString();
+                aGauge4.Value = _lubricantTemp / 10;
             });
             progressBar1Second += 1;
             progressBar2Second += 1;
@@ -295,54 +284,34 @@ namespace UIDesign
         //Start button trigger
         private void btnStart_Click(object sender, EventArgs e)
         {
-            if (toggleSwitch1.Checked == true)
+            if (i < 1)
             {
-                if (i < 1)
-                {
-                    //Tell the programme wheter the testing on progress or not
-                    isTesting = true;
-                    //Reseting the index if STOP button is clicked
-                    i = 1;
-                    //Immidiately send the first command
-                    sendFirstCommand();
-                    //Starting DAQ record
-                    startRecordDAQ();
-                    //Starting the timer
-                    Timer2.Enabled = true;
-                    Timer1.Interval = int.Parse(duration) * 1000;
-                    Timer1.Enabled = true;
-                    //Starting the stopwatch
-                    sw1.Start();
-                    sw2.Start();
-                    //Synchronize the timer object with the main thread
-                    Timer1.SynchronizingObject = this;
-                    //Get rpm and torque value from texcel
-                    requestDataTexcel();
-                    //Set the pbStage maximum value
-                    pbStage.Maximum = (int.Parse(duration) + int.Parse(ramp_time));
-                }
-                else
-                {
-                    //Tell the programme wheter the testing on progress or not
-                    isTesting = true;
-                    //Immidiately send the first command
-                    sendFirstCommand();
-                    //Starting the timer
-                    Timer2.Enabled = true;
-                    Timer1.Interval = int.Parse(duration) * 1000;
-                    Timer1.Enabled = true;
-                    //Starting the stopwatch
-                    sw1.Start();
-                    sw2.Start();
-                    //Synchronize the timer object with the main thread
-                    Timer1.SynchronizingObject = this;
-                    //Set the pbStage maximum value
-                    pbStage.Maximum = (int.Parse(duration) + int.Parse(ramp_time));
-                }
+                //Immidiately send the first command
+                sendFirstCommand();
+                i = 1;
+                //Starting DAQ record
+                startRecordDAQ();
+                //Starting the timer
+                Timer2.Enabled = true;
+                sw2.Start();
+                Timer1.Interval = int.Parse(duration) * 1000;
+                Timer1.Enabled = true;
+                sw1.Start();
+                //Get rpm and torque value from texcel
+                requestDataTexcel();
+                //Set the pbStage maximum value
+                pbStage.Maximum = (int.Parse(duration) + int.Parse(ramp_time));
             }
-            else
+            else //Resume the Testing 
             {
-                MessageBox.Show("CANNOT START THE TEST! \r\nConnection to all equipment has not established!");
+                //Starting the timer
+                Timer2.Enabled = true;
+                sw2.Start();
+                Timer1.Interval = int.Parse(duration) * 1000;
+                Timer1.Enabled = true;
+                sw1.Start();
+                //Set the pbStage maximum value
+                pbStage.Maximum = (int.Parse(duration) + int.Parse(ramp_time));
             }
         }
 
@@ -350,6 +319,7 @@ namespace UIDesign
         private void btnPause_Click(object sender, EventArgs e)
         {
             pauseRecordDAQ();
+            commandIdle();
             Timer1.Stop();
             Timer2.Stop();
             sw1.Stop();
@@ -382,7 +352,6 @@ namespace UIDesign
                 rtbLogging.AppendText(ex.Message);
                 rtbLogging.ScrollToCaret();
             }
-            isTesting = false;
             Timer1.Stop();
             Timer2.Stop();
             sw1.Stop();
@@ -410,7 +379,7 @@ namespace UIDesign
             stream.Write(bytesToSend1, 0, bytesToSend1.Length);
         }
 
-        //--------SENDING AND RECIEVING THE COMMAND TO TEXCEL-------------------------//
+        //---------------SENDING AND RECIEVING THE COMMAND TO TEXCEL-------------------------//
         private void sendFirstCommand()
         {
             //Highlighting the current demand
@@ -622,6 +591,24 @@ namespace UIDesign
             }      
         }
 
+        public void commandIdle()
+        {
+            string cmdFinal = fncascii.commandbuilder(texcelCommand.IdleCommand());
+            try
+            {
+                byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
+                stream.Write(bytesToSend, 0, bytesToSend.Length);
+                rtbLogging.AppendText(String.Format("[{1}]Sent: {0}", cmdFinal, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText(String.Format("[{1}]Command send error: {0}\r\n", ex.Message, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+                rtbLogging.ScrollToCaret();
+            }
+        }
+
+        //----------------Connection Button to All Device------------------------------------//
+
         //Establish the connection to the server from client.
         public void btnConnect_Click(object sender, EventArgs e)
         {
@@ -772,15 +759,7 @@ namespace UIDesign
             //    }
             //}
         }       
-
-        public void TableDisplay()
-        {
-            while (isTesting)
-            {
-                Thread.Sleep(1000);
-            }            
-        }
-        //-------------------------------START STOP PAUSEDAQ Function------------------------------//
+        //--------------------------START STOP PAUSE DAQ Function------------------------------//
         private void startRecordDAQ()
         {
             try
@@ -816,16 +795,31 @@ namespace UIDesign
         }
 
         //-------------------------Set point Coolant and Lubricant----------------------//
-        private void setPointCoolant()
+        private void btnSetCoolant_Click(object sender, EventArgs e)
         {
             try
             {
-                modbusWC.WriteSingleRegister(1, 70); //insert the Set Point here
-                rtbLogging.AppendText("Coolant Set Point: " + "\r\n");
+                int coolantSetPoint = (int)(double.Parse(tbSetCoolant.Text) * 10);
+                modbusWC.WriteSingleRegister(0, coolantSetPoint);
+                rtbLogging.AppendText(String.Format("[{1}]Coolant set point: {0}\r\n", tbSetCoolant.Text, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
             }
             catch (Exception ex)
             {
-                rtbLogging.AppendText("Coolant Conditioner Error: " + ex.Message + "\r\n");
+                rtbLogging.AppendText(String.Format("[{1}]Lubricant modbus write register error: {0}\r\n", ex.Message, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+            }
+        }
+
+        private void btnSetLubricant_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int lubricantSetPoint = (int)(double.Parse(tbSetCoolant.Text) * 10);
+                modbusOC.WriteSingleRegister(1, lubricantSetPoint);
+                rtbLogging.AppendText(String.Format("[{1}]Lubricant set point: {0} C\r\n", tbSetLubricant.Text, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+            }
+            catch (Exception ex)
+            {
+                rtbLogging.AppendText(String.Format("[{1}]Lubricant modbus write register error: {0}\r\n", ex.Message, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
             }
         }
 

@@ -97,6 +97,9 @@ namespace UIDesign
                 this.Hide();
                 this.Parent.Controls.Add(ucProjectDetail);
             }
+            else
+            {
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)

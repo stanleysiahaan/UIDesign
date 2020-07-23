@@ -55,10 +55,16 @@
             this.label4 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnConnectDAQ = new System.Windows.Forms.Button();
+            this.btnSetLubricant = new System.Windows.Forms.Button();
             this.btnConnectOC = new System.Windows.Forms.Button();
+            this.btnSetCoolant = new System.Windows.Forms.Button();
             this.btnConnectWC = new System.Windows.Forms.Button();
+            this.tbSetLubricant = new System.Windows.Forms.TextBox();
+            this.lblSetLubricant = new System.Windows.Forms.Label();
             this.btnConnect = new System.Windows.Forms.Button();
+            this.tbSetCoolant = new System.Windows.Forms.TextBox();
             this.toggleSwitch3 = new JCS.ToggleSwitch();
+            this.lblSetCoolant = new System.Windows.Forms.Label();
             this.toggleSwitch4 = new JCS.ToggleSwitch();
             this.toggleSwitch2 = new JCS.ToggleSwitch();
             this.toggleSwitch1 = new JCS.ToggleSwitch();
@@ -71,8 +77,6 @@
             this.label9 = new System.Windows.Forms.Label();
             this.rtbLogging = new System.Windows.Forms.RichTextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -87,17 +91,20 @@
             this.torqueDemand = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnPause = new System.Windows.Forms.Button();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.lblTexcelResponse = new System.Windows.Forms.Label();
             this.pbStage = new ProgressBarSample.TextProgressBar();
             this.pbTimeElapsed = new ProgressBarSample.TextProgressBar();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDemand)).BeginInit();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).BeginInit();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStart
@@ -458,10 +465,16 @@
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.btnConnectDAQ);
+            this.panel1.Controls.Add(this.btnSetLubricant);
             this.panel1.Controls.Add(this.btnConnectOC);
+            this.panel1.Controls.Add(this.btnSetCoolant);
             this.panel1.Controls.Add(this.btnConnectWC);
+            this.panel1.Controls.Add(this.tbSetLubricant);
+            this.panel1.Controls.Add(this.lblSetLubricant);
             this.panel1.Controls.Add(this.btnConnect);
+            this.panel1.Controls.Add(this.tbSetCoolant);
             this.panel1.Controls.Add(this.toggleSwitch3);
+            this.panel1.Controls.Add(this.lblSetCoolant);
             this.panel1.Controls.Add(this.toggleSwitch4);
             this.panel1.Controls.Add(this.toggleSwitch2);
             this.panel1.Controls.Add(this.toggleSwitch1);
@@ -473,51 +486,107 @@
             this.panel1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(239, 384);
+            this.panel1.Size = new System.Drawing.Size(239, 363);
             this.panel1.TabIndex = 13;
             // 
             // btnConnectDAQ
             // 
-            this.btnConnectDAQ.Location = new System.Drawing.Point(3, 336);
+            this.btnConnectDAQ.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnConnectDAQ.Location = new System.Drawing.Point(2, 193);
             this.btnConnectDAQ.Name = "btnConnectDAQ";
-            this.btnConnectDAQ.Size = new System.Drawing.Size(228, 35);
+            this.btnConnectDAQ.Size = new System.Drawing.Size(113, 35);
             this.btnConnectDAQ.TabIndex = 7;
-            this.btnConnectDAQ.Text = "Connect To DAQ";
+            this.btnConnectDAQ.Text = "DAQ";
             this.btnConnectDAQ.UseVisualStyleBackColor = true;
             this.btnConnectDAQ.Click += new System.EventHandler(this.btnConnectDAQ_Click);
             // 
+            // btnSetLubricant
+            // 
+            this.btnSetLubricant.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSetLubricant.Location = new System.Drawing.Point(184, 267);
+            this.btnSetLubricant.Name = "btnSetLubricant";
+            this.btnSetLubricant.Size = new System.Drawing.Size(47, 20);
+            this.btnSetLubricant.TabIndex = 10;
+            this.btnSetLubricant.Text = "set";
+            this.btnSetLubricant.UseVisualStyleBackColor = true;
+            this.btnSetLubricant.Click += new System.EventHandler(this.btnSetLubricant_Click);
+            // 
             // btnConnectOC
             // 
-            this.btnConnectOC.Location = new System.Drawing.Point(3, 295);
+            this.btnConnectOC.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnConnectOC.Location = new System.Drawing.Point(121, 193);
             this.btnConnectOC.Name = "btnConnectOC";
-            this.btnConnectOC.Size = new System.Drawing.Size(228, 35);
+            this.btnConnectOC.Size = new System.Drawing.Size(113, 35);
             this.btnConnectOC.TabIndex = 7;
-            this.btnConnectOC.Text = "Connect To Oil Coolant";
+            this.btnConnectOC.Text = "Lubricant";
             this.btnConnectOC.UseVisualStyleBackColor = true;
             this.btnConnectOC.Click += new System.EventHandler(this.btnConnectOC_Click);
             // 
+            // btnSetCoolant
+            // 
+            this.btnSetCoolant.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSetCoolant.Location = new System.Drawing.Point(184, 241);
+            this.btnSetCoolant.Name = "btnSetCoolant";
+            this.btnSetCoolant.Size = new System.Drawing.Size(47, 20);
+            this.btnSetCoolant.TabIndex = 10;
+            this.btnSetCoolant.Text = "set";
+            this.btnSetCoolant.UseVisualStyleBackColor = true;
+            this.btnSetCoolant.Click += new System.EventHandler(this.btnSetCoolant_Click);
+            // 
             // btnConnectWC
             // 
-            this.btnConnectWC.Location = new System.Drawing.Point(3, 254);
+            this.btnConnectWC.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnConnectWC.Location = new System.Drawing.Point(121, 152);
             this.btnConnectWC.Name = "btnConnectWC";
-            this.btnConnectWC.Size = new System.Drawing.Size(228, 35);
+            this.btnConnectWC.Size = new System.Drawing.Size(113, 35);
             this.btnConnectWC.TabIndex = 7;
-            this.btnConnectWC.Text = "Connect To Water";
+            this.btnConnectWC.Text = "Coolant";
             this.btnConnectWC.UseVisualStyleBackColor = true;
             this.btnConnectWC.Click += new System.EventHandler(this.btnConnectWC_Click);
             // 
+            // tbSetLubricant
+            // 
+            this.tbSetLubricant.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbSetLubricant.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSetLubricant.Location = new System.Drawing.Point(130, 267);
+            this.tbSetLubricant.Name = "tbSetLubricant";
+            this.tbSetLubricant.Size = new System.Drawing.Size(47, 20);
+            this.tbSetLubricant.TabIndex = 9;
+            // 
+            // lblSetLubricant
+            // 
+            this.lblSetLubricant.AutoSize = true;
+            this.lblSetLubricant.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSetLubricant.Location = new System.Drawing.Point(3, 270);
+            this.lblSetLubricant.Name = "lblSetLubricant";
+            this.lblSetLubricant.Size = new System.Drawing.Size(119, 14);
+            this.lblSetLubricant.TabIndex = 8;
+            this.lblSetLubricant.Text = "Lubricant Set Point (°C)";
+            // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(3, 213);
+            this.btnConnect.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnConnect.Location = new System.Drawing.Point(3, 152);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(228, 35);
+            this.btnConnect.Size = new System.Drawing.Size(113, 35);
             this.btnConnect.TabIndex = 7;
-            this.btnConnect.Text = "Connect To Texcel";
+            this.btnConnect.Text = "Texcel";
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
+            // tbSetCoolant
+            // 
+            this.tbSetCoolant.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbSetCoolant.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSetCoolant.Location = new System.Drawing.Point(130, 241);
+            this.tbSetCoolant.Name = "tbSetCoolant";
+            this.tbSetCoolant.Size = new System.Drawing.Size(47, 20);
+            this.tbSetCoolant.TabIndex = 9;
+            // 
             // toggleSwitch3
             // 
+            this.toggleSwitch3.Enabled = false;
+            this.toggleSwitch3.GrayWhenDisabled = false;
             this.toggleSwitch3.Location = new System.Drawing.Point(161, 124);
             this.toggleSwitch3.Name = "toggleSwitch3";
             this.toggleSwitch3.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -527,8 +596,20 @@
             this.toggleSwitch3.Size = new System.Drawing.Size(55, 22);
             this.toggleSwitch3.TabIndex = 6;
             // 
+            // lblSetCoolant
+            // 
+            this.lblSetCoolant.AutoSize = true;
+            this.lblSetCoolant.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSetCoolant.Location = new System.Drawing.Point(3, 244);
+            this.lblSetCoolant.Name = "lblSetCoolant";
+            this.lblSetCoolant.Size = new System.Drawing.Size(110, 14);
+            this.lblSetCoolant.TabIndex = 8;
+            this.lblSetCoolant.Text = "Coolant Set Point (°C)";
+            // 
             // toggleSwitch4
             // 
+            this.toggleSwitch4.Enabled = false;
+            this.toggleSwitch4.GrayWhenDisabled = false;
             this.toggleSwitch4.Location = new System.Drawing.Point(161, 96);
             this.toggleSwitch4.Name = "toggleSwitch4";
             this.toggleSwitch4.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -540,6 +621,8 @@
             // 
             // toggleSwitch2
             // 
+            this.toggleSwitch2.Enabled = false;
+            this.toggleSwitch2.GrayWhenDisabled = false;
             this.toggleSwitch2.Location = new System.Drawing.Point(161, 68);
             this.toggleSwitch2.Name = "toggleSwitch2";
             this.toggleSwitch2.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -625,7 +708,7 @@
             this.panel2.Controls.Add(this.rtbLogging);
             this.panel2.Location = new System.Drawing.Point(1665, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(239, 384);
+            this.panel2.Size = new System.Drawing.Size(239, 364);
             this.panel2.TabIndex = 14;
             // 
             // label9
@@ -643,10 +726,10 @@
             // rtbLogging
             // 
             this.rtbLogging.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.rtbLogging.Location = new System.Drawing.Point(0, 40);
+            this.rtbLogging.Location = new System.Drawing.Point(0, 39);
             this.rtbLogging.Name = "rtbLogging";
             this.rtbLogging.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtbLogging.Size = new System.Drawing.Size(237, 342);
+            this.rtbLogging.Size = new System.Drawing.Size(237, 323);
             this.rtbLogging.TabIndex = 0;
             this.rtbLogging.Text = "";
             // 
@@ -662,24 +745,6 @@
             this.textBox1.TabIndex = 0;
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.BackColor = System.Drawing.SystemColors.Control;
-            this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flowLayoutPanel1.Controls.Add(this.richTextBox1);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 384);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(303, 648);
-            this.flowLayoutPanel1.TabIndex = 15;
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(3, 3);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(291, 328);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
-            // 
             // panel3
             // 
             this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -687,9 +752,9 @@
             this.panel3.BackColor = System.Drawing.SystemColors.Control;
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.tabControl1);
-            this.panel3.Location = new System.Drawing.Point(300, 384);
+            this.panel3.Location = new System.Drawing.Point(241, 369);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1604, 648);
+            this.panel3.Size = new System.Drawing.Size(1663, 672);
             this.panel3.TabIndex = 16;
             // 
             // tabControl1
@@ -702,7 +767,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1602, 646);
+            this.tabControl1.Size = new System.Drawing.Size(1661, 670);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage3
@@ -711,7 +776,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1594, 617);
+            this.tabPage3.Size = new System.Drawing.Size(1653, 641);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Demand List";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -730,7 +795,7 @@
             this.dgvDemand.Location = new System.Drawing.Point(3, 3);
             this.dgvDemand.Name = "dgvDemand";
             this.dgvDemand.RowHeadersVisible = false;
-            this.dgvDemand.Size = new System.Drawing.Size(1588, 611);
+            this.dgvDemand.Size = new System.Drawing.Size(1647, 635);
             this.dgvDemand.TabIndex = 0;
             // 
             // tabPage1
@@ -740,7 +805,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1594, 617);
+            this.tabPage1.Size = new System.Drawing.Size(1653, 641);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Table";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -765,7 +830,7 @@
             this.dgvResult.Location = new System.Drawing.Point(3, 3);
             this.dgvResult.Name = "dgvResult";
             this.dgvResult.RowHeadersVisible = false;
-            this.dgvResult.Size = new System.Drawing.Size(1588, 611);
+            this.dgvResult.Size = new System.Drawing.Size(1647, 635);
             this.dgvResult.TabIndex = 0;
             // 
             // id
@@ -803,7 +868,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1594, 617);
+            this.tabPage2.Size = new System.Drawing.Size(1653, 641);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Graph";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -822,6 +887,37 @@
             this.btnPause.Text = "PAUSE";
             this.btnPause.UseVisualStyleBackColor = false;
             this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox1.Location = new System.Drawing.Point(5, 30);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.richTextBox1.Size = new System.Drawing.Size(229, 635);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = "";
+            // 
+            // panel4
+            // 
+            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.Controls.Add(this.lblTexcelResponse);
+            this.panel4.Controls.Add(this.richTextBox1);
+            this.panel4.Location = new System.Drawing.Point(0, 370);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(239, 670);
+            this.panel4.TabIndex = 18;
+            // 
+            // lblTexcelResponse
+            // 
+            this.lblTexcelResponse.AutoSize = true;
+            this.lblTexcelResponse.Font = new System.Drawing.Font("Futura Std Medium", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.lblTexcelResponse.Location = new System.Drawing.Point(1, 0);
+            this.lblTexcelResponse.Name = "lblTexcelResponse";
+            this.lblTexcelResponse.Size = new System.Drawing.Size(160, 27);
+            this.lblTexcelResponse.TabIndex = 11;
+            this.lblTexcelResponse.Text = "Texcel Response";
             // 
             // pbStage
             // 
@@ -855,10 +951,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1904, 1041);
+            this.Controls.Add(this.panel4);
             this.Controls.Add(this.pbStage);
             this.Controls.Add(this.pbTimeElapsed);
             this.Controls.Add(this.panel3);
-            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
@@ -883,20 +979,21 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "formEngineTesting";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "engineTestingForm";
+            this.Text = "System Control";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.formEngineTesting_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvDemand)).EndInit();
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).EndInit();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -932,14 +1029,12 @@
         private JCS.ToggleSwitch toggleSwitch2;
         private System.Windows.Forms.RichTextBox rtbLogging;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.DataGridView dgvDemand;
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.DataGridView dgvResult;
         private System.Windows.Forms.Button btnPause;
@@ -956,5 +1051,14 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn rpmDemand;
         private System.Windows.Forms.DataGridViewTextBoxColumn torqueActual;
         private System.Windows.Forms.DataGridViewTextBoxColumn torqueDemand;
+        private System.Windows.Forms.Label lblSetCoolant;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Button btnSetCoolant;
+        private System.Windows.Forms.TextBox tbSetCoolant;
+        private System.Windows.Forms.Button btnSetLubricant;
+        private System.Windows.Forms.TextBox tbSetLubricant;
+        private System.Windows.Forms.Label lblSetLubricant;
+        private System.Windows.Forms.Label lblTexcelResponse;
     }
 }

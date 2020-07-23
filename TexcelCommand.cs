@@ -37,6 +37,13 @@ namespace UIDesign
             return command = "C2,2," + torque + ",6,1," + rpm + ",6,0," + inletValve + ",6," + duration + ",";
         }
 
+        //Idle Command
+        public string IdleCommand()
+        {
+            //C16,<dmode>,<ddem>,<dramp>,<tmode>,<tdem>,<tramp>,<duration>,<checksum><cr>
+            return command = "C16,0,0,25,0,0,25,";
+        }
+
         //Dump Load
         public string DumpLoad()
         {
