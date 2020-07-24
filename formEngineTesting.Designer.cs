@@ -63,14 +63,16 @@
             this.lblSetLubricant = new System.Windows.Forms.Label();
             this.btnConnect = new System.Windows.Forms.Button();
             this.tbSetCoolant = new System.Windows.Forms.TextBox();
-            this.toggleSwitch3 = new JCS.ToggleSwitch();
+            this.tsDAQConnection = new JCS.ToggleSwitch();
             this.lblSetCoolant = new System.Windows.Forms.Label();
-            this.toggleSwitch4 = new JCS.ToggleSwitch();
-            this.toggleSwitch2 = new JCS.ToggleSwitch();
-            this.toggleSwitch1 = new JCS.ToggleSwitch();
+            this.tsLubeConnection = new JCS.ToggleSwitch();
+            this.tsCoolantConnection = new JCS.ToggleSwitch();
+            this.tsTexcelConnection = new JCS.ToggleSwitch();
+            this.tsTexcelHost = new JCS.ToggleSwitch();
             this.label10 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -174,14 +176,14 @@
             this.aGauge1.GaugeLabels.Add(aGaugeLabel1);
             this.aGauge1.GaugeLabels.Add(aGaugeLabel2);
             aGaugeRange1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(57)))), ((int)(((byte)(43)))));
-            aGaugeRange1.EndValue = 8F;
+            aGaugeRange1.EndValue = 6F;
             aGaugeRange1.InnerRadius = 185;
             aGaugeRange1.InRange = false;
             aGaugeRange1.Name = "GaugeRange1";
             aGaugeRange1.OuterRadius = 200;
-            aGaugeRange1.StartValue = 6.5F;
+            aGaugeRange1.StartValue = 4F;
             aGaugeRange2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(174)))), ((int)(((byte)(96)))));
-            aGaugeRange2.EndValue = 6.5F;
+            aGaugeRange2.EndValue = 4F;
             aGaugeRange2.InnerRadius = 185;
             aGaugeRange2.InRange = false;
             aGaugeRange2.Name = "GaugeRange2";
@@ -189,8 +191,8 @@
             aGaugeRange2.StartValue = 0F;
             this.aGauge1.GaugeRanges.Add(aGaugeRange1);
             this.aGauge1.GaugeRanges.Add(aGaugeRange2);
-            this.aGauge1.Location = new System.Drawing.Point(194, -15);
-            this.aGauge1.MaxValue = 8F;
+            this.aGauge1.Location = new System.Drawing.Point(204, -15);
+            this.aGauge1.MaxValue = 6F;
             this.aGauge1.MinValue = 0F;
             this.aGauge1.Name = "aGauge1";
             this.aGauge1.NeedleColor1 = System.Windows.Forms.AGaugeNeedleColor.Gray;
@@ -258,7 +260,7 @@
             this.aGauge2.GaugeLabels.Add(aGaugeLabel3);
             this.aGauge2.GaugeLabels.Add(aGaugeLabel4);
             this.aGauge2.Location = new System.Drawing.Point(1209, -15);
-            this.aGauge2.MaxValue = 40F;
+            this.aGauge2.MaxValue = 150F;
             this.aGauge2.MinValue = 0F;
             this.aGauge2.Name = "aGauge2";
             this.aGauge2.NeedleColor1 = System.Windows.Forms.AGaugeNeedleColor.Gray;
@@ -273,7 +275,7 @@
             this.aGauge2.ScaleLinesMajorColor = System.Drawing.Color.Black;
             this.aGauge2.ScaleLinesMajorInnerRadius = 190;
             this.aGauge2.ScaleLinesMajorOuterRadius = 200;
-            this.aGauge2.ScaleLinesMajorStepValue = 5F;
+            this.aGauge2.ScaleLinesMajorStepValue = 10F;
             this.aGauge2.ScaleLinesMajorWidth = 2;
             this.aGauge2.ScaleLinesMinorColor = System.Drawing.Color.Gray;
             this.aGauge2.ScaleLinesMinorInnerRadius = 195;
@@ -462,6 +464,7 @@
             // 
             // panel1
             // 
+            this.panel1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.btnConnectDAQ);
@@ -473,26 +476,28 @@
             this.panel1.Controls.Add(this.lblSetLubricant);
             this.panel1.Controls.Add(this.btnConnect);
             this.panel1.Controls.Add(this.tbSetCoolant);
-            this.panel1.Controls.Add(this.toggleSwitch3);
+            this.panel1.Controls.Add(this.tsDAQConnection);
             this.panel1.Controls.Add(this.lblSetCoolant);
-            this.panel1.Controls.Add(this.toggleSwitch4);
-            this.panel1.Controls.Add(this.toggleSwitch2);
-            this.panel1.Controls.Add(this.toggleSwitch1);
+            this.panel1.Controls.Add(this.tsLubeConnection);
+            this.panel1.Controls.Add(this.tsCoolantConnection);
+            this.panel1.Controls.Add(this.tsTexcelConnection);
+            this.panel1.Controls.Add(this.tsTexcelHost);
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label7);
+            this.panel1.Controls.Add(this.label11);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(1, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(239, 363);
+            this.panel1.Size = new System.Drawing.Size(239, 340);
             this.panel1.TabIndex = 13;
             // 
             // btnConnectDAQ
             // 
             this.btnConnectDAQ.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConnectDAQ.Location = new System.Drawing.Point(2, 193);
+            this.btnConnectDAQ.Location = new System.Drawing.Point(2, 219);
             this.btnConnectDAQ.Name = "btnConnectDAQ";
             this.btnConnectDAQ.Size = new System.Drawing.Size(113, 35);
             this.btnConnectDAQ.TabIndex = 7;
@@ -503,7 +508,7 @@
             // btnSetLubricant
             // 
             this.btnSetLubricant.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSetLubricant.Location = new System.Drawing.Point(184, 267);
+            this.btnSetLubricant.Location = new System.Drawing.Point(184, 285);
             this.btnSetLubricant.Name = "btnSetLubricant";
             this.btnSetLubricant.Size = new System.Drawing.Size(47, 20);
             this.btnSetLubricant.TabIndex = 10;
@@ -514,7 +519,7 @@
             // btnConnectOC
             // 
             this.btnConnectOC.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConnectOC.Location = new System.Drawing.Point(121, 193);
+            this.btnConnectOC.Location = new System.Drawing.Point(121, 219);
             this.btnConnectOC.Name = "btnConnectOC";
             this.btnConnectOC.Size = new System.Drawing.Size(113, 35);
             this.btnConnectOC.TabIndex = 7;
@@ -525,7 +530,7 @@
             // btnSetCoolant
             // 
             this.btnSetCoolant.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSetCoolant.Location = new System.Drawing.Point(184, 241);
+            this.btnSetCoolant.Location = new System.Drawing.Point(184, 259);
             this.btnSetCoolant.Name = "btnSetCoolant";
             this.btnSetCoolant.Size = new System.Drawing.Size(47, 20);
             this.btnSetCoolant.TabIndex = 10;
@@ -536,7 +541,7 @@
             // btnConnectWC
             // 
             this.btnConnectWC.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConnectWC.Location = new System.Drawing.Point(121, 152);
+            this.btnConnectWC.Location = new System.Drawing.Point(121, 178);
             this.btnConnectWC.Name = "btnConnectWC";
             this.btnConnectWC.Size = new System.Drawing.Size(113, 35);
             this.btnConnectWC.TabIndex = 7;
@@ -548,7 +553,7 @@
             // 
             this.tbSetLubricant.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbSetLubricant.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSetLubricant.Location = new System.Drawing.Point(130, 267);
+            this.tbSetLubricant.Location = new System.Drawing.Point(130, 285);
             this.tbSetLubricant.Name = "tbSetLubricant";
             this.tbSetLubricant.Size = new System.Drawing.Size(47, 20);
             this.tbSetLubricant.TabIndex = 9;
@@ -557,7 +562,7 @@
             // 
             this.lblSetLubricant.AutoSize = true;
             this.lblSetLubricant.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSetLubricant.Location = new System.Drawing.Point(3, 270);
+            this.lblSetLubricant.Location = new System.Drawing.Point(3, 288);
             this.lblSetLubricant.Name = "lblSetLubricant";
             this.lblSetLubricant.Size = new System.Drawing.Size(119, 14);
             this.lblSetLubricant.TabIndex = 8;
@@ -566,7 +571,7 @@
             // btnConnect
             // 
             this.btnConnect.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConnect.Location = new System.Drawing.Point(3, 152);
+            this.btnConnect.Location = new System.Drawing.Point(3, 178);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(113, 35);
             this.btnConnect.TabIndex = 7;
@@ -578,114 +583,139 @@
             // 
             this.tbSetCoolant.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbSetCoolant.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSetCoolant.Location = new System.Drawing.Point(130, 241);
+            this.tbSetCoolant.Location = new System.Drawing.Point(130, 259);
             this.tbSetCoolant.Name = "tbSetCoolant";
             this.tbSetCoolant.Size = new System.Drawing.Size(47, 20);
             this.tbSetCoolant.TabIndex = 9;
             // 
-            // toggleSwitch3
+            // tsDAQConnection
             // 
-            this.toggleSwitch3.Enabled = false;
-            this.toggleSwitch3.GrayWhenDisabled = false;
-            this.toggleSwitch3.Location = new System.Drawing.Point(161, 124);
-            this.toggleSwitch3.Name = "toggleSwitch3";
-            this.toggleSwitch3.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toggleSwitch3.OffText = "OFF";
-            this.toggleSwitch3.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toggleSwitch3.OnText = "ON";
-            this.toggleSwitch3.Size = new System.Drawing.Size(55, 22);
-            this.toggleSwitch3.TabIndex = 6;
+            this.tsDAQConnection.Enabled = false;
+            this.tsDAQConnection.GrayWhenDisabled = false;
+            this.tsDAQConnection.Location = new System.Drawing.Point(184, 150);
+            this.tsDAQConnection.Name = "tsDAQConnection";
+            this.tsDAQConnection.OffFont = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsDAQConnection.OffText = "OFF";
+            this.tsDAQConnection.OnFont = new System.Drawing.Font("Arial", 8.25F);
+            this.tsDAQConnection.OnText = "ON";
+            this.tsDAQConnection.Size = new System.Drawing.Size(40, 20);
+            this.tsDAQConnection.TabIndex = 6;
             // 
             // lblSetCoolant
             // 
             this.lblSetCoolant.AutoSize = true;
             this.lblSetCoolant.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSetCoolant.Location = new System.Drawing.Point(3, 244);
+            this.lblSetCoolant.Location = new System.Drawing.Point(3, 262);
             this.lblSetCoolant.Name = "lblSetCoolant";
             this.lblSetCoolant.Size = new System.Drawing.Size(110, 14);
             this.lblSetCoolant.TabIndex = 8;
             this.lblSetCoolant.Text = "Coolant Set Point (°C)";
             // 
-            // toggleSwitch4
+            // tsLubeConnection
             // 
-            this.toggleSwitch4.Enabled = false;
-            this.toggleSwitch4.GrayWhenDisabled = false;
-            this.toggleSwitch4.Location = new System.Drawing.Point(161, 96);
-            this.toggleSwitch4.Name = "toggleSwitch4";
-            this.toggleSwitch4.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toggleSwitch4.OffText = "OFF";
-            this.toggleSwitch4.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toggleSwitch4.OnText = "ON";
-            this.toggleSwitch4.Size = new System.Drawing.Size(55, 22);
-            this.toggleSwitch4.TabIndex = 5;
+            this.tsLubeConnection.Enabled = false;
+            this.tsLubeConnection.GrayWhenDisabled = false;
+            this.tsLubeConnection.Location = new System.Drawing.Point(184, 98);
+            this.tsLubeConnection.Name = "tsLubeConnection";
+            this.tsLubeConnection.OffFont = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsLubeConnection.OffText = "OFF";
+            this.tsLubeConnection.OnFont = new System.Drawing.Font("Arial", 8.25F);
+            this.tsLubeConnection.OnText = "ON";
+            this.tsLubeConnection.Size = new System.Drawing.Size(40, 20);
+            this.tsLubeConnection.TabIndex = 5;
             // 
-            // toggleSwitch2
+            // tsCoolantConnection
             // 
-            this.toggleSwitch2.Enabled = false;
-            this.toggleSwitch2.GrayWhenDisabled = false;
-            this.toggleSwitch2.Location = new System.Drawing.Point(161, 68);
-            this.toggleSwitch2.Name = "toggleSwitch2";
-            this.toggleSwitch2.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toggleSwitch2.OffText = "OFF";
-            this.toggleSwitch2.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toggleSwitch2.OnText = "ON";
-            this.toggleSwitch2.Size = new System.Drawing.Size(55, 22);
-            this.toggleSwitch2.TabIndex = 5;
+            this.tsCoolantConnection.Enabled = false;
+            this.tsCoolantConnection.GrayWhenDisabled = false;
+            this.tsCoolantConnection.Location = new System.Drawing.Point(183, 124);
+            this.tsCoolantConnection.Name = "tsCoolantConnection";
+            this.tsCoolantConnection.OffFont = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsCoolantConnection.OffText = "OFF";
+            this.tsCoolantConnection.OnFont = new System.Drawing.Font("Arial", 8.25F);
+            this.tsCoolantConnection.OnText = "ON";
+            this.tsCoolantConnection.Size = new System.Drawing.Size(40, 20);
+            this.tsCoolantConnection.TabIndex = 5;
             // 
-            // toggleSwitch1
+            // tsTexcelConnection
             // 
-            this.toggleSwitch1.Enabled = false;
-            this.toggleSwitch1.GrayWhenDisabled = false;
-            this.toggleSwitch1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.toggleSwitch1.Location = new System.Drawing.Point(161, 40);
-            this.toggleSwitch1.Name = "toggleSwitch1";
-            this.toggleSwitch1.OffFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toggleSwitch1.OffText = "OFF";
-            this.toggleSwitch1.OnFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toggleSwitch1.OnText = "ON";
-            this.toggleSwitch1.Size = new System.Drawing.Size(55, 22);
-            this.toggleSwitch1.TabIndex = 4;
-            this.toggleSwitch1.ToggleOnSideClick = false;
+            this.tsTexcelConnection.Enabled = false;
+            this.tsTexcelConnection.GrayWhenDisabled = false;
+            this.tsTexcelConnection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.tsTexcelConnection.Location = new System.Drawing.Point(184, 47);
+            this.tsTexcelConnection.Name = "tsTexcelConnection";
+            this.tsTexcelConnection.OffFont = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsTexcelConnection.OffText = "OFF";
+            this.tsTexcelConnection.OnFont = new System.Drawing.Font("Arial", 8.25F);
+            this.tsTexcelConnection.OnText = "ON";
+            this.tsTexcelConnection.Size = new System.Drawing.Size(40, 20);
+            this.tsTexcelConnection.TabIndex = 4;
+            this.tsTexcelConnection.ToggleOnSideClick = false;
+            // 
+            // tsTexcelHost
+            // 
+            this.tsTexcelHost.Enabled = false;
+            this.tsTexcelHost.GrayWhenDisabled = false;
+            this.tsTexcelHost.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.tsTexcelHost.Location = new System.Drawing.Point(184, 72);
+            this.tsTexcelHost.Name = "tsTexcelHost";
+            this.tsTexcelHost.OffFont = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsTexcelHost.OffText = "OFF";
+            this.tsTexcelHost.OnFont = new System.Drawing.Font("Arial", 8.25F);
+            this.tsTexcelHost.OnText = "ON";
+            this.tsTexcelHost.Size = new System.Drawing.Size(40, 20);
+            this.tsTexcelHost.TabIndex = 4;
+            this.tsTexcelHost.ToggleOnSideClick = false;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(16, 96);
+            this.label10.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(15, 101);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(76, 22);
+            this.label10.Size = new System.Drawing.Size(63, 18);
             this.label10.TabIndex = 2;
             this.label10.Text = "Oil PLC";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(16, 124);
+            this.label8.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(15, 149);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(52, 22);
+            this.label8.Size = new System.Drawing.Size(43, 18);
             this.label8.TabIndex = 3;
             this.label8.Text = "DAQ";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(16, 68);
+            this.label7.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(15, 127);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(118, 22);
+            this.label7.Size = new System.Drawing.Size(98, 18);
             this.label7.TabIndex = 2;
             this.label7.Text = "Coolant PLC";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(15, 50);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(75, 18);
+            this.label11.TabIndex = 1;
+            this.label11.Text = "Texcel V4";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(12, 40);
+            this.label6.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(15, 75);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(150, 22);
+            this.label6.Size = new System.Drawing.Size(165, 18);
             this.label6.TabIndex = 1;
-            this.label6.Text = "Texcel V4 (Host)";
+            this.label6.Text = "Texcel V4 (Host Mode)";
             // 
             // label5
             // 
@@ -701,14 +731,14 @@
             // 
             // panel2
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.panel2.BackColor = System.Drawing.SystemColors.Control;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.label9);
             this.panel2.Controls.Add(this.rtbLogging);
-            this.panel2.Location = new System.Drawing.Point(1665, 0);
+            this.panel2.Location = new System.Drawing.Point(1, 918);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(239, 364);
+            this.panel2.Size = new System.Drawing.Size(1902, 111);
             this.panel2.TabIndex = 14;
             // 
             // label9
@@ -716,7 +746,7 @@
             this.label9.AutoSize = true;
             this.label9.BackColor = System.Drawing.Color.Transparent;
             this.label9.Font = new System.Drawing.Font("Futura Std Medium", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(3, 9);
+            this.label9.Location = new System.Drawing.Point(-1, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(44, 27);
             this.label9.TabIndex = 15;
@@ -726,12 +756,13 @@
             // rtbLogging
             // 
             this.rtbLogging.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.rtbLogging.Location = new System.Drawing.Point(0, 39);
+            this.rtbLogging.Location = new System.Drawing.Point(0, 33);
             this.rtbLogging.Name = "rtbLogging";
             this.rtbLogging.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtbLogging.Size = new System.Drawing.Size(237, 323);
+            this.rtbLogging.Size = new System.Drawing.Size(1900, 76);
             this.rtbLogging.TabIndex = 0;
             this.rtbLogging.Text = "";
+            this.rtbLogging.TextChanged += new System.EventHandler(this.highlightError);
             // 
             // textBox1
             // 
@@ -747,14 +778,13 @@
             // 
             // panel3
             // 
-            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.panel3.BackColor = System.Drawing.SystemColors.Control;
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.tabControl1);
-            this.panel3.Location = new System.Drawing.Point(241, 369);
+            this.panel3.Location = new System.Drawing.Point(242, 355);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1663, 672);
+            this.panel3.Size = new System.Drawing.Size(1661, 562);
             this.panel3.TabIndex = 16;
             // 
             // tabControl1
@@ -767,7 +797,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1661, 670);
+            this.tabControl1.Size = new System.Drawing.Size(1659, 560);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage3
@@ -776,7 +806,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1653, 641);
+            this.tabPage3.Size = new System.Drawing.Size(1651, 531);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Demand List";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -795,7 +825,7 @@
             this.dgvDemand.Location = new System.Drawing.Point(3, 3);
             this.dgvDemand.Name = "dgvDemand";
             this.dgvDemand.RowHeadersVisible = false;
-            this.dgvDemand.Size = new System.Drawing.Size(1647, 635);
+            this.dgvDemand.Size = new System.Drawing.Size(1645, 525);
             this.dgvDemand.TabIndex = 0;
             // 
             // tabPage1
@@ -805,7 +835,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1653, 641);
+            this.tabPage1.Size = new System.Drawing.Size(1653, 531);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Table";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -830,7 +860,7 @@
             this.dgvResult.Location = new System.Drawing.Point(3, 3);
             this.dgvResult.Name = "dgvResult";
             this.dgvResult.RowHeadersVisible = false;
-            this.dgvResult.Size = new System.Drawing.Size(1647, 635);
+            this.dgvResult.Size = new System.Drawing.Size(1647, 525);
             this.dgvResult.TabIndex = 0;
             // 
             // id
@@ -868,7 +898,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1653, 641);
+            this.tabPage2.Size = new System.Drawing.Size(1653, 531);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Graph";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -892,21 +922,22 @@
             // 
             this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox1.Location = new System.Drawing.Point(5, 30);
+            this.richTextBox1.Location = new System.Drawing.Point(5, 31);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBox1.Size = new System.Drawing.Size(229, 635);
+            this.richTextBox1.Size = new System.Drawing.Size(229, 526);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             // 
             // panel4
             // 
+            this.panel4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel4.Controls.Add(this.lblTexcelResponse);
             this.panel4.Controls.Add(this.richTextBox1);
-            this.panel4.Location = new System.Drawing.Point(0, 370);
+            this.panel4.Location = new System.Drawing.Point(1, 355);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(239, 670);
+            this.panel4.Size = new System.Drawing.Size(239, 562);
             this.panel4.TabIndex = 18;
             // 
             // lblTexcelResponse
@@ -951,12 +982,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1904, 1041);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.pbStage);
             this.Controls.Add(this.pbTimeElapsed);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -1024,9 +1055,9 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
-        private JCS.ToggleSwitch toggleSwitch1;
-        private JCS.ToggleSwitch toggleSwitch3;
-        private JCS.ToggleSwitch toggleSwitch2;
+        private JCS.ToggleSwitch tsTexcelHost;
+        private JCS.ToggleSwitch tsDAQConnection;
+        private JCS.ToggleSwitch tsCoolantConnection;
         private System.Windows.Forms.RichTextBox rtbLogging;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Panel panel3;
@@ -1043,7 +1074,7 @@
         private System.Windows.Forms.Button btnConnectWC;
         private System.Windows.Forms.Button btnConnectOC;
         private System.Windows.Forms.Button btnConnectDAQ;
-        private JCS.ToggleSwitch toggleSwitch4;
+        private JCS.ToggleSwitch tsLubeConnection;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn time_stamp;
@@ -1060,5 +1091,7 @@
         private System.Windows.Forms.TextBox tbSetLubricant;
         private System.Windows.Forms.Label lblSetLubricant;
         private System.Windows.Forms.Label lblTexcelResponse;
+        private JCS.ToggleSwitch tsTexcelConnection;
+        private System.Windows.Forms.Label label11;
     }
 }
