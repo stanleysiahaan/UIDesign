@@ -99,7 +99,6 @@
             this.pbStage = new ProgressBarSample.TextProgressBar();
             this.pbTimeElapsed = new ProgressBarSample.TextProgressBar();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.btnSaveHeader = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -109,7 +108,6 @@
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).BeginInit();
             this.panel4.SuspendLayout();
-            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStart
@@ -847,6 +845,7 @@
             // 
             this.dgvResult.AllowUserToAddRows = false;
             this.dgvResult.AllowUserToDeleteRows = false;
+            this.dgvResult.AllowUserToOrderColumns = true;
             this.dgvResult.AllowUserToResizeRows = false;
             this.dgvResult.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvResult.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
@@ -981,21 +980,11 @@
             // 
             // panel5
             // 
-            this.panel5.Controls.Add(this.btnSaveHeader);
-            this.panel5.Location = new System.Drawing.Point(1664, 6);
+            this.panel5.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel5.Location = new System.Drawing.Point(1664, 3);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(238, 346);
             this.panel5.TabIndex = 19;
-            // 
-            // btnSaveHeader
-            // 
-            this.btnSaveHeader.Location = new System.Drawing.Point(12, 34);
-            this.btnSaveHeader.Name = "btnSaveHeader";
-            this.btnSaveHeader.Size = new System.Drawing.Size(75, 23);
-            this.btnSaveHeader.TabIndex = 0;
-            this.btnSaveHeader.Text = "Save Header";
-            this.btnSaveHeader.UseVisualStyleBackColor = true;
-            this.btnSaveHeader.Click += new System.EventHandler(this.SaveHeader);
             // 
             // formEngineTesting
             // 
@@ -1047,7 +1036,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).EndInit();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
-            this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1117,6 +1105,5 @@
         private JCS.ToggleSwitch tsTexcelConnection;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Button btnSaveHeader;
     }
 }

@@ -184,7 +184,16 @@ namespace UIDesign
             threadReceiveData = new Thread(startReceiving);
             threadReceiveData.IsBackground = true;
             threadReceiveData.Name = "Data receiving thread";
-            string filePath = @"F:\COLLEGE MATERIAL\ITB\7th Semester\TUGAS AKHIR\Testing Result\result.csv";
+            string fileName = String.Format("Texcel_{0}_{1}.csv", DateTime.Now.ToString("yyyyMMdd"), DateTime.Now.ToString("HHmmss"));
+            string filePath = @"F:\COLLEGE MATERIAL\ITB\7th Semester\TUGAS AKHIR\Testing Result\" + fileName;
+            if (!File.Exists(filePath)) //Create a new file 
+            {
+                StringBuilder sb = new StringBuilder();
+                IEnumerable<string> columnNames = dgvResult.Columns.Cast<DataGridViewTextBoxColumn>().
+                    Select(column => column.Name);
+                sb.Append(string.Join(";", columnNames));
+                File.WriteAllText(filePath, sb.ToString());
+            }
             sw = new StreamWriter(filePath, true);
         }
 
@@ -546,7 +555,7 @@ namespace UIDesign
                                 richTextBox1.ScrollToCaret();
                             });
                             //Sending the data to the database
-                            if (isTesting) { sendResponseToDatabase(_RPM, _Torque); }
+                            if (isTesting) { sendResponseToFile(_RPM, _Torque); }
                         }
                         else if (responseUnit.IndexOf("D7") > -1)
                         {
@@ -730,37 +739,25 @@ namespace UIDesign
         }
 
         //------------------SAVING THE TESTING RESULT TO THE DATABASE-------------------------//
-        public void sendResponseToDatabase(double actualRPM, double actualTorque)
+        public void sendResponseToFile(double actualRPM, double actualTorque)
         {
             StringBuilder sb = new StringBuilder();
             this.Invoke((Action)delegate
             {
                 var index = dgvResult.Rows.Add();
                 dgvResult.Rows[index].Cells["id"].Value = index + 1;
-                dgvResult.Rows[index].Cells["time_stamp"].Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                dgvResult.Rows[index].Cells["time_stamp"].Value = DateTime.Now.ToString("HH:mm:ss");
                 dgvResult.Rows[index].Cells["rpmActual"].Value = actualRPM;
                 dgvResult.Rows[index].Cells["rpmDemand"].Value = rpm;
                 dgvResult.Rows[index].Cells["torqueActual"].Value = actualTorque;
                 dgvResult.Rows[index].Cells["torqueDemand"].Value = torque;
                 dgvResult.FirstDisplayedScrollingRowIndex = dgvResult.RowCount - 1;
                 dgvResult.Update();
-                sb.Append(string.Join(";", index + 1, DateTime.Now.ToString("HH:mm:ss"), actualRPM, rpm, actualTorque, torque));
+                sb.Append(string.Join(";", index + 1, dgvResult.Rows[index].Cells["time_stamp"].Value.ToString(), actualRPM, rpm, actualTorque, torque));
                 sw.WriteLine(sb.ToString());
                 sw.Flush();                    
             });
         }
-
-        public void SaveHeader(object sender, EventArgs e)
-        {
-            StringBuilder sb = new StringBuilder();
-            IEnumerable<string> columnNames = dgvResult.Columns.Cast<DataGridViewTextBoxColumn>().
-                Select(column => column.Name);
-            sb.Append(string.Join(";", columnNames));
-            sw.WriteLine(sb.ToString());
-            sw.Flush();
-        }
-
-
 
         //--------------------------START STOP PAUSE DAQ Function----------------------------//
         private void startRecordDAQ()
