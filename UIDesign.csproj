@@ -27,7 +27,7 @@
     <ProductName>Engine Testing Control</ProductName>
     <PublisherName>Stanley Simon Gading Siahaan</PublisherName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -130,6 +130,7 @@
     <Compile Include="progressWindow.Designer.cs">
       <DependentUpon>progressWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="SaveToCSVFile.cs" />
     <Compile Include="TexcelCommand.cs" />
     <Compile Include="texcelRespondProcessor.cs" />
     <Compile Include="TextProgressBar.cs" />

@@ -98,6 +98,8 @@
             this.lblTexcelResponse = new System.Windows.Forms.Label();
             this.pbStage = new ProgressBarSample.TextProgressBar();
             this.pbTimeElapsed = new ProgressBarSample.TextProgressBar();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.btnSaveHeader = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -107,6 +109,7 @@
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).BeginInit();
             this.panel4.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStart
@@ -835,7 +838,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1653, 531);
+            this.tabPage1.Size = new System.Drawing.Size(1651, 531);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Table";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -860,7 +863,7 @@
             this.dgvResult.Location = new System.Drawing.Point(3, 3);
             this.dgvResult.Name = "dgvResult";
             this.dgvResult.RowHeadersVisible = false;
-            this.dgvResult.Size = new System.Drawing.Size(1647, 525);
+            this.dgvResult.Size = new System.Drawing.Size(1645, 525);
             this.dgvResult.TabIndex = 0;
             // 
             // id
@@ -898,7 +901,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1653, 531);
+            this.tabPage2.Size = new System.Drawing.Size(1651, 531);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Graph";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -976,12 +979,31 @@
             this.pbTimeElapsed.TextFont = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pbTimeElapsed.VisualMode = ProgressBarSample.ProgressBarDisplayMode.CustomText;
             // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.btnSaveHeader);
+            this.panel5.Location = new System.Drawing.Point(1664, 6);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(238, 346);
+            this.panel5.TabIndex = 19;
+            // 
+            // btnSaveHeader
+            // 
+            this.btnSaveHeader.Location = new System.Drawing.Point(12, 34);
+            this.btnSaveHeader.Name = "btnSaveHeader";
+            this.btnSaveHeader.Size = new System.Drawing.Size(75, 23);
+            this.btnSaveHeader.TabIndex = 0;
+            this.btnSaveHeader.Text = "Save Header";
+            this.btnSaveHeader.UseVisualStyleBackColor = true;
+            this.btnSaveHeader.Click += new System.EventHandler(this.SaveHeader);
+            // 
             // formEngineTesting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1904, 1041);
+            this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.pbStage);
@@ -1025,6 +1047,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).EndInit();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
+            this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1093,5 +1116,7 @@
         private System.Windows.Forms.Label lblTexcelResponse;
         private JCS.ToggleSwitch tsTexcelConnection;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Button btnSaveHeader;
     }
 }
