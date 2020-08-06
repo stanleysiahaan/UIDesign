@@ -149,7 +149,7 @@
             this.btnExport.Font = new System.Drawing.Font("Futura Std Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExport.ForeColor = System.Drawing.Color.White;
             this.btnExport.Image = global::UIDesign.Properties.Resources.icons8_export_50px;
-            this.btnExport.Location = new System.Drawing.Point(0, 394);
+            this.btnExport.Location = new System.Drawing.Point(0, 306);
             this.btnExport.Margin = new System.Windows.Forms.Padding(2);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(113, 78);
@@ -167,6 +167,7 @@
             this.btnHome.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btnHome.FlatAppearance.BorderSize = 0;
             this.btnHome.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(135)))), ((int)(((byte)(219)))));
+            this.btnHome.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(135)))), ((int)(((byte)(219)))));
             this.btnHome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHome.Font = new System.Drawing.Font("Futura Std Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnHome.ForeColor = System.Drawing.Color.White;
@@ -191,7 +192,7 @@
             this.btnPrmtr.Font = new System.Drawing.Font("Futura Std Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPrmtr.ForeColor = System.Drawing.Color.White;
             this.btnPrmtr.Image = global::UIDesign.Properties.Resources.icons8_coordinate_system_50px;
-            this.btnPrmtr.Location = new System.Drawing.Point(0, 153);
+            this.btnPrmtr.Location = new System.Drawing.Point(0, 156);
             this.btnPrmtr.Margin = new System.Windows.Forms.Padding(2);
             this.btnPrmtr.Name = "btnPrmtr";
             this.btnPrmtr.Size = new System.Drawing.Size(113, 74);
@@ -211,7 +212,7 @@
             this.btnSettings.Font = new System.Drawing.Font("Futura Std Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSettings.ForeColor = System.Drawing.Color.White;
             this.btnSettings.Image = global::UIDesign.Properties.Resources.icons8_settings_50px;
-            this.btnSettings.Location = new System.Drawing.Point(0, 232);
+            this.btnSettings.Location = new System.Drawing.Point(0, 235);
             this.btnSettings.Margin = new System.Windows.Forms.Padding(2);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(113, 74);
@@ -232,7 +233,7 @@
             this.btnDAQ.Font = new System.Drawing.Font("Futura Std Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDAQ.ForeColor = System.Drawing.Color.White;
             this.btnDAQ.Image = global::UIDesign.Properties.Resources.icons8_caliper_50px;
-            this.btnDAQ.Location = new System.Drawing.Point(0, 470);
+            this.btnDAQ.Location = new System.Drawing.Point(0, 382);
             this.btnDAQ.Margin = new System.Windows.Forms.Padding(2);
             this.btnDAQ.Name = "btnDAQ";
             this.btnDAQ.Size = new System.Drawing.Size(113, 74);
