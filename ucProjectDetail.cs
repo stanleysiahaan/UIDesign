@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
-using System.Collections.ObjectModel;
 
 namespace UIDesign
 {
@@ -27,7 +20,7 @@ namespace UIDesign
             //Creating command for MySQL
             DataTable dt = new DataTable();
             string query = "SELECT * FROM project_data WHERE id LIKE '%" + projectID + "%'";
-            
+
             //Showing the data in suitable text box
             MySqlDataAdapter da = new MySqlDataAdapter(query, dbc.connection);
             da.Fill(dt);
@@ -88,15 +81,6 @@ namespace UIDesign
                 MessageBox.Show(ex.Message);
             }
             dbc.CloseConnection();
-
-            //Rezise the height of the panel
-            //int totalRowHeight = dataGridView1.ColumnHeadersHeight;
-            //foreach (DataGridViewRow row in dataGridView1.Rows)
-            //{
-            //    totalRowHeight += row.Height;
-            //    dataGridView1.Height = totalRowHeight;
-            //}
-            //textBox1.Text = projectID;
         }
 
         private void button1_Click(object sender, EventArgs e)

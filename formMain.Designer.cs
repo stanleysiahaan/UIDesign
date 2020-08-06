@@ -143,6 +143,7 @@
             // 
             this.btnExport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
             this.btnExport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnExport.Enabled = false;
             this.btnExport.FlatAppearance.BorderSize = 0;
             this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExport.Font = new System.Drawing.Font("Futura Std Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -157,6 +158,7 @@
             this.btnExport.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnExport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnExport.UseVisualStyleBackColor = false;
+            this.btnExport.Visible = false;
             this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // btnHome
@@ -189,7 +191,7 @@
             this.btnPrmtr.Font = new System.Drawing.Font("Futura Std Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPrmtr.ForeColor = System.Drawing.Color.White;
             this.btnPrmtr.Image = global::UIDesign.Properties.Resources.icons8_coordinate_system_50px;
-            this.btnPrmtr.Location = new System.Drawing.Point(0, 236);
+            this.btnPrmtr.Location = new System.Drawing.Point(0, 153);
             this.btnPrmtr.Margin = new System.Windows.Forms.Padding(2);
             this.btnPrmtr.Name = "btnPrmtr";
             this.btnPrmtr.Size = new System.Drawing.Size(113, 74);
@@ -209,7 +211,7 @@
             this.btnSettings.Font = new System.Drawing.Font("Futura Std Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSettings.ForeColor = System.Drawing.Color.White;
             this.btnSettings.Image = global::UIDesign.Properties.Resources.icons8_settings_50px;
-            this.btnSettings.Location = new System.Drawing.Point(0, 315);
+            this.btnSettings.Location = new System.Drawing.Point(0, 232);
             this.btnSettings.Margin = new System.Windows.Forms.Padding(2);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(113, 74);
@@ -224,12 +226,13 @@
             // 
             this.btnDAQ.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
             this.btnDAQ.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnDAQ.Enabled = false;
             this.btnDAQ.FlatAppearance.BorderSize = 0;
             this.btnDAQ.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDAQ.Font = new System.Drawing.Font("Futura Std Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDAQ.ForeColor = System.Drawing.Color.White;
             this.btnDAQ.Image = global::UIDesign.Properties.Resources.icons8_caliper_50px;
-            this.btnDAQ.Location = new System.Drawing.Point(0, 158);
+            this.btnDAQ.Location = new System.Drawing.Point(0, 470);
             this.btnDAQ.Margin = new System.Windows.Forms.Padding(2);
             this.btnDAQ.Name = "btnDAQ";
             this.btnDAQ.Size = new System.Drawing.Size(113, 74);
@@ -238,6 +241,7 @@
             this.btnDAQ.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnDAQ.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnDAQ.UseVisualStyleBackColor = false;
+            this.btnDAQ.Visible = false;
             this.btnDAQ.Click += new System.EventHandler(this.btnDAQ_Click);
             // 
             // panelContainer

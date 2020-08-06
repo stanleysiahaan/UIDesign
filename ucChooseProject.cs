@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
-using MySqlX.XDevAPI.Relational;
 
 namespace UIDesign
 {
-    
+
     public partial class ucChooseProject : UserControl
     {
         int row;
@@ -22,7 +15,7 @@ namespace UIDesign
         public ucChooseProject()
         {
             InitializeComponent();
-            
+
             //Declare method to connect to the database
             DBConnect dbc = new DBConnect();
             dbc.Initialize();
@@ -49,15 +42,15 @@ namespace UIDesign
                 MessageBox.Show(ex.Message);
             }
             dbc.CloseConnection();
-                        
+
             //Rezise the height of the panel
             int totalRowHeight = dataGridView1.ColumnHeadersHeight;
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 totalRowHeight += row.Height;
                 dataGridView1.Height = totalRowHeight;
-            }    
-                        
+            }
+
             // creating a coloumn with a detail button
             DataGridViewButtonColumn bcol1 = new DataGridViewButtonColumn();
             bcol1.HeaderText = "";
@@ -90,7 +83,7 @@ namespace UIDesign
             {
                 // Column index is 3 to obtain project_id
                 col = 2;
-                row = e.RowIndex;        
+                row = e.RowIndex;
                 projectID = dataGridView1[col, row].Value.ToString();
 
                 ucProjectDetail ucProjectDetail = new ucProjectDetail(this, projectID);

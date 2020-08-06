@@ -1,12 +1,4 @@
-﻿using SimpleTCP;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace UIDesign
+﻿namespace UIDesign
 {
     class TexcelCommand
     {
@@ -159,7 +151,6 @@ namespace UIDesign
         {
             return command = "P7,";
         }
-
 
     }
 }

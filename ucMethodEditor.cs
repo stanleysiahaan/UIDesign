@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
-using MySql.Data.MySqlClient;
-using System.Security.Cryptography.X509Certificates;
-using System.Drawing.Text;
 
 namespace UIDesign
 {
@@ -30,14 +21,6 @@ namespace UIDesign
             dgPositions.Rows[e.RowIndex].Cells[0].Value = (e.RowIndex + 1);
         }
 
-        //To skip 'Step' coloumn when user press Tab button
-        //private void dataGridView1_CellEnter(object sender, DataGridViewCellEventArgs e)
-        //{
-        //    if (dgPositions.Columns[e.ColumnIndex].Name == "Step")
-        //    {
-        //        SendKeys.Send("{TAB}");
-        //    }
-        //}        
 
         private async void btnSubmitMethod_Click(object sender, EventArgs e)
         {
@@ -50,12 +33,12 @@ namespace UIDesign
             //create my sql command
             MySqlCommand cmd = new MySqlCommand();
             //Assign the connection using Connection
-            cmd = dbc.connection.CreateCommand();            
+            cmd = dbc.connection.CreateCommand();
             //Store Method name to Method_name table
             string methodName = tbMethodName.Text;
             cmd.Parameters.AddWithValue("@name", methodName);
             cmd.CommandText = "INSERT INTO method_name(name)VALUES(@name)";
-            cmd.ExecuteNonQuery();            
+            cmd.ExecuteNonQuery();
             int max = dgPositions.RowCount;
             int i = 0;
             int step = 0;
@@ -98,7 +81,7 @@ namespace UIDesign
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
-                }                
+                }
             }
             MessageBox.Show("Records Inserted.");
             //Close connection
@@ -130,5 +113,5 @@ namespace UIDesign
             }
         }
     }
-    
+
 }

@@ -1,6 +1,5 @@
 ﻿using EasyModbus;
 using MySql.Data.MySqlClient;
-using MySqlX.XDevAPI.Relational;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -32,9 +31,11 @@ namespace UIDesign
         NetworkStream stream;
         Thread threadReceiveData;
         texcelRespondProcessor respondProcessor = new texcelRespondProcessor();
+        FolderBrowserDialog fbd = new FolderBrowserDialog();
         ModbusClient modbusDAQ;
         ModbusClient modbusOC;
         ModbusClient modbusWC;
+        StreamWriter sw;
 
         //Declare all the global variables
         public string IPTexcel;
@@ -66,7 +67,9 @@ namespace UIDesign
         string[] explodedResponse;
         string torque;
         string rpm;
-        StreamWriter sw;
+        string fileName;
+        string filePath;
+
         //Declare the flag
         bool isTesting = false;
 
@@ -184,17 +187,6 @@ namespace UIDesign
             threadReceiveData = new Thread(startReceiving);
             threadReceiveData.IsBackground = true;
             threadReceiveData.Name = "Data receiving thread";
-            string fileName = String.Format("Texcel_{0}_{1}.csv", DateTime.Now.ToString("yyyyMMdd"), DateTime.Now.ToString("HHmmss"));
-            string filePath = @"F:\COLLEGE MATERIAL\ITB\7th Semester\TUGAS AKHIR\Testing Result\" + fileName;
-            if (!File.Exists(filePath)) //Create a new file 
-            {
-                StringBuilder sb = new StringBuilder();
-                IEnumerable<string> columnNames = dgvResult.Columns.Cast<DataGridViewTextBoxColumn>().
-                    Select(column => column.Name);
-                sb.Append(string.Join(";", columnNames));
-                File.WriteAllText(filePath, sb.ToString());
-            }
-            sw = new StreamWriter(filePath, true);
         }
 
         //Sending and logging trigger
@@ -308,46 +300,55 @@ namespace UIDesign
         //Start button trigger
         private void btnStart_Click(object sender, EventArgs e)
         {
-            if (commandIndex < 1)
+            if (tbFilePath.Text != "")
             {
-                isTesting = true;
-                //Immidiately send the first command
-                sendCommandImmediately(commandIndex);
-                commandIndex = 1;
-                //Starting DAQ record
-                startRecordDAQ();
-                //Starting the timer
-                Timer2.Enabled = true;
-                sw2.Start();
-                Timer1.Interval = int.Parse(duration) * 1000;
-                Timer1.Enabled = true;
-                sw1.Start();
-                //Get rpm and torque value from texcel
-                requestDataTexcel();
-                //Set the pbStage maximum value
-                pbStage.Maximum = (int.Parse(duration));
-                //Set the lubricant's and coolant's set point
-                btnSetCoolant_Click(sender, e);
-                btnSetLubricant_Click(sender, e);
+                if (commandIndex < 1)
+                {
+                    createFile();
+                    isTesting = true;
+                    //Immidiately send the first command
+                    sendCommandImmediately(commandIndex);
+                    commandIndex = 1;
+                    //Starting DAQ record
+                    startRecordDAQ();
+                    //Starting the timer
+                    Timer2.Enabled = true;
+                    sw2.Start();
+                    Timer1.Interval = int.Parse(duration) * 1000;
+                    Timer1.Enabled = true;
+                    sw1.Start();
+                    //Get rpm and torque value from texcel
+                    requestDataTexcel();
+                    //Set the pbStage maximum value
+                    pbStage.Maximum = (int.Parse(duration));
+                    //Set the lubricant's and coolant's set point
+                    btnSetCoolant_Click(sender, e);
+                    btnSetLubricant_Click(sender, e);
+                }
+                else //Resume the Testing 
+                {
+                    isTesting = true;
+                    startRecordDAQ();
+                    sendCommandImmediately(commandIndex);
+                    commandIndex = commandIndex + 1;
+                    //Starting the timer
+                    Timer1.Interval = int.Parse(duration) * 1000;
+                    Timer1.Enabled = true;
+                    sw1.Start();
+                    Timer2.Enabled = true;
+                    sw2.Start();
+                    //Set the pbStage maximum value
+                    pbStage.Maximum = (int.Parse(duration));
+                    //Set the lubricant's and coolant's set point
+                    btnSetCoolant_Click(sender, e);
+                    btnSetLubricant_Click(sender, e);
+                }
             }
-            else //Resume the Testing 
+            else
             {
-                isTesting = true;
-                startRecordDAQ();
-                sendCommandImmediately(commandIndex);
-                commandIndex = commandIndex + 1;
-                //Starting the timer
-                Timer1.Interval = int.Parse(duration) * 1000;
-                Timer1.Enabled = true;
-                sw1.Start();
-                Timer2.Enabled = true;
-                sw2.Start();
-                //Set the pbStage maximum value
-                pbStage.Maximum = (int.Parse(duration));
-                //Set the lubricant's and coolant's set point
-                btnSetCoolant_Click(sender, e);
-                btnSetLubricant_Click(sender, e);
+                MessageBox.Show("Please select report folder path");
             }
+
         }
 
         //Pause button trigger
@@ -645,11 +646,11 @@ namespace UIDesign
             {
                 byte[] bytesToSend = Encoding.ASCII.GetBytes(cmdFinal);
                 stream.Write(bytesToSend, 0, bytesToSend.Length);
-                rtbLogging.AppendText(String.Format("[{1}]Sent: {0}", cmdFinal, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+                rtbLogging.AppendText(String.Format("[{1}] Sent: {0}", cmdFinal, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
             }
             catch (Exception ex)
             {
-                rtbLogging.AppendText(String.Format("[{1}]Sending command Error: {0}\r\n", ex.Message, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+                rtbLogging.AppendText(String.Format("[{1}] Sending command Error: {0}\r\n", ex.Message, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
                 rtbLogging.ScrollToCaret();
             }
         }
@@ -755,8 +756,33 @@ namespace UIDesign
                 dgvResult.Update();
                 sb.Append(string.Join(";", index + 1, dgvResult.Rows[index].Cells["time_stamp"].Value.ToString(), actualRPM, rpm, actualTorque, torque));
                 sw.WriteLine(sb.ToString());
-                sw.Flush();                    
+                sw.Flush();
             });
+        }
+
+        public void createFile()
+        {
+            fileName = String.Format("Texcel_{0}_{1}.csv", DateTime.Now.ToString("yyyyMMdd"), DateTime.Now.ToString("HHmmss"));
+            filePath = tbFilePath.Text + @"\" + fileName;
+            if (!File.Exists(filePath)) //Create a new file 
+            {
+                StringBuilder sb = new StringBuilder();
+                IEnumerable<string> columnNames = dgvResult.Columns.Cast<DataGridViewTextBoxColumn>().
+                    Select(column => column.Name);
+                sb.AppendLine(string.Join(";", columnNames));
+                File.WriteAllText(filePath, sb.ToString());
+            }
+            sw = new StreamWriter(filePath, true);
+        }
+
+        private void btnDirectory_Click(object sender, EventArgs e)
+        {
+            fbd.RootFolder = Environment.SpecialFolder.Desktop;
+            fbd.Description = "Select testing result directory";
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                tbFilePath.Text = fbd.SelectedPath;
+            }
         }
 
         //--------------------------START STOP PAUSE DAQ Function----------------------------//
@@ -835,5 +861,7 @@ namespace UIDesign
             rtbLogging.Find("Error", RichTextBoxFinds.MatchCase);
             rtbLogging.SelectionColor = Color.Red;
         }
+
+
     }
 }

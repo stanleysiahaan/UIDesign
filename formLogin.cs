@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -34,8 +29,8 @@ namespace UIDesign
         //check the username and password
         private async void btnLogin_Click(object sender, EventArgs e)
         {
-            if (textUsername.Text=="admin" && textPassword.Text=="admin")
-            {                
+            if (textUsername.Text == "admin" && textPassword.Text == "admin")
+            {
                 textBox1.Visible = true;
                 textBox1.Text = "Welcome, Please Wait!";
                 textBox1.ForeColor = Color.White;
@@ -49,7 +44,7 @@ namespace UIDesign
             {
                 textBox1.Visible = true;
                 textBox1.Text = "Wrong Password, Please Try Again";
-                textBox1.ForeColor = Color.Red;                
+                textBox1.ForeColor = Color.Red;
             }
         }
 
@@ -61,15 +56,5 @@ namespace UIDesign
                 btnLogin_Click(this, new EventArgs());
             }
         }
-
-        //private void btnMinimize_Click(object sender, EventArgs e)
-        //{
-        //    this.WindowState = FormWindowState.Minimized;
-        //}
-
-        //private void btnClose_Click(object sender, EventArgs e)
-        //{
-        //    Application.Exit();
-        //}
     }
 }

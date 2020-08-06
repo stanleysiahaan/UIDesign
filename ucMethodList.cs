@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
-using System.Security.Cryptography;
 
 namespace UIDesign
 {
@@ -17,7 +10,7 @@ namespace UIDesign
         private object methodIdObject;
         public ucMethodList()
         {
-            
+
             InitializeComponent();
             DBConnect dbc = new DBConnect();
             dbc.Initialize();
@@ -57,7 +50,7 @@ namespace UIDesign
 
                 //Populating dataGridView1 with mySQL data
                 string query = "SELECT * FROM method_data WHERE method_id LIKE '%" + methodIdObject.ToString() + "%'";
-                
+
                 try
                 {
                     DataTable dt = new DataTable();
@@ -82,7 +75,7 @@ namespace UIDesign
                         else if (column.HeaderText == "second")
                         {
                             column.HeaderText = "Duration (second)";
-                        }                        
+                        }
                         else if (column.HeaderText == "ramp_time")
                         {
                             column.HeaderText = "Ramp Time (second)";
@@ -126,8 +119,8 @@ namespace UIDesign
                     data = row.Cells["method_id"].Value.ToString();
                     if (data.Contains("0"))
                     {
-                        MessageBox.Show("ADA YANG NOL BROOOO");
-                    }                    
+                        MessageBox.Show("There is zero data");
+                    }
                 }
                 string query = "SELECT * FROM method_data WHERE method_id LIKE '%" + methodIdObject.ToString() + "%'";
                 DataSet ds = new DataSet();
@@ -151,7 +144,5 @@ namespace UIDesign
             dataGridView1_RowValidated(null, null);
             MessageBox.Show("Data successfuly updated");
         }
-
-
     }
 }

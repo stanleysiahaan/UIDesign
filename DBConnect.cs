@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-//Add MySQL Library
+﻿//Add MySQL Library
 using MySql.Data.MySqlClient;
+using System.Windows.Forms;
 
 //connection: will be used to open a connection to the database.
 //server: indicates where our server is hosted, in our case, it's localhost.
@@ -87,37 +82,5 @@ namespace UIDesign
                 return false;
             }
         }
-
-        //Insert statement
-        //private bool Insert()
-        //{
-
-        //}
-
-        ////Delete Statement
-        //private bool Delete()
-        //{
-
-        //}
-
-        ////Select statement
-        //public List<string> [] Select()
-        //{
-
-        //}
-
-        //Backup
-        //public void Backup()
-        //{
-
-        //}
-
-        ////Restore
-        //public void Restore()
-        //{
-
-        //}
-
-
     }
 }

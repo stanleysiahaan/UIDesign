@@ -99,6 +99,10 @@
             this.pbStage = new ProgressBarSample.TextProgressBar();
             this.pbTimeElapsed = new ProgressBarSample.TextProgressBar();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.tbFilePath = new System.Windows.Forms.TextBox();
+            this.btnDirectory = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -108,6 +112,7 @@
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).BeginInit();
             this.panel4.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStart
@@ -232,9 +237,9 @@
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox2.Enabled = false;
             this.textBox2.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(1396, 311);
+            this.textBox2.Location = new System.Drawing.Point(1431, 311);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(134, 22);
+            this.textBox2.Size = new System.Drawing.Size(52, 22);
             this.textBox2.TabIndex = 6;
             this.textBox2.TabStop = false;
             this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -492,7 +497,7 @@
             this.panel1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.panel1.Location = new System.Drawing.Point(1, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(239, 340);
+            this.panel1.Size = new System.Drawing.Size(239, 344);
             this.panel1.TabIndex = 13;
             // 
             // btnConnectDAQ
@@ -722,10 +727,10 @@
             // 
             this.label5.AutoSize = true;
             this.label5.BackColor = System.Drawing.Color.Transparent;
-            this.label5.Font = new System.Drawing.Font("Futura Std Medium", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(8, 9);
+            this.label5.Font = new System.Drawing.Font("Futura Std Medium", 14.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(13, 11);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(224, 27);
+            this.label5.Size = new System.Drawing.Size(200, 25);
             this.label5.TabIndex = 0;
             this.label5.Text = "Connection Information";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -771,9 +776,9 @@
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox1.Enabled = false;
             this.textBox1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(385, 311);
+            this.textBox1.Location = new System.Drawing.Point(427, 311);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(134, 22);
+            this.textBox1.Size = new System.Drawing.Size(64, 22);
             this.textBox1.TabIndex = 0;
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -783,9 +788,9 @@
             this.panel3.BackColor = System.Drawing.SystemColors.Control;
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.tabControl1);
-            this.panel3.Location = new System.Drawing.Point(242, 355);
+            this.panel3.Location = new System.Drawing.Point(242, 358);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1661, 562);
+            this.panel3.Size = new System.Drawing.Size(1661, 559);
             this.panel3.TabIndex = 16;
             // 
             // tabControl1
@@ -798,7 +803,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1659, 560);
+            this.tabControl1.Size = new System.Drawing.Size(1659, 557);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage3
@@ -807,7 +812,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1651, 531);
+            this.tabPage3.Size = new System.Drawing.Size(1651, 528);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Demand List";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -826,7 +831,7 @@
             this.dgvDemand.Location = new System.Drawing.Point(3, 3);
             this.dgvDemand.Name = "dgvDemand";
             this.dgvDemand.RowHeadersVisible = false;
-            this.dgvDemand.Size = new System.Drawing.Size(1645, 525);
+            this.dgvDemand.Size = new System.Drawing.Size(1645, 522);
             this.dgvDemand.TabIndex = 0;
             // 
             // tabPage1
@@ -924,7 +929,7 @@
             // 
             this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox1.Location = new System.Drawing.Point(5, 31);
+            this.richTextBox1.Location = new System.Drawing.Point(5, 28);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.richTextBox1.Size = new System.Drawing.Size(229, 526);
@@ -937,9 +942,9 @@
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel4.Controls.Add(this.lblTexcelResponse);
             this.panel4.Controls.Add(this.richTextBox1);
-            this.panel4.Location = new System.Drawing.Point(1, 355);
+            this.panel4.Location = new System.Drawing.Point(1, 358);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(239, 562);
+            this.panel4.Size = new System.Drawing.Size(239, 559);
             this.panel4.TabIndex = 18;
             // 
             // lblTexcelResponse
@@ -981,10 +986,41 @@
             // panel5
             // 
             this.panel5.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.panel5.Location = new System.Drawing.Point(1664, 3);
+            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel5.Controls.Add(this.tbFilePath);
+            this.panel5.Controls.Add(this.btnDirectory);
+            this.panel5.Controls.Add(this.label12);
+            this.panel5.Location = new System.Drawing.Point(1664, 12);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(238, 346);
+            this.panel5.Size = new System.Drawing.Size(238, 340);
             this.panel5.TabIndex = 19;
+            // 
+            // tbFilePath
+            // 
+            this.tbFilePath.Location = new System.Drawing.Point(8, 39);
+            this.tbFilePath.Name = "tbFilePath";
+            this.tbFilePath.Size = new System.Drawing.Size(219, 20);
+            this.tbFilePath.TabIndex = 14;
+            // 
+            // btnDirectory
+            // 
+            this.btnDirectory.Location = new System.Drawing.Point(150, 65);
+            this.btnDirectory.Name = "btnDirectory";
+            this.btnDirectory.Size = new System.Drawing.Size(77, 23);
+            this.btnDirectory.TabIndex = 13;
+            this.btnDirectory.Text = "Select Folder";
+            this.btnDirectory.UseVisualStyleBackColor = true;
+            this.btnDirectory.Click += new System.EventHandler(this.btnDirectory_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Futura Std Medium", 14.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(3, 11);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(205, 25);
+            this.label12.TabIndex = 12;
+            this.label12.Text = "Report Export Directory";
             // 
             // formEngineTesting
             // 
@@ -1036,6 +1072,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).EndInit();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1105,5 +1143,9 @@
         private JCS.ToggleSwitch tsTexcelConnection;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox tbFilePath;
+        private System.Windows.Forms.Button btnDirectory;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }
