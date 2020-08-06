@@ -13,6 +13,13 @@ using System.Text;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
+using LiveCharts;
+using LiveCharts.Wpf;
+using LiveCharts.WinForms;
+using LiveCharts.Configurations;
+using Winform.Cartesian.ConstantChanges;
+using System.Security;
+using System.Windows.Media;
 
 namespace UIDesign
 {
@@ -73,9 +80,55 @@ namespace UIDesign
         //Declare the flag
         bool isTesting = false;
 
+        public ChartValues<MeasureModel> ChartValues { get; set; }
+
+        public System.Windows.Forms.Timer Timer { get; set; }
+        public Random R { get; set; }
+
         public formEngineTesting(ucChooseProject ucCP, string projectID)
         {
             InitializeComponent();
+
+            var mapper = Mappers.Xy<MeasureModel>()
+                            .X(model => model.DateTime.Ticks)   //use DateTime.Ticks as X
+                            .Y(model => model.Value);           //use the value property as Y
+
+            //lets save the mapper globally.
+            Charting.For<MeasureModel>(mapper);
+
+            //the ChartValues property will store our values array
+            ChartValues = new ChartValues<MeasureModel>();
+            cartesianChart1.Series = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Values = ChartValues,
+                    PointGeometrySize = 1,
+                    StrokeThickness = 1,
+                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0,0,0,0)),
+                }
+            };
+            cartesianChart1.AxisX.Add(new Axis
+            {
+                DisableAnimations = true,
+                LabelFormatter = value => new System.DateTime((long)value).ToString("HH:mm:ss"),
+                Separator = new Separator
+                {
+                    Step = TimeSpan.FromSeconds(1).Ticks
+                }
+            });
+
+            //SetAxisLimits(System.DateTime.Now);
+
+            //The next code simulates data changes every 500 ms
+            Timer = new System.Windows.Forms.Timer
+            {
+                Interval = 1000
+            };
+            Timer.Tick += TimerOnTick;
+            R = new Random();
+            Timer.Start();
+
 
             //Initializing the database
             dbc.Initialize();
@@ -180,6 +233,33 @@ namespace UIDesign
             //Disabling the mode button.
             btnMode.Enabled = false;
             btnStart.Enabled = false;
+        }
+
+        //private void SetAxisLimits(System.DateTime now)
+        //{
+        //    cartesianChart1.AxisX[0].MaxValue = now.Ticks + TimeSpan.FromSeconds(1).Ticks; // lets force the axis to be 100ms ahead
+        //    cartesianChart1.AxisX[0].MinValue = now.Ticks - TimeSpan.FromSeconds(8).Ticks; //we only care about the last 8 seconds
+        //}
+        private void TimerOnTick(object sender, EventArgs eventArgs)
+        {
+            var now = System.DateTime.Now;
+            ChartValues.Add(new MeasureModel
+            {
+                DateTime = now,
+                Value = R.Next(0, 10),
+            });
+            if (ChartValues.Count > 30)
+            {
+                cartesianChart1.AxisX[0].Separator.Step = TimeSpan.FromSeconds(30).Ticks;
+            }
+            else if (ChartValues.Count > 3600)
+            {
+                cartesianChart1.AxisX[0].Separator.Step = TimeSpan.FromSeconds(3600).Ticks;
+            }            
+            //SetAxisLimits(now);
+
+            //lets only use the last 30 values
+            //if (ChartValues.Count > 30) ChartValues.RemoveAt(0);
         }
 
         private void formEngineTesting_Load(object sender, EventArgs e)
@@ -859,9 +939,18 @@ namespace UIDesign
         {
             rtbLogging.ScrollToCaret();
             rtbLogging.Find("Error", RichTextBoxFinds.MatchCase);
-            rtbLogging.SelectionColor = Color.Red;
+            rtbLogging.SelectionColor = System.Drawing.Color.Red;
         }
 
 
+    }
+}
+
+namespace Winform.Cartesian.ConstantChanges
+{
+    public class MeasureModel
+    {
+        public System.DateTime DateTime { get; set; }
+        public double Value { get; set; }
     }
 }

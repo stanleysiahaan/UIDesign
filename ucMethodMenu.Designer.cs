@@ -66,7 +66,7 @@
             this.btnPrmtrNew.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnPrmtrNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(62)))), ((int)(((byte)(80)))));
             this.btnPrmtrNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPrmtrNew.Font = new System.Drawing.Font("Futura Std Medium", 20.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrmtrNew.Font = new System.Drawing.Font("Futura Std Medium", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPrmtrNew.ForeColor = System.Drawing.Color.White;
             this.btnPrmtrNew.Image = global::UIDesign.Properties.Resources.icons8_create_127px;
             this.btnPrmtrNew.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -75,7 +75,7 @@
             this.btnPrmtrNew.Padding = new System.Windows.Forms.Padding(0, 0, 0, 20);
             this.btnPrmtrNew.Size = new System.Drawing.Size(247, 190);
             this.btnPrmtrNew.TabIndex = 0;
-            this.btnPrmtrNew.Text = "New";
+            this.btnPrmtrNew.Text = "Create Testing Method";
             this.btnPrmtrNew.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnPrmtrNew.UseVisualStyleBackColor = false;
             this.btnPrmtrNew.Click += new System.EventHandler(this.btnPrmtrNew_Click);

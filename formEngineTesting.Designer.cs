@@ -92,6 +92,7 @@
             this.torqueActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.torqueDemand = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
             this.btnPause = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -111,6 +112,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvDemand)).BeginInit();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).BeginInit();
+            this.tabPage2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
             this.SuspendLayout();
@@ -301,6 +303,7 @@
             // 
             // aGauge3
             // 
+            this.aGauge3.BackColor = System.Drawing.SystemColors.Control;
             this.aGauge3.BaseArcColor = System.Drawing.Color.Black;
             this.aGauge3.BaseArcRadius = 80;
             this.aGauge3.BaseArcStart = 180;
@@ -841,7 +844,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1651, 531);
+            this.tabPage1.Size = new System.Drawing.Size(1651, 528);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Table";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -867,7 +870,7 @@
             this.dgvResult.Location = new System.Drawing.Point(3, 3);
             this.dgvResult.Name = "dgvResult";
             this.dgvResult.RowHeadersVisible = false;
-            this.dgvResult.Size = new System.Drawing.Size(1645, 525);
+            this.dgvResult.Size = new System.Drawing.Size(1645, 522);
             this.dgvResult.TabIndex = 0;
             // 
             // id
@@ -902,13 +905,23 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.cartesianChart1);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1651, 531);
+            this.tabPage2.Size = new System.Drawing.Size(1651, 528);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Graph";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // cartesianChart1
+            // 
+            this.cartesianChart1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cartesianChart1.Location = new System.Drawing.Point(3, 3);
+            this.cartesianChart1.Name = "cartesianChart1";
+            this.cartesianChart1.Size = new System.Drawing.Size(1645, 522);
+            this.cartesianChart1.TabIndex = 0;
+            this.cartesianChart1.Text = "cartesianChart1";
             // 
             // btnPause
             // 
@@ -928,7 +941,7 @@
             // richTextBox1
             // 
             this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBox1.Location = new System.Drawing.Point(5, 28);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
@@ -1070,6 +1083,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvDemand)).EndInit();
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).EndInit();
+            this.tabPage2.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel5.ResumeLayout(false);
@@ -1147,5 +1161,6 @@
         private System.Windows.Forms.TextBox tbFilePath;
         private System.Windows.Forms.Button btnDirectory;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private LiveCharts.WinForms.CartesianChart cartesianChart1;
     }
 }
