@@ -27,7 +27,7 @@
     <ProductName>Engine Testing Control</ProductName>
     <PublisherName>Stanley Simon Gading Siahaan</PublisherName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationRevision>5</ApplicationRevision>
     <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -375,6 +375,7 @@
   <ItemGroup>
     <Content Include="icons8_engine_1.ico" />
     <Content Include="icons8_engine_2.ico" />
+    <None Include="Resources\logo_survindo_bulat.png" />
     <None Include="Resources\icons8_info_50px.png" />
   </ItemGroup>
   <ItemGroup>

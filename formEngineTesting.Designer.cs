@@ -85,14 +85,10 @@
             this.dgvDemand = new System.Windows.Forms.DataGridView();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.dgvResult = new System.Windows.Forms.DataGridView();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.time_stamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rpmActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rpmDemand = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.torqueActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.torqueDemand = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.btnPause = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -104,6 +100,13 @@
             this.btnDirectory = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.time_stamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rpmActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rpmDemand = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.torqueActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.torqueDemand = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -113,6 +116,7 @@
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).BeginInit();
             this.tabPage2.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
             this.SuspendLayout();
@@ -745,9 +749,9 @@
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.label9);
             this.panel2.Controls.Add(this.rtbLogging);
-            this.panel2.Location = new System.Drawing.Point(1, 918);
+            this.panel2.Location = new System.Drawing.Point(1664, 107);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1902, 111);
+            this.panel2.Size = new System.Drawing.Size(238, 149);
             this.panel2.TabIndex = 14;
             // 
             // label9
@@ -765,10 +769,10 @@
             // rtbLogging
             // 
             this.rtbLogging.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.rtbLogging.Location = new System.Drawing.Point(0, 33);
+            this.rtbLogging.Location = new System.Drawing.Point(0, 27);
             this.rtbLogging.Name = "rtbLogging";
             this.rtbLogging.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtbLogging.Size = new System.Drawing.Size(1900, 76);
+            this.rtbLogging.Size = new System.Drawing.Size(236, 120);
             this.rtbLogging.TabIndex = 0;
             this.rtbLogging.Text = "";
             this.rtbLogging.TextChanged += new System.EventHandler(this.highlightError);
@@ -791,9 +795,9 @@
             this.panel3.BackColor = System.Drawing.SystemColors.Control;
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.tabControl1);
-            this.panel3.Location = new System.Drawing.Point(242, 358);
+            this.panel3.Location = new System.Drawing.Point(1, 358);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1661, 559);
+            this.panel3.Size = new System.Drawing.Size(1902, 681);
             this.panel3.TabIndex = 16;
             // 
             // tabControl1
@@ -801,12 +805,13 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1659, 557);
+            this.tabControl1.Size = new System.Drawing.Size(1900, 679);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage3
@@ -815,7 +820,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1651, 528);
+            this.tabPage3.Size = new System.Drawing.Size(1892, 650);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Demand List";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -834,7 +839,7 @@
             this.dgvDemand.Location = new System.Drawing.Point(3, 3);
             this.dgvDemand.Name = "dgvDemand";
             this.dgvDemand.RowHeadersVisible = false;
-            this.dgvDemand.Size = new System.Drawing.Size(1645, 522);
+            this.dgvDemand.Size = new System.Drawing.Size(1886, 644);
             this.dgvDemand.TabIndex = 0;
             // 
             // tabPage1
@@ -844,7 +849,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1651, 528);
+            this.tabPage1.Size = new System.Drawing.Size(1892, 650);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Table";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -861,6 +866,7 @@
             this.dgvResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvResult.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
+            this.date,
             this.time_stamp,
             this.rpmActual,
             this.rpmDemand,
@@ -870,38 +876,8 @@
             this.dgvResult.Location = new System.Drawing.Point(3, 3);
             this.dgvResult.Name = "dgvResult";
             this.dgvResult.RowHeadersVisible = false;
-            this.dgvResult.Size = new System.Drawing.Size(1645, 522);
+            this.dgvResult.Size = new System.Drawing.Size(1886, 644);
             this.dgvResult.TabIndex = 0;
-            // 
-            // id
-            // 
-            this.id.HeaderText = "id";
-            this.id.Name = "id";
-            // 
-            // time_stamp
-            // 
-            this.time_stamp.HeaderText = "Time Stamp";
-            this.time_stamp.Name = "time_stamp";
-            // 
-            // rpmActual
-            // 
-            this.rpmActual.HeaderText = "Speed Actual (rpm)";
-            this.rpmActual.Name = "rpmActual";
-            // 
-            // rpmDemand
-            // 
-            this.rpmDemand.HeaderText = "Speed Demand (rpm)";
-            this.rpmDemand.Name = "rpmDemand";
-            // 
-            // torqueActual
-            // 
-            this.torqueActual.HeaderText = "Torque Actual (Nm)";
-            this.torqueActual.Name = "torqueActual";
-            // 
-            // torqueDemand
-            // 
-            this.torqueDemand.HeaderText = "Torque Demand (Nm)";
-            this.torqueDemand.Name = "torqueDemand";
             // 
             // tabPage2
             // 
@@ -909,7 +885,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1651, 528);
+            this.tabPage2.Size = new System.Drawing.Size(1892, 650);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Graph";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -919,9 +895,29 @@
             this.cartesianChart1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cartesianChart1.Location = new System.Drawing.Point(3, 3);
             this.cartesianChart1.Name = "cartesianChart1";
-            this.cartesianChart1.Size = new System.Drawing.Size(1645, 522);
+            this.cartesianChart1.Size = new System.Drawing.Size(1886, 644);
             this.cartesianChart1.TabIndex = 0;
             this.cartesianChart1.Text = "cartesianChart1";
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.webBrowser1);
+            this.tabPage4.Location = new System.Drawing.Point(4, 25);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(1892, 650);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "DAQ Engine Lab";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // webBrowser1
+            // 
+            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser1.Location = new System.Drawing.Point(0, 0);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.Size = new System.Drawing.Size(1892, 650);
+            this.webBrowser1.TabIndex = 0;
+            this.webBrowser1.Url = new System.Uri("http://192.168.250.202:8000/daq.html ", System.UriKind.Absolute);
             // 
             // btnPause
             // 
@@ -942,10 +938,10 @@
             // 
             this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.richTextBox1.Location = new System.Drawing.Point(5, 28);
+            this.richTextBox1.Location = new System.Drawing.Point(3, 28);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBox1.Size = new System.Drawing.Size(229, 526);
+            this.richTextBox1.Size = new System.Drawing.Size(231, 61);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             // 
@@ -955,16 +951,16 @@
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel4.Controls.Add(this.lblTexcelResponse);
             this.panel4.Controls.Add(this.richTextBox1);
-            this.panel4.Location = new System.Drawing.Point(1, 358);
+            this.panel4.Location = new System.Drawing.Point(1664, 262);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(239, 559);
+            this.panel4.Size = new System.Drawing.Size(239, 94);
             this.panel4.TabIndex = 18;
             // 
             // lblTexcelResponse
             // 
             this.lblTexcelResponse.AutoSize = true;
             this.lblTexcelResponse.Font = new System.Drawing.Font("Futura Std Medium", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.lblTexcelResponse.Location = new System.Drawing.Point(1, 0);
+            this.lblTexcelResponse.Location = new System.Drawing.Point(4, 2);
             this.lblTexcelResponse.Name = "lblTexcelResponse";
             this.lblTexcelResponse.Size = new System.Drawing.Size(160, 27);
             this.lblTexcelResponse.TabIndex = 11;
@@ -1005,7 +1001,7 @@
             this.panel5.Controls.Add(this.label12);
             this.panel5.Location = new System.Drawing.Point(1664, 12);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(238, 340);
+            this.panel5.Size = new System.Drawing.Size(238, 94);
             this.panel5.TabIndex = 19;
             // 
             // tbFilePath
@@ -1034,6 +1030,41 @@
             this.label12.Size = new System.Drawing.Size(205, 25);
             this.label12.TabIndex = 12;
             this.label12.Text = "Report Export Directory";
+            // 
+            // id
+            // 
+            this.id.HeaderText = "id";
+            this.id.Name = "id";
+            // 
+            // date
+            // 
+            this.date.HeaderText = "Date";
+            this.date.Name = "date";
+            // 
+            // time_stamp
+            // 
+            this.time_stamp.HeaderText = "Time Stamp";
+            this.time_stamp.Name = "time_stamp";
+            // 
+            // rpmActual
+            // 
+            this.rpmActual.HeaderText = "Speed Actual (rpm)";
+            this.rpmActual.Name = "rpmActual";
+            // 
+            // rpmDemand
+            // 
+            this.rpmDemand.HeaderText = "Speed Demand (rpm)";
+            this.rpmDemand.Name = "rpmDemand";
+            // 
+            // torqueActual
+            // 
+            this.torqueActual.HeaderText = "Torque Actual (Nm)";
+            this.torqueActual.Name = "torqueActual";
+            // 
+            // torqueDemand
+            // 
+            this.torqueDemand.HeaderText = "Torque Demand (Nm)";
+            this.torqueDemand.Name = "torqueDemand";
             // 
             // formEngineTesting
             // 
@@ -1084,6 +1115,7 @@
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).EndInit();
             this.tabPage2.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel5.ResumeLayout(false);
@@ -1139,12 +1171,6 @@
         private System.Windows.Forms.Button btnConnectDAQ;
         private JCS.ToggleSwitch tsLubeConnection;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.DataGridViewTextBoxColumn id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn time_stamp;
-        private System.Windows.Forms.DataGridViewTextBoxColumn rpmActual;
-        private System.Windows.Forms.DataGridViewTextBoxColumn rpmDemand;
-        private System.Windows.Forms.DataGridViewTextBoxColumn torqueActual;
-        private System.Windows.Forms.DataGridViewTextBoxColumn torqueDemand;
         private System.Windows.Forms.Label lblSetCoolant;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Panel panel4;
@@ -1162,5 +1188,14 @@
         private System.Windows.Forms.Button btnDirectory;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private LiveCharts.WinForms.CartesianChart cartesianChart1;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.WebBrowser webBrowser1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn date;
+        private System.Windows.Forms.DataGridViewTextBoxColumn time_stamp;
+        private System.Windows.Forms.DataGridViewTextBoxColumn rpmActual;
+        private System.Windows.Forms.DataGridViewTextBoxColumn rpmDemand;
+        private System.Windows.Forms.DataGridViewTextBoxColumn torqueActual;
+        private System.Windows.Forms.DataGridViewTextBoxColumn torqueDemand;
     }
 }

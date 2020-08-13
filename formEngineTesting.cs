@@ -81,6 +81,7 @@ namespace UIDesign
         bool isTesting = false;
 
         public ChartValues<MeasureModel> ChartValues { get; set; }
+        public ChartValues<MeasureModel2> ChartValues2 { get; set; }
 
         public System.Windows.Forms.Timer Timer { get; set; }
         public Random R { get; set; }
@@ -93,16 +94,28 @@ namespace UIDesign
                             .X(model => model.DateTime.Ticks)   //use DateTime.Ticks as X
                             .Y(model => model.Value);           //use the value property as Y
 
+            var mapper2 = Mappers.Xy<MeasureModel2>()
+                .X(model => model.DateTime.Ticks)   //use DateTime.Ticks as X
+                .Y(model => model.Value);           //use the value property as Y
             //lets save the mapper globally.
             Charting.For<MeasureModel>(mapper);
+            Charting.For<MeasureModel2>(mapper2);
 
             //the ChartValues property will store our values array
             ChartValues = new ChartValues<MeasureModel>();
+            ChartValues2 = new ChartValues<MeasureModel2>();
             cartesianChart1.Series = new SeriesCollection
             {
                 new LineSeries
                 {
                     Values = ChartValues,
+                    PointGeometrySize = 1,
+                    StrokeThickness = 1,
+                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0,0,0,0)),
+                },
+                new LineSeries
+                {
+                    Values = ChartValues2,
                     PointGeometrySize = 1,
                     StrokeThickness = 1,
                     Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0,0,0,0)),
@@ -120,14 +133,14 @@ namespace UIDesign
 
             //SetAxisLimits(System.DateTime.Now);
 
-            //The next code simulates data changes every 500 ms
-            Timer = new System.Windows.Forms.Timer
-            {
-                Interval = 1000
-            };
-            Timer.Tick += TimerOnTick;
-            R = new Random();
-            Timer.Start();
+            ////The next code simulates data changes every 500 ms
+            //Timer = new System.Windows.Forms.Timer
+            //{
+            //    Interval = 1000
+            //};
+            //Timer.Tick += TimerOnTick;
+            //R = new Random();
+            //Timer.Start();
 
 
             //Initializing the database
@@ -240,27 +253,32 @@ namespace UIDesign
         //    cartesianChart1.AxisX[0].MaxValue = now.Ticks + TimeSpan.FromSeconds(1).Ticks; // lets force the axis to be 100ms ahead
         //    cartesianChart1.AxisX[0].MinValue = now.Ticks - TimeSpan.FromSeconds(8).Ticks; //we only care about the last 8 seconds
         //}
-        private void TimerOnTick(object sender, EventArgs eventArgs)
-        {
-            var now = System.DateTime.Now;
-            ChartValues.Add(new MeasureModel
-            {
-                DateTime = now,
-                Value = R.Next(0, 10),
-            });
-            if (ChartValues.Count > 30)
-            {
-                cartesianChart1.AxisX[0].Separator.Step = TimeSpan.FromSeconds(30).Ticks;
-            }
-            else if (ChartValues.Count > 3600)
-            {
-                cartesianChart1.AxisX[0].Separator.Step = TimeSpan.FromSeconds(3600).Ticks;
-            }            
-            //SetAxisLimits(now);
 
-            //lets only use the last 30 values
-            //if (ChartValues.Count > 30) ChartValues.RemoveAt(0);
-        }
+        //private void TimerOnTick(object sender, EventArgs eventArgs)
+        //{
+        //    var now = System.DateTime.Now;
+        //    ChartValues.Add(new MeasureModel
+        //    {
+        //        DateTime = now,
+        //        Value = R.Next(0, 10),
+        //    });
+        //    ChartValues2.Add(new MeasureModel2
+        //    {
+        //        DateTime = now,
+        //        Value = R.Next(0, 5),
+        //    });
+        //    if (ChartValues.Count > 30)
+        //    {
+        //        cartesianChart1.AxisX[0].Separator.Step = TimeSpan.FromSeconds(30).Ticks;
+        //    }
+        //    else if (ChartValues.Count > 3600)
+        //    {
+        //        cartesianChart1.AxisX[0].Separator.Step = TimeSpan.FromSeconds(3600).Ticks;
+        //    }            
+        //    //SetAxisLimits(now);
+        //    //lets only use the last 30 values
+        //    //if (ChartValues.Count > 30) ChartValues.RemoveAt(0);
+        //}
 
         private void formEngineTesting_Load(object sender, EventArgs e)
         {
@@ -339,7 +357,7 @@ namespace UIDesign
             {
                 pbStage.CustomText = sw2.Elapsed.ToString("hh\\:mm\\:ss");
                 pbStage.Value = progressBar2Second;
-                pbTimeElapsed.CustomText = sw1.Elapsed.ToString("hh\\:mm\\:ss");
+                pbTimeElapsed.CustomText = sw1.Elapsed.ToString("hhh\\:mm\\:ss");
                 pbTimeElapsed.Value = progressBar1Second;
                 textBox6.Text = (_coolantTemp / 10).ToString();
                 aGauge3.Value = _coolantTemp / 10;
@@ -348,6 +366,26 @@ namespace UIDesign
             });
             progressBar1Second += 1;
             progressBar2Second += 1;
+            var now = System.DateTime.Now;
+            ChartValues.Add(new MeasureModel
+            {
+                DateTime = now,
+                //Value = R.Next(0, 10),
+                Value = _RPM,
+            });
+            ChartValues2.Add(new MeasureModel2
+            {
+                DateTime = now,
+                Value = _Torque,
+            });
+            if (ChartValues.Count > 30)
+            {
+                cartesianChart1.AxisX[0].Separator.Step = TimeSpan.FromSeconds(30).Ticks;
+            }
+            else if (ChartValues.Count > 3600)
+            {
+                cartesianChart1.AxisX[0].Separator.Step = TimeSpan.FromSeconds(3600).Ticks;
+            }
         }
 
         //Executed when the command is done
@@ -827,6 +865,7 @@ namespace UIDesign
             {
                 var index = dgvResult.Rows.Add();
                 dgvResult.Rows[index].Cells["id"].Value = index + 1;
+                dgvResult.Rows[index].Cells["date"].Value = DateTime.Now.ToString("dd/MM/yyyy");
                 dgvResult.Rows[index].Cells["time_stamp"].Value = DateTime.Now.ToString("HH:mm:ss");
                 dgvResult.Rows[index].Cells["rpmActual"].Value = actualRPM;
                 dgvResult.Rows[index].Cells["rpmDemand"].Value = rpm;
@@ -834,7 +873,7 @@ namespace UIDesign
                 dgvResult.Rows[index].Cells["torqueDemand"].Value = torque;
                 dgvResult.FirstDisplayedScrollingRowIndex = dgvResult.RowCount - 1;
                 dgvResult.Update();
-                sb.Append(string.Join(";", index + 1, dgvResult.Rows[index].Cells["time_stamp"].Value.ToString(), actualRPM, rpm, actualTorque, torque));
+                sb.Append(string.Join(";", index + 1, dgvResult.Rows[index].Cells["date"], dgvResult.Rows[index].Cells["time_stamp"].Value.ToString(), actualRPM, rpm, actualTorque, torque));
                 sw.WriteLine(sb.ToString());
                 sw.Flush();
             });
@@ -949,6 +988,12 @@ namespace UIDesign
 namespace Winform.Cartesian.ConstantChanges
 {
     public class MeasureModel
+    {
+        public System.DateTime DateTime { get; set; }
+        public double Value { get; set; }
+    }
+
+    public class MeasureModel2
     {
         public System.DateTime DateTime { get; set; }
         public double Value { get; set; }
