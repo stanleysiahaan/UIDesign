@@ -56,7 +56,7 @@ namespace UIDesign
                 progressW._progress = i;
                 i++;
                 step++;
-                await Task.Delay(100);
+                await Task.Delay(300);
                 try
                 {
                     if (row.IsNewRow) continue;

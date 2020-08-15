@@ -85,6 +85,13 @@
             this.dgvDemand = new System.Windows.Forms.DataGridView();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.dgvResult = new System.Windows.Forms.DataGridView();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.time_stamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rpmActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rpmDemand = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.torqueActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.torqueDemand = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -100,13 +107,6 @@
             this.btnDirectory = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.time_stamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rpmActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rpmDemand = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.torqueActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.torqueDemand = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -879,6 +879,41 @@
             this.dgvResult.Size = new System.Drawing.Size(1886, 644);
             this.dgvResult.TabIndex = 0;
             // 
+            // id
+            // 
+            this.id.HeaderText = "id";
+            this.id.Name = "id";
+            // 
+            // date
+            // 
+            this.date.HeaderText = "Date";
+            this.date.Name = "date";
+            // 
+            // time_stamp
+            // 
+            this.time_stamp.HeaderText = "Time Stamp";
+            this.time_stamp.Name = "time_stamp";
+            // 
+            // rpmActual
+            // 
+            this.rpmActual.HeaderText = "Speed Actual (rpm)";
+            this.rpmActual.Name = "rpmActual";
+            // 
+            // rpmDemand
+            // 
+            this.rpmDemand.HeaderText = "Speed Demand (rpm)";
+            this.rpmDemand.Name = "rpmDemand";
+            // 
+            // torqueActual
+            // 
+            this.torqueActual.HeaderText = "Torque Actual (Nm)";
+            this.torqueActual.Name = "torqueActual";
+            // 
+            // torqueDemand
+            // 
+            this.torqueDemand.HeaderText = "Torque Demand (Nm)";
+            this.torqueDemand.Name = "torqueDemand";
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.cartesianChart1);
@@ -1030,41 +1065,6 @@
             this.label12.Size = new System.Drawing.Size(205, 25);
             this.label12.TabIndex = 12;
             this.label12.Text = "Report Export Directory";
-            // 
-            // id
-            // 
-            this.id.HeaderText = "id";
-            this.id.Name = "id";
-            // 
-            // date
-            // 
-            this.date.HeaderText = "Date";
-            this.date.Name = "date";
-            // 
-            // time_stamp
-            // 
-            this.time_stamp.HeaderText = "Time Stamp";
-            this.time_stamp.Name = "time_stamp";
-            // 
-            // rpmActual
-            // 
-            this.rpmActual.HeaderText = "Speed Actual (rpm)";
-            this.rpmActual.Name = "rpmActual";
-            // 
-            // rpmDemand
-            // 
-            this.rpmDemand.HeaderText = "Speed Demand (rpm)";
-            this.rpmDemand.Name = "rpmDemand";
-            // 
-            // torqueActual
-            // 
-            this.torqueActual.HeaderText = "Torque Actual (Nm)";
-            this.torqueActual.Name = "torqueActual";
-            // 
-            // torqueDemand
-            // 
-            this.torqueDemand.HeaderText = "Torque Demand (Nm)";
-            this.torqueDemand.Name = "torqueDemand";
             // 
             // formEngineTesting
             // 

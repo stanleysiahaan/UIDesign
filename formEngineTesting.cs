@@ -17,7 +17,7 @@ using LiveCharts;
 using LiveCharts.Wpf;
 using LiveCharts.WinForms;
 using LiveCharts.Configurations;
-using Winform.Cartesian.ConstantChanges;
+//using Winform.Cartesian.ConstantChanges;
 using System.Security;
 using System.Windows.Media;
 
@@ -80,56 +80,56 @@ namespace UIDesign
         //Declare the flag
         bool isTesting = false;
 
-        public ChartValues<MeasureModel> ChartValues { get; set; }
-        public ChartValues<MeasureModel2> ChartValues2 { get; set; }
+        //public ChartValues<MeasureModel> ChartValues { get; set; }
+        //public ChartValues<MeasureModel2> ChartValues2 { get; set; }
 
-        public System.Windows.Forms.Timer Timer { get; set; }
-        public Random R { get; set; }
+        //public System.Windows.Forms.Timer Timer { get; set; }
+        //public Random R { get; set; }
 
         public formEngineTesting(ucChooseProject ucCP, string projectID)
         {
             InitializeComponent();
 
-            var mapper = Mappers.Xy<MeasureModel>()
-                            .X(model => model.DateTime.Ticks)   //use DateTime.Ticks as X
-                            .Y(model => model.Value);           //use the value property as Y
+            //var mapper = Mappers.Xy<MeasureModel>()
+            //                .X(model => model.DateTime.Ticks)   //use DateTime.Ticks as X
+            //                .Y(model => model.Value);           //use the value property as Y
 
-            var mapper2 = Mappers.Xy<MeasureModel2>()
-                .X(model => model.DateTime.Ticks)   //use DateTime.Ticks as X
-                .Y(model => model.Value);           //use the value property as Y
-            //lets save the mapper globally.
-            Charting.For<MeasureModel>(mapper);
-            Charting.For<MeasureModel2>(mapper2);
+            //var mapper2 = Mappers.Xy<MeasureModel2>()
+            //    .X(model => model.DateTime.Ticks)   //use DateTime.Ticks as X
+            //    .Y(model => model.Value);           //use the value property as Y
+            ////lets save the mapper globally.
+            //Charting.For<MeasureModel>(mapper);
+            //Charting.For<MeasureModel2>(mapper2);
 
-            //the ChartValues property will store our values array
-            ChartValues = new ChartValues<MeasureModel>();
-            ChartValues2 = new ChartValues<MeasureModel2>();
-            cartesianChart1.Series = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Values = ChartValues,
-                    PointGeometrySize = 1,
-                    StrokeThickness = 1,
-                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0,0,0,0)),
-                },
-                new LineSeries
-                {
-                    Values = ChartValues2,
-                    PointGeometrySize = 1,
-                    StrokeThickness = 1,
-                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0,0,0,0)),
-                }
-            };
-            cartesianChart1.AxisX.Add(new Axis
-            {
-                DisableAnimations = true,
-                LabelFormatter = value => new System.DateTime((long)value).ToString("HH:mm:ss"),
-                Separator = new Separator
-                {
-                    Step = TimeSpan.FromSeconds(1).Ticks
-                }
-            });
+            ////the ChartValues property will store our values array
+            //ChartValues = new ChartValues<MeasureModel>();
+            //ChartValues2 = new ChartValues<MeasureModel2>();
+            //cartesianChart1.Series = new SeriesCollection
+            //{
+            //    new LineSeries
+            //    {
+            //        Values = ChartValues,
+            //        PointGeometrySize = 1,
+            //        StrokeThickness = 1,
+            //        Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0,0,0,0)),
+            //    },
+            //    new LineSeries
+            //    {
+            //        Values = ChartValues2,
+            //        PointGeometrySize = 1,
+            //        StrokeThickness = 1,
+            //        Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0,0,0,0)),
+            //    }
+            //};
+            //cartesianChart1.AxisX.Add(new Axis
+            //{
+            //    DisableAnimations = true,
+            //    LabelFormatter = value => new System.DateTime((long)value).ToString("HH:mm:ss"),
+            //    Separator = new Separator
+            //    {
+            //        Step = TimeSpan.FromSeconds(1).Ticks
+            //    }
+            //});
 
             //SetAxisLimits(System.DateTime.Now);
 
@@ -366,26 +366,26 @@ namespace UIDesign
             });
             progressBar1Second += 1;
             progressBar2Second += 1;
-            var now = System.DateTime.Now;
-            ChartValues.Add(new MeasureModel
-            {
-                DateTime = now,
-                //Value = R.Next(0, 10),
-                Value = _RPM,
-            });
-            ChartValues2.Add(new MeasureModel2
-            {
-                DateTime = now,
-                Value = _Torque,
-            });
-            if (ChartValues.Count > 30)
-            {
-                cartesianChart1.AxisX[0].Separator.Step = TimeSpan.FromSeconds(30).Ticks;
-            }
-            else if (ChartValues.Count > 3600)
-            {
-                cartesianChart1.AxisX[0].Separator.Step = TimeSpan.FromSeconds(3600).Ticks;
-            }
+            //var now = System.DateTime.Now;
+            //ChartValues.Add(new MeasureModel
+            //{
+            //    DateTime = now,
+            //    //Value = R.Next(0, 10),
+            //    Value = _RPM,
+            //});
+            //ChartValues2.Add(new MeasureModel2
+            //{
+            //    DateTime = now,
+            //    Value = _Torque,
+            //});
+            //if (ChartValues.Count > 30)
+            //{
+            //    cartesianChart1.AxisX[0].Separator.Step = TimeSpan.FromSeconds(30).Ticks;
+            //}
+            //else if (ChartValues.Count > 3600)
+            //{
+            //    cartesianChart1.AxisX[0].Separator.Step = TimeSpan.FromSeconds(3600).Ticks;
+            //}
         }
 
         //Executed when the command is done
@@ -985,17 +985,17 @@ namespace UIDesign
     }
 }
 
-namespace Winform.Cartesian.ConstantChanges
-{
-    public class MeasureModel
-    {
-        public System.DateTime DateTime { get; set; }
-        public double Value { get; set; }
-    }
+//namespace Winform.Cartesian.ConstantChanges
+//{
+//    public class MeasureModel
+//    {
+//        public System.DateTime DateTime { get; set; }
+//        public double Value { get; set; }
+//    }
 
-    public class MeasureModel2
-    {
-        public System.DateTime DateTime { get; set; }
-        public double Value { get; set; }
-    }
-}
+//    public class MeasureModel2
+//    {
+//        public System.DateTime DateTime { get; set; }
+//        public double Value { get; set; }
+//    }
+//}

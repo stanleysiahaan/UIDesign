@@ -33,7 +33,7 @@
         public string IdleCommand()
         {
             //C16,<dmode>,<ddem>,<dramp>,<tmode>,<tdem>,<tramp>,<duration>,<checksum><cr>
-            return command = "C16,0,0,25,0,0,25,";
+            return command = "C16,0,0,30,0,0,30,";
         }
 
         //Dump Load
